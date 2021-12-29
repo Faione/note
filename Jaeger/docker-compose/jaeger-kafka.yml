@@ -1,0 +1,45 @@
+version: "3"
+services: 
+  jaeger-agent:
+    image: "jaegertracing/jaeger-agent" 
+    ports: 
+        - "5775:5775/udp"
+        - "6831:6831/udp"
+        - "6832:6832/udp"
+        - "5778:5778"
+    command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
+    restart: on-failure
+    depends_on: 
+      - jaeger-collector
+
+  jaeger-collector:
+    image: "jaegertracing/jaeger-collector"
+    ports:
+      - "14269"
+      - "14268:14268"
+      - "14250"
+      - "9411:9411"
+    environment: 
+      - SPAN_STORAGE_TYPE=kafka
+      - KAFKA_PRODUCER_BROKERS=152.136.134.100:9092
+      - KAFKA_TOPIC=jaeger_kafka_test
+    command: ["--kafka.producer.protocol-version=2.0.0", "--kafka.producer.encoding=json"]
+
+    restart: on-failure
+
+  hotrod:
+      image: jaegertracing/example-hotrod:latest
+      ports:
+      - '10040:8080'
+      - '10041:8083'
+      command: ["-m","prometheus","all"]
+      environment:
+      - JAEGER_AGENT_HOST=jaeger-agent
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=remote
+      - JAEGER_SAMPLING_ENDPOINT=http://jaeger-agent:5778/sampling
+      depends_on:
+      - jaeger-agent
+
+
+ 

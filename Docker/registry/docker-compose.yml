@@ -1,0 +1,19 @@
+version: '3'
+services:
+  docker-register:
+    image: "registry:2"
+    container_name: "registry"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./registry:/var/lib/registry
+    restart: always
+    
+
+
+    
+
+
+
+
+        

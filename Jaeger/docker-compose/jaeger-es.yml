@@ -1,0 +1,16 @@
+version: "3"
+services:
+  es:
+    image: "elasticsearch:7.14.1"
+    ports:
+      - "10030:9200"
+      - "10031:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      # 13版本后需要配置安全策略，否则无法直接连上es
+      - "xpack.security.enabled=false"
+
+    volumes:
+      # ./ 以选择当前目录
+      - ./es/data:/usr/share/elasticsearch/data

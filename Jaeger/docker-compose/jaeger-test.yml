@@ -1,0 +1,50 @@
+version: "3"
+services: 
+  jaeger-agent:
+    image: "jaegertracing/jaeger-agent" 
+    ports: 
+        - "5775:5775/udp"
+        - "6831:6831/udp"
+        - "6832:6832/udp"
+        - "5778:5778"
+    # 数据最终给到collector，并由其发送给数据存储中心
+    command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
+    restart: on-failure
+    depends_on: 
+      - jaeger-collector
+
+  jaeger-collector:
+    image: "jaegertracing/jaeger-collector"
+    ports:
+      - "14269"
+      - "14268:14268"
+      - "14250"
+      - "9411:9411"
+    environment: 
+      - "SPAN_STORAGE_TYPE=elasticsearch"
+      - "ES_SERVER_URLS=http://39.101.140.145:10030"
+      - "ES_TAGS_AS_FIELDS_ALL=true"
+
+    restart: on-failure
+
+  # 测试jaeger的程序
+  hotrod:
+      image: jaegertracing/example-hotrod:latest
+      ports:
+      - '8080:8080'
+      - '8083:8083'
+      command: ["-m","prometheus","all"]
+      environment:
+      - JAEGER_AGENT_HOST=jaeger-agent
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=remote
+      - JAEGER_SAMPLING_ENDPOINT=http://jaeger-agent:5778/sampling
+      depends_on:
+      - jaeger-agent
+
+
+
+
+  
+
+
