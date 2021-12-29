@@ -60,3 +60,9 @@ git pull // git pull 等同于 git fetch && git merge, 即取得远程的分支�
 # 推送
 git push
 ```
+
+#### (4) 免密码push
+
+```shell
+git config --global credential.helper store
+```
