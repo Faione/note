@@ -26,14 +26,14 @@ docker run -d --rm --name jaeger \
 docker compose 
 ```yml
 version: "3"
-services: 
-  jaeger-query:
-    image: "jaegertracing/jaeger-query"
-    ports: 
-      - "10032:16686" 
-    environment: 
-      - "SPAN_STORAGE_TYPE=elasticsearch"
-      - "ES_SERVER_URLS=http://152.136.134.100:9200" 
-    command: ["--query.additional-headers","Access-Control-Allow-Origin:*"]
-    restart: always
+  services: 
+    jaeger-query:
+      image: "jaegertracing/jaeger-query"
+      ports: 
+        - "10032:16686" 
+      environment: 
+        - "SPAN_STORAGE_TYPE=elasticsearch"
+        - "ES_SERVER_URLS=http://152.136.134.100:9200" 
+      command: ["--query.additional-headers","Access-Control-Allow-Origin:*"]
+      restart: always
 ```

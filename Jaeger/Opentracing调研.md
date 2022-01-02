@@ -57,6 +57,14 @@ except Exception e:
 
 ## 二、Python埋点示例
 
+### (1) client 配置
+
+### (2) span 创建
+
+### (3) tag 与 log
+
+### (4) baggage
+
 
 ## 三、Go埋点示例
 

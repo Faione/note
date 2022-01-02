@@ -120,6 +120,31 @@ camera服务
 使用队列存储请求以及span, 等待响应后结束span
 
 
+### 小车第二版设计
+
+#### 参与因素
+
+web
+   - ui
+
+服务
+   - frontend
+   - backend
+      - camera
+      - motion 
+   - darknet
+
+#### 请求stream
+
+- 移动控制
+
+frontend -> motion
+
+- 图像处理
+
+frontend -> camera -> darknet
+
+
 
 
 
