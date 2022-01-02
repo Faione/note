@@ -65,8 +65,8 @@ def get_image(frame_queue, send_timestamp_queue, recv_timestamp_queue, input_add
 
             span = None
             if span_ctx is not None:
-                span = tracer.start_span('image_process', child_of=span_ctx)
-
+                
+span = tracer.start_span('image_process', child_of=span_ctx)
             header = msg[0:24]
             hh,ww,cc,tt = struct.unpack('iiid',header)
             send_timestamp_queue.put(int(tt*1000.0))
