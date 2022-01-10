@@ -73,6 +73,8 @@ services:
         - ./var/gogs:/data
     mariadb:
         image: "mariadb:latest"
+        volumes:
+        - ./var/mariadb:/var/lib/mysql 
         environment:
             - "MARIADB_USER=fhl"
             - "MARIADB_PASSWORD=123456"
