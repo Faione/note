@@ -1,0 +1,52 @@
+containers:
+  darknet-service:
+    appkey: "supb.application.test.darknet"
+    parent: []
+    child: 
+    - supb.application.test.car
+    name: ""
+    image: sauronwu/superb_darknet_demo:v1
+    cid: ""
+    guid: ""
+    status: NotReady
+    ports:
+     15000-15100:15000-15100 
+    envs:
+      SUPB_GUID: ""
+      SUPB_MIN_PORT: "15000"
+      SUPB_MAX_PORT: "15100"
+    cmd:
+    - /bin/bash
+    - cd /usr/src/darknet-superb-service &&
+    - git pull &&
+    - python darknet_websocket_demo.py
+    tags:
+    - key: HOST
+      type: string
+      value: GPU
+  car-service:
+    appkey: "supb.application.test.car"
+    parent: 
+    - supb.application.test.darknet
+    child: 
+    - supb.application.test.car-frontend
+    name: ""
+    image: car-ctrl-service:v0.1
+    cid: ""
+    guid: ""
+    status: NotReady
+    ports:
+      10038:8000
+    envs:
+      SUPB_GUID: ""
+      JAEGER_AGENT_PORT: ""
+      JAEGER_AGENT_HOST: ""
+      PARENT_HOST: ""
+	  PARENT_PORT: ""
+    cmd:
+    - /bin/bash
+    - /root/boot.sh
+    tags:
+    - key: CAR
+      type: string
+      value: CPU

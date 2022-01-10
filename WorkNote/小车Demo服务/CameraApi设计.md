@@ -17,3 +17,8 @@
   - nnmsg send提供回调, 在回调中进行span的关闭
 
 ### (2) 
+
+docker run -itd --rm --privileged -p 10039:8000 -e JAEGER_AGENT_PORT=5775 -e JAEGER_AGENT_HOST=10.16.0.180 -e DARK_NET_HOST=10.118.0.35 car-ctrl-service:v0.1 /bin/bash /root/bo
+ot.sh
+
+docker run -it --rm --privileged -p 10039:8000 -e JAEGER_AGENT_PORT=5775 -e JAEGER_AGENT_HOST=10.16.0.180 -e DARK_NET_HOST=10.118.0.35 car-ctrl-service:latest /bin/bash /root/boot.sh
