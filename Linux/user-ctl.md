@@ -4,11 +4,12 @@
 
 ## 一、用户管理
 
-### (1) 增加用户‘
+### (1) 增加用户
 
 useradd 选项 用户名
 
 ```shell
+# -m 参数能够在没有用户目录的情况下创建用户目录
 $ useradd -c "a handsome man" -d /home/fhl -s /bin/zsh fhl 
 ```
 
@@ -80,6 +81,8 @@ $ newgrp root
 ## 二、权限管理
 
 ### (1) root权限
+
+先 w!, 再 q! 强制修改
 
 ```shell
 $ vi /etc/sudoers
