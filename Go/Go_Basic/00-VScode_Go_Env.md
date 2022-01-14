@@ -15,11 +15,11 @@ apt-get 默认安装的go版本较老，不支持新特性
 在 [Go中文社区Golang资源](https://studygolang.com/dl), 或Go官网找到对应平台的Go二进制文件
 ```shell
 # 下载二进制文件
-wget https://studygolang.com/dl/golang/go1.17.1.linux-amd64.tar.gz .
+wget https://studygolang.com/dl/golang/go1.17.6.linux-amd64.tar.gz .
 
 # 解压二进制文件
 # 解压至 /usr/local
-tar -C /usr/local -xzf go1.17.1.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.17.6.linux-amd64.tar.gz
 
 # 增加环境变量
 export PATH=$PATH:/usr/local/go/bin

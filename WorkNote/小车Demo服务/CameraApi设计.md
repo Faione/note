@@ -23,5 +23,9 @@ ot.sh
 
 docker run -it --rm --privileged -p 10039:8000 -e JAEGER_AGENT_PORT=5775 -e JAEGER_AGENT_HOST=10.16.0.180 -e DARK_NET_HOST=10.118.0.35 -e FRAME_RATE=15 car-ctrl-service:latest /bin/bash /root/boot.sh
 
+docker run -itd --privileged -p 10039:8000 -e JAEGER_AGENT_PORT=5775 -e JAEGER_AGENT_HOST=10.16.0.180 -e DARK_NET_HOST=10.118.0.35 -e FRAME_RATE=15 -e SAMPLING_RATE=0.02 car-ctrl-service:latest /bin/bash 
 
 10.30.5.119:10039/car/camera/start
+
+
+docker run -itd --privileged -p 10050:8000 -e JAEGER_AGENT_PORT=5775 -e JAEGER_AGENT_HOST=10.16.0.180 -e DARK_NET_HOST=10.118.0.35 -e FRAME_RATE=15 -e SAMPLING_RATE=0.02 car-pwm-ctrl-service:latest /bin/bash

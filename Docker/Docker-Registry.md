@@ -53,6 +53,9 @@ $ docker push 39.101.140.145:5000/interference-cpu-core-1:v0.1
 
 ```shell
 $ docker pull 39.101.140.145:5000/interference-cpu-core-1:v0.1
+
+$ docker pull 39.101.140.145:5000/cpu-ctrl-core-1
+
 ```
 
 2. 运行镜像

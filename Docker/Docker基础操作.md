@@ -58,6 +58,7 @@ docker build -t image:tag <path container Dockerfile>
 ```
 $ vi /lib/systemd/system/docker.service
 # add -H tcp://0.0.0.0:2375
+# -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
 
 # 重载配置信息
 $ systemctl daemon-reload
