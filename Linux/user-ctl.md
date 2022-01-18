@@ -27,6 +27,7 @@ $ userdel fhl
 usermod 选项 用户名
 
 ```shell
+# -g 为覆盖，-G 为增加
 usermod -g normal fhl
 ```
 
