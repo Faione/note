@@ -86,6 +86,9 @@ $ newgrp root
 先 w!, 再 q! 强制修改
 
 ```shell
+# 
+# $ adduser username sudo 
+
 $ vi /etc/sudoers
 
 add -> fhl   ALL=(ALL:ALL) ALL
