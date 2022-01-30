@@ -9,6 +9,7 @@
     - [四、暴露Service](#四暴露service)
     - [五、运行应用的多个实例](#五运行应用的多个实例)
     - [六、应用更新](#六应用更新)
+    - [七、配置Java微服务](#七配置java微服务)
     - [问题与理解](#问题与理解)
   - [理解](#理解)
   - [问题汇总](#问题汇总)
@@ -172,6 +173,10 @@ $ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatali
 ```shell
 $ kubectl rollout undo deployments/kubernetes-bootcamp
 ```
+
+### 七、配置Java微服务
+
+
 
 ### 问题与理解
 
