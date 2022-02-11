@@ -176,8 +176,6 @@ $ kubectl rollout undo deployments/kubernetes-bootcamp
 
 ### 七、配置Java微服务
 
-
-
 ### 问题与理解
 
 ## 理解

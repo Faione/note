@@ -73,3 +73,15 @@ pull 指定 digest (获取不同指令集架构镜像)
 ```shell
 $ docker pull ubuntu:latest@sha256:f3113ef2fa3d3c9ee5510737083d6c39f74520a2da6eab72081d896d8592c078
 ```
+
+## 六、检索
+
+```shell
+# 关键词搜索，返回容器id
+# $ docker ps -a | awk '/key_word/'
+$ docker ps -a | awk '/key_word/{print $1}'
+
+# 检索已经关闭的容器
+# docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+$ docker ps -a|grep Exited|awk '{print $1}'
+```
