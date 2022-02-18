@@ -8,8 +8,17 @@
 - [源码解析](https://bbs.huaweicloud.com/blogs/detail/247559)
 - [Ray 1.0 Architecture whitepaper](https://docs.google.com/document/d/1lAy0Owi-vPz2jEqBSaHNQcy2IBSDEHyXNOQZlGuj93c/preview)
 - [Ray Design Patterns](https://docs.google.com/document/d/167rnnDFIVRhHhK4mznEIemOtj63IOhtIPvSYaPgI4Fg/edit)
+- [Ray 框架介绍](https://zhuanlan.zhihu.com/p/111340572)
 
 ## 一、初步认识
+
+- 为什么使用ray框架
+  - 提供了简单、通用的API来进行分布式应用的构造
+  - 程序可以单机运行，也可以部署在集群上运行
+- 高性能的实现
+  - 并行计算
+- 如何实现并行计算
+- ray集群计算
 
 - 简单认识
   - 高性能分布式执行框架，提供了简单、通用的API来进行分布式应用的构造
@@ -21,7 +30,6 @@
     - 为开发者提供动态定制计算依赖的能力
       - 动态定制能够根据函数之间的调用关系生成Dag，无需提前设定Dag
 - 系统框架
-
 
 - 用户视角的ray功能
   - 方便的多进程创建(方法装饰器)
