@@ -23,3 +23,7 @@ async def main():
 
 
 main作为主要的 async 方法, 其中创建tast但不等待task完成
+
+# Python 异步编程
+
+- async/await 为python提供的关键词，用来声明函数为异步函数

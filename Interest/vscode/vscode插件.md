@@ -49,6 +49,12 @@ Host NJServer
 
 扩展中搜索 GitGraph
 
+## 四、常用设置
+
+Open Folders In New Window
+ - on: 总是会打开新的窗口
+ - off: 默认替换当前窗口
+ - default
 
 
 
