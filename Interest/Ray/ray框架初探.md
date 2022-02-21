@@ -2,12 +2,14 @@
 
 - [Ray框架初探](#ray框架初探)
   - [一、Ray Init](#一ray-init)
+    - [ray集群操作](#ray集群操作)
   - [二、Remote Function](#二remote-function)
     - [(1) 创建与运行](#1-创建与运行)
     - [(2) 指定资源](#2-指定资源)
     - [(3) 多个返回值](#3-多个返回值)
     - [(4) 取消task](#4-取消task)
   - [三、Remote Object & Object Ref](#三remote-object--object-ref)
+    - [Python future对象](#python-future对象)
     - [(1) 取得 Remote Object](#1-取得-remote-object)
     - [(2) 对象溢出](#2-对象溢出)
   - [四、Remote Classes](#四remote-classes)
@@ -34,6 +36,29 @@ ray init 信息
  'gcs_address': '127.0.0.1:4370',
  'node_id': '67e7fbcd76a272f7a2189b065bb12816caf86f8e011b2f6f5f122f76'
  }
+```
+
+### ray集群操作
+
+```shell
+# 启动单节点的ray runtime，当前机器将会成为"head node" 
+$ ray start --head --port=6379
+```
+
+连接当前节点的ray runtime
+- 可以将其他机器与当前的 head node 连接从而构成集群，集群中的任何程序都可以通过以下方式连接到ray集群
+- 默认情况下，Ray 将并行化其工作负载并在多个进程和多个节点上运行任务
+
+```python 
+import ray
+ray.init(address='auto')
+```
+
+- 可以通过启用本地模式来强制所有 Ray 函数在单个进程上发生
+
+```python 
+import ray
+ray.init(local_mode=True)
 ```
 
 ## 二、Remote Function
@@ -89,8 +114,13 @@ f = ray.remote(f)
     - 通过 ray.put() 构造
 - Object存储在共享内存的object store中，集群中的每一个节点都部署有一个object store，并且，集群中object所分配的机器是无法提前得知的
 - Remote Object是不可变的，因而得以在不同的Object store中复制却不必同步
+ 
+### Python future对象
 
-TODO [python future](https://docs.python.org/zh-cn/3/library/asyncio-future.html)
+- 一个 Future 代表一个异步运算的最终结果
+- Future 是一个 awaitable 对象。协程可以等待 Future 对象直到它们有结果或异常集合或被取消
+
+
 
 ### (1) 取得 Remote Object
 
