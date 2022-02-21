@@ -9,10 +9,12 @@
     - [(3) 多个返回值](#3-多个返回值)
     - [(4) 取消task](#4-取消task)
   - [三、Remote Object & Object Ref](#三remote-object--object-ref)
-    - [Python future对象](#python-future对象)
     - [(1) 取得 Remote Object](#1-取得-remote-object)
     - [(2) 对象溢出](#2-对象溢出)
-  - [四、Remote Classes](#四remote-classes)
+  - [四、Remote Classes(Actor)](#四remote-classesactor)
+    - [actor 命名](#actor-命名)
+    - [actor 生命周期](#actor-生命周期)
+    - [actor 池](#actor-池)
 
 ## 一、Ray Init 
 
@@ -61,6 +63,13 @@ import ray
 ray.init(local_mode=True)
 ```
 
+- 可以指定当前程序所允许的命名空间
+
+```python 
+import ray
+ray.init(address="auto", namespace="test")
+```
+
 ## 二、Remote Function
 
 ### (1) 创建与运行
@@ -94,10 +103,11 @@ f = ray.remote(f)
   - 可以指定超过实际资源数量的资源
 - @ray.remote() 同样也能够接收资源参数，为remote function指定资源
   - 指定的资源必须在 ray.init() 所允许的范围之中, 否则 remote function 不会被调度
-- 指定cpu资源，ray不会强制进行隔离
-- 指定gpu资源，ray则能够提供资源的隔离
+- 资源隔离
+  - 指定cpu资源，ray不会强制进行隔离
+  - 指定gpu资源，ray则能够提供资源的隔离
 - 除了计算资源外，还可以指定要运行的任务的环境，其中可以包括 Python 包、本地文件、环境变量等
-
+  - 可以指定 custom 自定义资源，前提是改资源在集群上已经定义(通过参数在启动时声明资源数量)
 ### (3) 多个返回值
 
 - @ray.remote(num_returns=3) 适用于函数具有多个返回值的情况, 否则会产生错误
@@ -115,12 +125,9 @@ f = ray.remote(f)
 - Object存储在共享内存的object store中，集群中的每一个节点都部署有一个object store，并且，集群中object所分配的机器是无法提前得知的
 - Remote Object是不可变的，因而得以在不同的Object store中复制却不必同步
  
-### Python future对象
-
-- 一个 Future 代表一个异步运算的最终结果
-- Future 是一个 awaitable 对象。协程可以等待 Future 对象直到它们有结果或异常集合或被取消
-
-
+- Python future对象
+  - 一个 Future 代表一个异步运算的最终结果
+  - Future 是一个 awaitable 对象。协程可以等待 Future 对象直到它们有结果或异常集合或被取消
 
 ### (1) 取得 Remote Object
 
@@ -137,7 +144,7 @@ ready_refs, remaining_refs = ray.wait(object_refs, num_returns=1, timeout=None)
 
 单节点上，share memory 有限，若 object store 满，则会与硬盘交换
 
-## 四、Remote Classes
+## 四、Remote Classes(Actor)
 
 ```python
 @ray.remote
@@ -151,8 +158,80 @@ class Counter(object):
 
 # Create an actor from this class.
 counter = Counter.remote()
+
+# 调用 remote class 的方法
+counter.increment.remote()
+
+------------------ 等同于 -----------------
+
+class Counter(object):
+    def __init__(self):
+        self.value = 0
+
+    def increment(self):
+        self.value += 1
+        return self.value
+
+    def get_counter(self):
+        return self.value
+
+# ray.remote 接收一个类作为输入，并生成一个 Remote Class
+Counter = ray.remote(Counter)
+
+counter_actor = Counter.remote()
 ```
 
+- 不同actor调用的方法可以并行执行，同一个actor调用的方法按照调用顺序依次执行(串行)
+- 同一个actor上的方法会互相共享状态(上下文)
+
+
+- 当actor被构造时
+  - 集群中的一个节点将被选中并运行一个工作者进程，所有对于actor的方法调用将通过这个工作者进程来完成
+  - 一个 actor 所指代的对象(原本对象)将在工作者进程中实例化，并调用其构造方法
+
+
 - 同样的，actor也能指定所能使用的资源
-- 不同actor调用的方法可以并行执行，同一个actor调用的方法按照调用顺序依次执行。同一个actor上的方法会互相共享状态
+  - 当一个GPU actor被创建时, 它会被调度到一个至少拥有一个GPU的节点上，且此GPU会在Actor的生命周期内持续为Actor保留(独占), 当actor终止时，GPU资源将被释放
+  - 若不指定资源，则actor也不会去主动请求资源(默认)，此时无法对其中的方法进行资源分配
+
+- 可以在 remote class 构造时动态的改变资源分配
+
+```shell
+a1 = Counter.options(num_cpus=1, resources={"Custom1": 1}).remote()
+```
+
+### actor 命名
+
+- actor handle: actor 句柄，指向一个actor
+  - 指针指向一个对象的内存地址，句柄则是由系统所管理的引用标识，可以被重定位到不同的对象
+
+- actor 命名
+  - 在 ray 集群中，可以通过 actor handle 得到一个 actor，然而实际上直接传递 actor handle 不一定方便
+  - ray 允许对actor进行命名，该名称定义的namespace中唯一，可以在集群中的任何位置，通过命名获得该actor
+    - 需要在一个namespace中
+  - 但是，如果handle不在存在，则actor会被回收
+    
+
+```shell
+ray.init(address="auto", namespace="test")
+counter = Counter.options(name="some_name").remote()
+
+# ---- somewhere in the cluster 
+
+ray.init(address="auto", namespace="test")
+counter = ray.get_actor("some_name")
+```
+
+### actor 生命周期
+
+- 一般认为，actor随程序的退出而终结，然而actor的生命周期实际上与作业解耦，即允许actor在驱动进程退出之后仍然存在
+- 反之，则原来的程序退出，actor终结
+
+```shell
+counter = Counter.options(name="CounterActor", lifetime="detached").remote()
+```
+
+### actor 池
+
+ray 允许用户构造 actor 池用来进行任务调度
 
