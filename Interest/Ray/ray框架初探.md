@@ -3,26 +3,32 @@
 - [Ray框架初探](#ray框架初探)
   - [一、Ray Init](#一ray-init)
     - [ray集群操作](#ray集群操作)
-  - [二、Remote Function](#二remote-function)
+  - [二、Remote Function (Tasks)](#二remote-function-tasks)
     - [(1) 创建与运行](#1-创建与运行)
     - [(2) 指定资源](#2-指定资源)
     - [(3) 多个返回值](#3-多个返回值)
     - [(4) 取消task](#4-取消task)
-  - [三、Remote Object & Object Ref](#三remote-object--object-ref)
+  - [三、Objects in Ray](#三objects-in-ray)
     - [(1) 取得 Remote Object](#1-取得-remote-object)
     - [(2) 对象溢出](#2-对象溢出)
   - [四、Remote Classes(Actor)](#四remote-classesactor)
     - [actor 命名](#actor-命名)
     - [actor 生命周期](#actor-生命周期)
     - [actor 池](#actor-池)
+    - [worker && actor](#worker--actor)
+  - [五、Namespaces](#五namespaces)
+    - [匿名空间](#匿名空间)
+  - [六、依赖处理](#六依赖处理)
 
 ## 一、Ray Init 
 
 
 - 运行ray程序之前，必须使用 ray.init() 进行初始化
-  - 一个进程中, init() 函数只能够调用一次, 否则出现error
+  - 使用 ray.init() 将会创建一个 job, 在这个job的上下文中，不允许再次使用 ray.init()
+  <!-- - 一个进程中, init() 函数只能够调用一次, 否则出现error
     - init() 函数为当前进程初始化了一个 ray 单例对象以及其所依赖的其他运行环境
-  - 不同进程中，init() 函数构造的ray对象在端口、node id 上都不同, 也就是说，不同进程 init() 的ray相互之间没有关联，不会干扰
+  - 不同进程中，init() 函数构造的ray对象在端口、node id 上都不同, 也就是说，不同进程 init() 的ray相互之间没有关联，不会干扰 -->
+- ray init() 作用是进行资源分配、命名空间创建、连接到ray集群，以及其他初始化工作
 
 ray init 信息
 
@@ -63,14 +69,7 @@ import ray
 ray.init(local_mode=True)
 ```
 
-- 可以指定当前程序所允许的命名空间
-
-```python 
-import ray
-ray.init(address="auto", namespace="test")
-```
-
-## 二、Remote Function
+## 二、Remote Function (Tasks)
 
 ### (1) 创建与运行
 - 普通函数使用 "@ray.remote" 修饰之后，就称为一个 remote function
@@ -93,7 +92,7 @@ f = ray.remote(f)
 - remote() 的结果是 object ref, 搭配 ray.get() 得到最终的结果(Object)
   - remote function 的执行是异步的过程，ray.get() 则是同步的过程，get() 会等待 remote funtion 中的过程完全结束再输出结果
   - 同时，若 remote function 所返回的 object ref 所指代的对象并未在当前节点上，get() 过程中则还包括将结果下载到本地的过程
-- remote function 接收静态的输入，同时也接收 object ref 作为输入
+- remote function 接收静态的输入，同时也接收 object re6f 作为输入
   - 接收 object ref 作为输入时, remote() 的执行则会自动同步, 即下游 remote function 会自动地等待上游 remote function 执行完毕之后再执行
 
 ### (2) 指定资源
@@ -116,8 +115,9 @@ f = ray.remote(f)
 
 - ray.cancel(obj_ref)
 
-## 三、Remote Object & Object Ref
+## 三、Objects in Ray
 
+Remote Object & Object Ref
 - 在ray的计算框架中，object是构造与计算的主要对象，并使用 object ref 指向某一个object(类似于指针)
   - Object ref 本质上是一个唯一 ID，可用于引用 Remote Object
     - 进行 remote function call 构造
@@ -235,3 +235,40 @@ counter = Counter.options(name="CounterActor", lifetime="detached").remote()
 
 ray 允许用户构造 actor 池用来进行任务调度
 
+### worker && actor
+
+- 每个 Ray worker 都是一个 python进程
+- worker因 tasks 和 actor 而被不同地对待，任何 ray workeer
+  - 用来执行多个 ray tasks
+  - 被启动作为一个专门的 ray actor
+
+- Tasks
+  - Ray 启动时会自动的根据CPU数量启动一定数量的 ray workers(1 per cpu), 类似于进程池，这些 worker 被用来执行 tasks, 而一旦任务执行完成，则 worker进入闲置状态，直到被指派新的 task
+- Actor
+  - Ray actor 同样是一个 "ray worker", 但在运行时被实例化，他的所有方法将在同一个进程中运行，使用相同的资源，不同于 tasks, 运行 actors 的 python 进程不会被复用，且在actor被删除时终止
+
+- 无状态的 task 调度起来更加灵活，如果不需要有状态的 actor, 则为更高的利用率，应当使用 task
+
+## 五、Namespaces
+
+- 命名空间是job和actor的逻辑分组, 一个actor被命名时，此名称在同一个命名空间中必须唯一
+
+```python 
+import ray
+ray.init(address="auto", namespace="test")
+```
+
+### 匿名空间
+
+- ray.init() 是不指定命名空间，ray将会将job放置一个匿名空间中，在此匿名空间中，此job会有自己的命名空间，且无法访问其他命名空间
+  - 匿名空间实际上的实现类似于UUID's, 这使得其他job可以手动地连接到一个匿名空间中的job的命名空间，但ray不推荐这种做法
+
+```python
+# 获得当前的命名空间
+namespace = ray.get_runtime_context().namespace
+```
+
+## 六、依赖处理
+
+分布式情况下的程序依赖处理
+- 
