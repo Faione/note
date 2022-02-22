@@ -41,9 +41,10 @@
 
 
 @startuml
-bus -> api_server: create request
-api_server -> manager_api: reform object
-manager_api -> manager: 
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
 @enduml
 
 

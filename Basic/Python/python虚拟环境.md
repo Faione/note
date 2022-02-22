@@ -1,5 +1,7 @@
 # Python虚拟环境
 
+- [linux python 虚拟环境](https://www.cnblogs.com/Infi-chu/p/10342029.html)
+
 Python虚拟化环境提供一个隔离的开发环境，其中有独立的python解释器与包管理工具pip
 
 ```cmd

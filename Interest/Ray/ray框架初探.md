@@ -18,7 +18,8 @@
     - [worker && actor](#worker--actor)
   - [五、Namespaces](#五namespaces)
     - [匿名空间](#匿名空间)
-  - [六、依赖处理](#六依赖处理)
+  - [六、Runtime Environment](#六runtime-environment)
+    - [核心概念](#核心概念)
 
 ## 一、Ray Init 
 
@@ -162,7 +163,7 @@ counter = Counter.remote()
 # 调用 remote class 的方法
 counter.increment.remote()
 
------------------- 等同于 -----------------
+---------------- 等同于 ----------------
 
 class Counter(object):
     def __init__(self):
@@ -268,7 +269,29 @@ ray.init(address="auto", namespace="test")
 namespace = ray.get_runtime_context().namespace
 ```
 
-## 六、依赖处理
+## 六、Runtime Environment
 
-分布式情况下的程序依赖处理
-- 
+- 适用情况
+  - 运行分布式的 ray 库 或者 程序
+  - 运行引用本地文件的分布式的 ray 脚本
+  - 快速迭代在 ray 集群中运行的，有变化依赖和文件的工程
+
+- 解决的问题
+  - ray script 引用\依赖 一些python库
+  - ray script 查询一些特定环境变量
+  - ray script 引入script以外的文件
+- ray 期望依赖在集群中的所有节点上都存在
+
+### 核心概念
+
+- Ray Application:
+  - 包含调用 ray.init() 的ray script 并使用 ray tasks/actor 的程序
+- Dependencies/Environment
+  - 应用程序需要运行的 Ray 脚本之外的任何内容，包括文件、包和环境变量
+- Files
+  - ray应用程序所需要的 Code files、data files or other files 
+- Packages
+  - Ray 应用程序所需的外部库或可执行文件，通常通过 pip 或 conda 安装
+- Job
+  - 在使用 ray.init() 连接到集群和通过调用 ray.shutdown() 或退出 Ray 脚本断开连接之间的一段执行时间
+  - 用户调用ray的进程的运行周期就是一个job
