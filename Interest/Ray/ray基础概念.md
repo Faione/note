@@ -9,6 +9,9 @@
 - [Ray 1.0 Architecture whitepaper](https://docs.google.com/document/d/1lAy0Owi-vPz2jEqBSaHNQcy2IBSDEHyXNOQZlGuj93c/preview)
 - [Ray Design Patterns](https://docs.google.com/document/d/167rnnDFIVRhHhK4mznEIemOtj63IOhtIPvSYaPgI4Fg/edit)
 - [Ray 框架介绍](https://zhuanlan.zhihu.com/p/111340572)
+- [Ray分布式框架详解](https://zhuanlan.zhihu.com/p/460600694)
+- [Ray架构解析](https://zhuanlan.zhihu.com/p/357182462)
+- [remote function解析](https://zhuanlan.zhihu.com/p/341217169)
 
 ## 一、初步认识
 
@@ -62,3 +65,7 @@
     - ObjectStore底层由- Apache Arrow实现
 - Plasma
   - 每个Slave上的ObjectStore都由一个名为Plasma的对象管理器进行管理，它可以在Worker访问本地ObjectStore上不存在的远程数据对象时，主动拉取其它Slave上的对象数据到当前机器。
+
+
+## 四、Ray编程模型
+

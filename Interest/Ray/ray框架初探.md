@@ -25,6 +25,9 @@
     - [为每个Task或Actor指定运行时环境](#为每个task或actor指定运行时环境)
   - [七、Ray Job Submission](#七ray-job-submission)
     - [RESTFul API](#restful-api)
+  - [八、其他](#八其他)
+    - [task && trace](#task--trace)
+    - [actor模型](#actor模型)
 
 ## 一、Ray Init 
 
@@ -356,3 +359,10 @@ class MyClass:
 
 ### RESTFul API
 
+## 八、其他
+
+### task && trace
+
+ray && opentelementry
+
+### actor模型
