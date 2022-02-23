@@ -20,6 +20,11 @@
     - [匿名空间](#匿名空间)
   - [六、Runtime Environment](#六runtime-environment)
     - [核心概念](#核心概念)
+    - [运行时环境](#运行时环境)
+    - [为每个job指定运行时环境](#为每个job指定运行时环境)
+    - [为每个Task或Actor指定运行时环境](#为每个task或actor指定运行时环境)
+  - [七、Ray Job Submission](#七ray-job-submission)
+    - [RESTFul API](#restful-api)
 
 ## 一、Ray Init 
 
@@ -295,3 +300,59 @@ namespace = ray.get_runtime_context().namespace
 - Job
   - 在使用 ray.init() 连接到集群和通过调用 ray.shutdown() 或退出 Ray 脚本断开连接之间的一段执行时间
   - 用户调用ray的进程的运行周期就是一个job
+
+### 运行时环境
+
+- 运行时环境描述了 Ray 应用程序需要运行的依赖项，包括文件、包、环境变量等，他在集群上动态地进行安装
+- 运行时环境使得开发者能够将运行在本地的ray app 翻译为能够运行在远程集群中的程序，而不需要要任何手动的环境设置
+
+```python
+runtime_env = {"working_dir": "/data/my_files", "pip": ["requests", "pendulum==2.1.2"]}
+
+# To transition from a local single-node cluster to a remote cluster,
+# simply change to ray.init("ray://123.456.7.8:10001", runtime_env=...)
+ray.init(runtime_env=runtime_env)
+```
+### 为每个job指定运行时环境
+
+- 指定运行环境的两种选项
+  - default 当 job 开始时(ray.init（）)，就会立刻下载并安装依赖项
+  - 仅当带调用task或创建actor时才开始安装依赖项
+
+```json
+# evn 中增加以下配置以启动第二个选项
+"eager_install": False 
+```
+
+### 为每个Task或Actor指定运行时环境
+
+- 可以让actor和task在自己的环境中运行，而与周围环境无关
+  - 周边环境可以是作业的运行环境，也可以是集群的系统环境
+- Ray 不保证具有冲突运行时环境的任务和参与者之间的兼容性
+
+```python
+# 调用一个 task
+f.options(runtime_env=runtime_env).remote()
+
+# 实例化一个 actor
+actor = SomeClass.options(runtime_env=runtime_env).remote()
+
+# Specify a runtime environment in the task definition.  Future invocations via
+# `g.remote()` will use this runtime environment unless overridden by using
+# `.options()` as above.
+@ray.remote(runtime_env=runtime_env)
+def g():
+    pass
+
+# Specify a runtime environment in the actor definition.  Future instantiations
+# via `MyClass.remote()` will use this runtime environment unless overridden by
+# using `.options()` as above.
+@ray.remote(runtime_env=runtime_env)
+class MyClass:
+    pass
+```
+
+## 七、Ray Job Submission
+
+### RESTFul API
+
