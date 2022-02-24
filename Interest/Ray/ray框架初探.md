@@ -51,7 +51,7 @@ ray init 信息
 ```json
 {'node_ip_address': '127.0.0.1',
  'raylet_ip_address': '127.0.0.1',
- 'redis_address': '127.0.0.1:6379', // redis 用来保存 ray 的运行信息, ray status --address 127.0.0.1:6379 即指当前的 ray 的信息
+ 'redis_address': '127.0.0.1:6379', 
  'object_store_address': 'tcp://127.0.0.1:53081',
  'raylet_socket_name': 'tcp://127.0.0.1:29239',
  'webui_url': None,
@@ -108,7 +108,7 @@ f = ray.remote(f)
 - remote() 的结果是 object ref, 搭配 ray.get() 得到最终的结果(Object)
   - remote function 的执行是异步的过程，ray.get() 则是同步的过程，get() 会等待 remote funtion 中的过程完全结束再输出结果
   - 同时，若 remote function 所返回的 object ref 所指代的对象并未在当前节点上，get() 过程中则还包括将结果下载到本地的过程
-- remote function 接收静态的输入，同时也接收 object re6f 作为输入
+- remote function 接收静态的输入，同时也接收 object ref 作为输入
   - 接收 object ref 作为输入时, remote() 的执行则会自动同步, 即下游 remote function 会自动地等待上游 remote function 执行完毕之后再执行
 
 ### (2) 指定资源
