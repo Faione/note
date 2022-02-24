@@ -24,10 +24,17 @@
     - [为每个job指定运行时环境](#为每个job指定运行时环境)
     - [为每个Task或Actor指定运行时环境](#为每个task或actor指定运行时环境)
   - [七、Ray Job Submission](#七ray-job-submission)
-    - [RESTFul API](#restful-api)
-  - [八、其他](#八其他)
+    - [目标](#目标)
+    - [概念](#概念)
+    - [Ray Job APIs](#ray-job-apis)
+    - [CLI](#cli)
+    - [SDK](#sdk)
+    - [REST API](#rest-api)
+  - [八、Ray Serve](#八ray-serve)
+  - [九、其他](#九其他)
     - [task && trace](#task--trace)
     - [actor模型](#actor模型)
+    - [接入策略](#接入策略)
 
 ## 一、Ray Init 
 
@@ -357,12 +364,105 @@ class MyClass:
 
 ## 七、Ray Job Submission
 
-### RESTFul API
+### 目标
 
-## 八、其他
+- 为用户提供一种轻量级的机制，将他们在本地开发和测试过的应用程序提交到正在运行的远程 Ray 集群，从而使用户能够将他们的 Ray 应用程序作为 Job 打包、部署和管理。这些作业可以由他们选择的作业经理提交。
+
+### 概念
+
+- Package
+  - 定义应用程序的文件和配置的集合，从而允许它在不同的环境中远程执行（理想情况下是独立的）
+  - 在 Job 提交的上下文中，打包部分由 Runtime Environments 处理，可以在其中动态配置 Ray 集群环境，提交的作业的actor或task级别的运行时环境
+- Job
+  - 提交给 Ray 集群执行的 Ray 应用程序
+  - 提交作业后，它会在集群上运行一次以完成或失败。重试或不同参数的不同运行应由提交者处理
+  - 作业绑定到 Ray 集群的生命周期，因此，如果 Ray 集群出现故障，该集群上所有正在运行的作业都将终止
+- Job Manager
+  - Ray 集群外部的一个实体，它管理 Job 的生命周期以及可能还有 Ray 集群的生命周期，例如调度、杀死、轮询状态、获取日志和持久化输入/输出
+  - 可以是具有这些能力的任何现有框架，例如 Airflow。
+
+### Ray Job APIs
+
+- 确保有一个本地 Ray 集群, 终端中显示的地址和端口应该是我们提交作业请求的地方
+
+```shell
+$ pip install "ray[default]"
+
+# http://127.0.0.1:8265 即是api入口
+$ ray start --head
+ Local node IP: 127.0.0.1
+ INFO services.py:1360 -- View the Ray dashboard at http://127.0.0.1:8265
+
+```
+
+### CLI
+
+**提交一个 job**
+
+- 需要指定 "ray_init_test.py" 所在的工作目录，如有非基础库的依赖库，则还需要增加 "pip": ["requests==2.26.0"] 声明依赖
+- windows下，处理json字符串需要注意转义
+
+```shell
+$ ray job submit --runtime-env-json='{"working_dir": "./"}' -- "python ray_init_test.py"
+```
+
+### SDK
+
+```python
+from ray.dashboard.modules.job.sdk import JobSubmissionClient
+from ray.dashboard.modules.job.common import JobStatus, JobStatusInfo
+import time
+
+client = JobSubmissionClient("http://127.0.0.1:8265")
+
+job_id = client.submit_job(
+    # Entrypoint shell command to execute
+    entrypoint="python ray_init_test.py",
+    # Working dir
+    runtime_env={
+        "working_dir": "./"
+    }
+)
+
+
+def wait_until_finish(job_id):
+    start = time.time()
+    timeout = 5
+    while time.time() - start <= timeout:
+        status_info = client.get_job_status(job_id)
+        status = status_info.status
+        print(f"status: {status}")
+        if status in {JobStatus.SUCCEEDED, JobStatus.STOPPED, JobStatus.FAILED}:
+            break
+        time.sleep(1)
+
+
+wait_until_finish(job_id)
+logs = client.get_job_logs(job_id)
+print(logs)
+```
+
+### REST API
+
+- 在后台，Job Client 和 CLI 都对运行在 ray 头节点上的作业服务器进行 HTTP 调用。因此，如果需要，用户也可以通过 HTTP 直接向相应的端点发送请求
+- 测试尚未成功
+
+```url
+http://127.0.0.1:8265/api/jobs/submit
+```
+
+## 八、Ray Serve
+
+
+## 九、其他
 
 ### task && trace
 
 ray && opentelementry
 
 ### actor模型
+
+### 接入策略
+
+计算任务以 job 为核心单位进行管理，使用 rest api 将用户的源代码进行提交
+
