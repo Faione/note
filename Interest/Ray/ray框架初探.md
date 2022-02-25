@@ -172,10 +172,10 @@ class Counter(object):
         self.value += 1
         return self.value
 
-# Create an actor from this class.
+# 构造一个 Remote Class
 counter = Counter.remote()
 
-# 调用 remote class 的方法
+# 调用 Remote Class 的方法
 counter.increment.remote()
 
 ---------------- 等同于 ----------------
@@ -452,6 +452,38 @@ http://127.0.0.1:8265/api/jobs/submit
 ```
 
 ## 八、Ray Serve
+
+```python
+import ray
+import requests
+
+runtime_env = {"working_dir": "/data/my_files", "pip": ["requests", "pendulum==2.1.2"]}
+
+ray.init(runtime_env=runtime_env)
+
+@ray.remote()
+def f():
+  open("my_datafile.txt").read()
+  return requests.get("https://www.ray.io")
+
+```
+
+```python
+
+ray.init(num_cpus=4, num_gpus=2)
+
+@ray.remote(num_cpus=2, num_gpus=1)
+def f():
+  return 1
+
+@ray.remote(runtime_env=runtime_env)
+def g():
+    pass
+    
+@ray.remote(runtime_env=runtime_env)
+class MyClass:
+    pass
+```
 
 
 ## 九、其他
