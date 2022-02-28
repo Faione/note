@@ -1,0 +1,3 @@
+- [opentelementry](https://opentelemetry.io/docs/instrumentation/python/getting-started/)
+- [架构简析](https://izsk.me/2021/10/27/OpenTelemetry-Introduct/)
+- [架构简析](https://jimmysong.io/opentelemetry-obervability/architectural-overview.html)
