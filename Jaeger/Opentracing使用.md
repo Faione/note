@@ -1,6 +1,6 @@
-# Opentracing 调研
+# Opentracing 使用
 
-- [Opentracing 调研](#opentracing-调研)
+- [Opentracing 使用](#opentracing-使用)
   - [一、Python埋点示例](#一python埋点示例)
     - [(1) client配置与tracer创建](#1-client配置与tracer创建)
       - [Client配置](#client配置)
