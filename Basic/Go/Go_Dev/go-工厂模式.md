@@ -1,0 +1,1 @@
+- [go工厂模式](https://www.cnblogs.com/mafeng/p/6924096.html)
