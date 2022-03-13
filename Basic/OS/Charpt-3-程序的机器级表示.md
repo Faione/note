@@ -189,3 +189,107 @@
 ![条件传送指令](./img/2022-03-12-10-52-43.png)
 
 ### 3.6.7 循环
+
+- C语言中提供的 do-while、while 与 for，在汇编中并不存在对应的指令，而是通过条件测试和跳转组合起来实现循环的效果
+  - 条件测试(if语句)，跳转(goto)
+  - GCC和其他汇编器产生的循环代码基于两种基本的循环模式
+
+- 理解产生的汇编代码与原始源代码之间的关系，关键是找到程序值和寄存器之间的映射关系
+
+**do-while 循环**
+
+```c++
+do 
+    body-statement 
+    while (test-expr);
+
+// do-while循环可翻译为如下条件和goto语句
+
+loop: 
+   body-statement 
+    t = test-expr; 
+    if (t) 
+        goto loop;
+```
+
+**while 循环**
+
+- 不同于 do-while， while先判断条件，再执行循环体
+  - 跳转到中间
+    - 首先执行无条件跳转到结尾的测试，再进行循环
+  - guarded-do
+    - 首先进行条件分支，若不成立就跳过循环，反之则进行do-while循环
+
+```c++
+while (test-expr) 
+    body-statement
+
+// 1. 跳转到中间
+    goto test; 
+loop: 
+    body-statement 
+test: 
+    t = test-expr; 
+    if (t) 
+        goto loop;
+
+// 2. guarded-do
+t = test-expr; 
+if (!t) 
+    goto done; 
+loop: 
+    body-statement 
+    t = test-expr; 
+    if (t) 
+        goto loop; 
+done:
+```
+
+**for循环**
+
+- for循环可以等价转化位 while 循环的形式，因而也能够使用 while 循环同样的翻译方式
+
+```c++
+for (init-expr; test-expr; update-expr) 
+    body-statement
+
+// 等同于
+init-expr; 
+while (test-expr) { 
+    body-statement 
+    update-exp,; 
+}
+
+// 1. 跳转到中间
+init-expr; 
+goto test; 
+loop: 
+    body-statement 
+    update-expr; 
+test: 
+    t = test-expr; 
+    if (t) 
+    goto loop;
+
+// 2. guarded-do
+init-expr; 
+t = test-expr; 
+if (! t) 
+    goto done; 
+loop : 
+    body-statement 
+    update-expr; 
+    t = test-expr; 
+    if (t) 
+        goto loop; 
+done: 
+```
+
+### 3.6.8 switch语句
+
+- swich语句能够呢根据一个整数索引值进行多重分支
+  - 通过使用跳转表数据结构使得实现更高效
+    - 跳转表是一个数组，表项i是一个代码段的地址
+  - 相比于 if-else 语句，使用跳转表的优点是执行开关语句的时间与开关情况的数量无关
+  - GCC根据开关情况的数量和开关情况值的稀疏程度来翻译开关语句，当开 、关情况数量比较多(例如4个以上)，并且值的范围跨度比较小时，就会使用跳转表
+  - "&" 会创建一个执行数据值的指针，在GCC中, "&&" 会创建一个指向代码位置的指针
