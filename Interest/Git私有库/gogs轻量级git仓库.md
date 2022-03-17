@@ -59,6 +59,12 @@ Docker配置注意事项
 3. SSH Port, HTTP Port 分别使用暴露的端口
 4. Application URL使用: <Domain>:<HTTP Port>
 
+
+```shell
+# 替换分支前可以删除当前的远程分支
+$ git remote rm origin
+```
+
 ### (3) 统一Compose文件
 
 ```yml
