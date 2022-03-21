@@ -52,4 +52,15 @@
     - mmutable Infrastructures的例子是 windows，系统在起初安装时非常简单，但随着版本更新，会增加各种各样的补丁，这些补丁不仅会带来程序体积的增加，增加程序的复杂性，还有可能导致新的bug与漏洞
   - unikernel旨在开发和部署，因此无法进行远程连接或调试bug，其在设计上是不可变的，同时，unikernel启动的快速性能允许进行无缝更新
 
-### 
+### VM | Container | Unikernel
+
+- virtual machine 基于 hyperviser 管理程序实现，hyperviser提供硬件资源的抽象，而运行在这些抽象资源的上的每个OS就是 virtual machine，程序依赖 vm 运行
+- container 基于 namespace，cgroup 所提供的隔离机制，共享同一个内核，相比于 virtual machine 更轻量，但由于共享内核，安全上难以保证
+- unikernel 同样基于 hyperviser 提供的硬件资源抽象，但不同的是，unikernel中的程序 以 library os 利用硬件资源，unikernel给予了程序直接运行在 hyperviser抽象层之上的能力
+  - 在生产环境上仍然不够成熟
+
+| Technology | Pros | Cons |
+| --- | --- | --- |
+| Virtual Machines | - Allows deploying different operating systems on a single host<br> - Complete isolation from host<br> - Orchestration solutions available | - Requires compute power proportional to number of instances<br> - Requires large infrastructures<br> - Each instance loads an entire operating system |
+| Linux Containers | - Lightweight virtualization<br> - Fast boot times<br> - Ochestration solutions<br> - Dynamic resource allocation | - Reduced isolation between host and guest due to shared kernel<br> - Less flexible (i.e.: dependent on host kernel)<br> - Network is less flexible |
+| Unikernels | - Lightweight images<br> - Specialized application<br> - Complete isolation from host<br> - Higher security against absent functionalities (e.g.: remote command execution) | - Not mature enough yet for production<br> - Requires developing applications from the grounds up<br> - Limited deployment possibilities<br> - Lack of complete IDE support<br> - Static resource allocation<br> - Lack of orchestration tools |
