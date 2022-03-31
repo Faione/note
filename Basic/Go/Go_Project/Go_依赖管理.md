@@ -10,4 +10,7 @@ vendor中增加新内容的方法
 - 自动修改 go mod 后 还需要 进行 go mod vendor 同步操作
   - [vendor增加内容](https://stackoverflow.com/questions/70808768/what-does-inconsistent-vendoring-mean-in-go)
 
+
+- 对导入进来的包进行重命名，可以防止包中的方法无法索引到
+
  
