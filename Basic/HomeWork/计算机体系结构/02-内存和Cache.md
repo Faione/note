@@ -89,6 +89,7 @@ $$Average\ memory\ access\ time\ (AMAT) = Hit\ time + Miss\ rate * Miss\ penalty
 
 - Victim Cache
   - 一个小组相联备份Cache，添加到直接映射的缓存中，用于保存近期被替换出去的Cache行数据
+    - 被挤出来的Cache line就是 victim(受害者)
     - CPU首先查看直接映射的Cache
     - 缺失，则在victim cache中检擦
     - 如果victim cache命中，把L1当前行与victim cache中的命中行互换

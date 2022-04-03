@@ -57,3 +57,25 @@
 
 4. 针对本文我可以做哪些进一步的工作 
 
+
+
+## 阅读记录
+
+### Problem & Background
+
+
+
+### Challenges
+
+
+
+### State-of-the-arts
+
+
+
+### Key insights/ideas/techniques
+
+
+
+### Lessons learned from experiments
+
