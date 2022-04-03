@@ -35,7 +35,7 @@ $ kubectl logs deployment/test-1-core-simservice
 **log监控**
 
 - 通过索引获得容器的logs
-  - kubect logs
+  - kubectl logs
 
 **metric监控**
 
