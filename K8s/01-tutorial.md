@@ -36,11 +36,26 @@
 ### (1) minikube启动
 
 ```shell
+# 下载二进制文件
+$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+# 安装
+$ sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# 赋予当前用户docker权限(minikube不推荐使用root启动)
+$ sudo usermod -aG docker $USER && newgrp docker
+```
+
+- minikube启动成功后，会为当前用户创建 .kube 配置文件
+
+
+```shell
 # --image-mirror-country='cn' 自动选择国内的minikube镜像(配置打包在镜像中，而不是通过此命令配置仓库)
 # --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers' 配置内部docker的默认拉取仓库
 # --driver='docker' 默认会选择docker driver
 # $ minikube start --driver='docker' --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'
 
+# minikube start --image-mirror-country='cn' --insecure-registry=152.136.134.100:10048  设置虚拟机中的docker使用私有库
 $ minikube start --image-mirror-country='cn'
 
 # 停止, 不会改变minikube镜像(minikube中的配置不变)
@@ -51,6 +66,14 @@ $ minikube delete
 ```
 
 ### (2) 查看集群信息
+
+```shell
+# 下载kubectl二进制包
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+# 安装kubectl
+$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
 
 ```shell
 # 查看所有nodes

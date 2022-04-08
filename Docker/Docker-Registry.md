@@ -77,7 +77,7 @@ Error response from daemon: Get 39.101.140.145:5000/v1/_ping: http: server gave 
 ```shell
 # tee: 标准输入复制到每个指定文件，并显示到标准输出 
 $ tee /etc/docker/daemon.json << EOF
-{ "insecure-registries":["39.101.140.145:5000"] }
+{ "insecure-registries":["152.136.134.100:10048"] }
 EOF
 
 # $ systemctl daemon-reload
