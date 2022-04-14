@@ -49,3 +49,20 @@ $ kubectl --namespace monitoring port-forward --address=0.0.0.0 svc/grafana 3000
 ```shell
 $ kubectl --namespace monitoring port-forward --address=0.0.0.0 svc/alertmanager-main 9093
 ```
+
+
+## 调研
+
+- kube-prometheus组件
+  - The Prometheus Operator
+  - Highly available Prometheus
+  - Highly available Alertmanager
+  - Prometheus node-exporter
+  - Prometheus Adapter for Kubernetes Metrics APIs
+  - kube-state-metrics
+  - Grafana
+
+- 修改 Prometheus 镜像，使其默认发送数据到agent
+  - manager 通过数据的发送者来区分集群，分开数据的存储
+  - agent负责启动 kube-prometheus
+  - agent之间传递 jaeger collector 配置

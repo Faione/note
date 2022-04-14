@@ -35,3 +35,13 @@ systemd-cgtop
 - cpu quota
 
 
+### lib-cgroup 工具
+
+- 删除cgroup
+
+```shell
+$ cgdelete cpuset:mycgroup
+```
+
+- [memory](https://segmentfault.com/a/1190000008125359)
+
