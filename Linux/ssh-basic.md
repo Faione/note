@@ -34,12 +34,12 @@ Are you sure you want to continue connecting (yes/no)?
 ssh-keygen -t rsa -C "备注"
 ```
 
-|参数|说明|
-|-|-|
-|-t| type, -t rsa 表示采用rsa加密方式|
-|-b|密钥长度, -b 1024 表示采用1024bit的密钥，最大为4096|
-|-f| 生成的文件名, -f /home/fhl/keys, 表示生产密钥对keys在/home/fhl下 |
-|-C|备注, -C "备注"|
+| 参数 | 说明                                                             |
+| ---- | ---------------------------------------------------------------- |
+| -t   | type, -t rsa 表示采用rsa加密方式                                 |
+| -b   | 密钥长度, -b 1024 表示采用1024bit的密钥，最大为4096              |
+| -f   | 生成的文件名, -f /home/fhl/keys, 表示生产密钥对keys在/home/fhl下 |
+| -C   | 备注, -C "备注"                                                  |
 
 
 ### (2) 配置密钥登录
@@ -109,6 +109,21 @@ PasswordAuthentication no
 $ tail -f /var/log/auth.log
 ```
 
+- Centos 
+
+```shell
+$ tail -f /var/log/secure
+
+$ tail -f /var/log/message
+```
+
+- SElinux 拦截
+- [SElinux 阻止sshd读取用户的key](https://blog.csdn.net/lanxe/article/details/50739768)
+
+```shell
+# 对于 .ssh 文件夹
+$ restorecon -R -v .ssh
+```
 ssh登陆指定 port
 
 ```shell

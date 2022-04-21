@@ -21,7 +21,7 @@ $ kubectl apply -f manifests/
 - 问题
   - 无法拉取 "k8s.gcr.io/kube-state-metrics/kube-state-metrics:v1.9.8" 镜像
   - 解决
-    - 从 dockerhub 拉取镜像 "bitnami/kube-state-metrics:1.9.8"
+      - 从 dockerhub 拉取镜像 "bitnami/kube-state-metrics:1.9.8"
     - `docker tag bitnami/kube-state-metrics:1.9.8 k8s.gcr.io/kube-state-metrics/kube-state-metrics:v1.9.8`
 
 ## 使用
