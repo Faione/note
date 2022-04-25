@@ -9,6 +9,8 @@
 ```shell
 # 部署可监控的k8s集群
 $ minikube start --kubernetes-version=v1.23.0 --memory=6g --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'  --insecure-registry=152.136.134.100:10048
+
+$ minikube start --kubernetes-version=v1.23.0 --memory=6g --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'  --insecure-registry=152.136.134.100:10048 --nodes 3
 ```
 clone 项目
 
@@ -24,6 +26,17 @@ $ kubectl apply -f manifests/
       - 从 dockerhub 拉取镜像 "bitnami/kube-state-metrics:1.9.8"
     - `docker tag bitnami/kube-state-metrics:1.9.8 k8s.gcr.io/kube-state-metrics/kube-state-metrics:v1.9.8`
 
+```shell
+$ docker pull 152.136.134.100:10048/kube-state-metrics:1.9.8
+
+$ docker tag 152.136.134.100:10048/kube-state-metrics:1.9.8 k8s.gcr.io/kube-state-metrics/kube-state-metrics:v1.9.8
+```
+
+```shell
+$ docker pull v5cn/prometheus-adapter:v0.9.1
+
+$ docker tag v5cn/prometheus-adapter:v0.9.1 k8s.gcr.io/prometheus-adapter/prometheus-adapter:v0.9.1
+```
 ## 使用
 
 - 使用 k8s port-forward 将服务通过本机端口进行暴漏
