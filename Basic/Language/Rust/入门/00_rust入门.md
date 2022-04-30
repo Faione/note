@@ -1,5 +1,23 @@
 # Rust 入门
 
+
+## window安装
+
+**安装c++工具链**
+
+- 通过指示进行安装
+  - 选择 win11 SDK、编译器即可
+
+
+**通过环境变量配置安装路径**
+
+```
+# 可以配置为用户，也可以配置为系统
+CARGO_HOME = 
+RUSTUP_HOME = 
+```
+在 Path 中加入 cargo bin 路径
+
 ## 安装 rust 环境
 
 ```shell
@@ -139,7 +157,6 @@ $ cargo clean
   - build: 开发环境，快速build，方便debug
   - release: 生成环境，优化程序运行
     - benchmark时使用
-
 
 
 ## Cargo 问题
