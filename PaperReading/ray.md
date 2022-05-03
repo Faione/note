@@ -11,6 +11,7 @@
     - [Architecture](#architecture)
       - [Application Layer](#application-layer)
       - [System Layer](#system-layer)
+    - [Implementation](#implementation)
   - [Lessons learned from experiments](#lessons-learned-from-experiments)
 
 - 题目
@@ -19,6 +20,8 @@
   - Philipp Moritz
 - 会议
   - osdi18
+
+- [presentation](https://www.youtube.com/watch?v=oD6mvWpa1J4)
 
 ### Problem & Background
 
@@ -192,6 +195,51 @@
     - GCS 保存这些信息, 并转发给 global scheduler
     - 在接收到一个任务后，全局调度器使用来自每个节点的最新的加载信息以及任务输入的位置和大小(来自GCS的对象元数据)来决定将任务分配给哪个节点
   - 如果 global scheduler 出现瓶颈, 则可以实例化多个副本, 让 local scheduler 随机选择一个进行 task 的提交
+
+
+**In-Memory Distributed Object Store**
+
+- 存储每个task的 inputs 和 outputs
+  - 在每个节点上通过 共享内存 的方式实现object store
+  - 使用数据分析中的事实标准，一种高效的内存布局 Apache Arrow
+
+- 工作流程
+  - 如果一个 task 的 inputs 不是本地，则在task执行之前，inputs会被复制到与task相同的node的local object store 中
+  - task也会将所有的 outputs 写入 local object store 中
+  - 效果
+    - 使用复制防止 热数据 导致的潜在瓶颈
+    - task仅对本地数据进行读写，减少了执行时间
+
+- 与现有集群计算框架相同，只有不可变数据才会存储到 object store 中，同时为了实现简便，Ray中的 object store 并不支持分布式对象存储，每个要存储的对象适用于单节点
+  - 分布式对象存储在未来提供
+
+- 对象重建
+  - Ray通过谱系重执行的方式恢复丢失的Object
+  - 通过 stateful edges 将有状态对象加入计算图中，从而能够使用相同的机制对actor 与 remote function 进行对象重建
+    - 对于包含 stateful edges 的谱系，重建会要求重新构造actor
+      - 为了提高恢复速度，周期性的记录 actor 的检查点，并允许从检查点恢复 actor
+
+- 为了低延迟，对象完全保存在内存中，并根据需要使用最近最少使用的驱逐策略将它们驱逐到磁盘上
  
+ **Putting Everything Together**
+
+ - remote function 会被分发到每个节点上
+
+
+#### Implementation
+
+- Scheduler Performance
+  - local 与 global scheduler 的实现是事件驱动、单线程的进程
+- Object Store Performance
+  - Object Store 使用单线程事件循环进行实现
+  - 为了减少对象创建开销，Object Store预先分配了一个大型内存映射文件池
+  - 使用类似SIMD的内存拷贝来最大限度地提高将数据从worker的内存复制到Object Store的共享内存的吞吐量
+  - 并行化Object内容的hash过程，用来检测非确定性的计算
+  - 使用Apache Arrow库来达到序列化、反序列化python对象时的高性能
+- End-to-End System Performance
+  - 基于 object 与 task IDs 进行 GCS 表的分片，每个分片对应一个Redis存储，同时对每个分片进行复制以实现容错
+- Monitor
+  - Ray's monitor 追踪系统组件的存活性，并将组件的故障反馈给GCS
+  - 集群节点上出现故障的Task和Object会被标记为Lost，然后，根据需要，使用沿袭信息来重建Object
 
 ### Lessons learned from experiments
