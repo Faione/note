@@ -48,6 +48,8 @@ $ docker tag v5cn/prometheus-adapter:v0.9.1 k8s.gcr.io/prometheus-adapter/promet
 $ kubectl --namespace monitoring port-forward --address=0.0.0.0 svc/prometheus-k8s 9090
 ```
 
+./wrk -D exp -t 1 -c 1 -d 20 -L -s ./scripts/social-network/compose-post.lua http://10.107.118.78:8080/wrk2-api/post/compose -R 1
+
 **Grafana**
 
 - grafana 默认账户: admin, 默认密码: admin
@@ -63,6 +65,10 @@ $ kubectl --namespace monitoring port-forward --address=0.0.0.0 svc/grafana 3000
 $ kubectl --namespace monitoring port-forward --address=0.0.0.0 svc/alertmanager-main 9093
 ```
 
+
+## NameSpace删除
+
+- [apiservice失败导致apiserver卡死](https://cloud.tencent.com/developer/article/1802531)
 
 ## 调研
 

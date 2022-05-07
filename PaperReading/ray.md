@@ -29,6 +29,23 @@
 
 > 过去二十年中，许多组织收集并期望利用大量的数据，这促进了各式各样分布式数据分析框架的发展，如 batch、streaming、graph等数据处理系统，这些框架的成功使得组织进行大数据的分析成为可能，并引领了大数据时代
 
+
+- 机器学习生态
+  - Distributed Training
+    - Horovod、Distributed TF、Parameter Server
+  - Model Serving
+    - Clipper、TensorFlow Serving
+  - Streaming
+    - Flink
+  - Distributed RL
+    - Baselines、RLlab、ELF、Coach、TensorForce、ChainerRL
+  - Data Processing
+    - MapReduce、Hadoop、Spark
+  - Hyperparameter Search
+    - Vizier
+- 这些组成部分都实现为相互独立的分布式系统，这对于需要使用多个部分的AI应用来说是一个挑战，因为需要为每个部分分别搭建相应的分布式系统
+- ray则提供了一个通用的底层分布式系统，并在此基础上，支持了以上各种计算模式
+
 - 强化学习
   - 机器学习应用程序必须越来越多地在动态环境中运行，对环境的变化做出反应，并采取一系列行动，而不是只提供单一的预测
   - 强化学习就是用来处理在不确定环境中学习以能够持续操作的框架
@@ -243,3 +260,66 @@
   - 集群节点上出现故障的Task和Object会被标记为Lost，然后，根据需要，使用沿袭信息来重建Object
 
 ### Lessons learned from experiments
+
+
+```python
+
+def zeros(shape):
+    return np.zeros(shape)
+
+
+def dot(a, b):
+    return np.dot(a, b)
+
+m1 = zeros([5, 5])
+m2 = zeros([5, 5])
+m3 = dot(m1, m2)
+
+```
+
+```python
+@ray.remote
+def zeros(shape):
+    return np.zeros(shape)
+
+@ray.remote
+def dot(a, b):
+    return np.dot(a, b)
+
+id1 = zeros.remote([5, 5])
+id2 = zeros.remote([5, 5])
+id3 = dot.remote(id1, id2)
+
+```
+
+```python
+
+class Counter(object):
+    def __init__(self):
+        self.value = 0
+    def increment(self):
+        self.value += 1
+        return self.value  
+
+c = Counter()
+ct1 = c.increment()
+ct2 = c.increment()
+
+
+```
+
+```python
+@ray.remote(num_gpus=1)
+class Counter(object):
+    def __init__(self):
+        self.value = 0
+    def increment(self):
+        self.value += 1
+        return self.value  
+
+c = Counter.remote()
+id1 = c.increment.remote()
+id2 = c.increment.remote()
+ray.get([id1, id2])
+
+```
