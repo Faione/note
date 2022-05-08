@@ -11,7 +11,8 @@
 - [load Accumulator](https://www.nesdev.org/obelisk-6502-guide/reference.html#LDA)
 
 - 功能
-  - 修改寄存器 accumulator
+  - 从指定地址读取值到寄存器 accumulator
+  - 修改 寄存器A 的值
   - 修改状态 `Z` `N`
     - 符合条件置 `1`
     - 反之置 `0`
@@ -25,6 +26,11 @@
       - 掩码为 `1` 不会产生任何影响
       - 掩码为 `0` 处置0
 
+## 指令 STA
+
+- 将寄存器 accumulator 存储到指定地址
+
+ 
 ## 指令 BRK
 
 - 中断程序的执行
@@ -44,4 +50,3 @@
 self.register_x = self.register_x.wrapping_add(1);
 ```
 
-- [continue](https://bugzmanov.github.io/nes_ebook/chapter_3_1.html)
