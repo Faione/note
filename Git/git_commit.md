@@ -10,3 +10,6 @@ perf: 优化相关，如提升性能、用户体验等。
 test: 测试用例，包括单元测试、集成测试。
 chore: 改变构建流程、或者增加依赖库、工具等。
 revert: 版本回滚
+
+
+- [免密码push](https://www.cnblogs.com/marblemm/p/7993194.html)
