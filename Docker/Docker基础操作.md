@@ -85,3 +85,17 @@ $ docker ps -a | awk '/key_word/{print $1}'
 # docker rm `docker ps -a|grep Exited|awk '{print $1}'`
 $ docker ps -a|grep Exited|awk '{print $1}'
 ```
+
+## 七、查看已终止容器的log信息
+
+- 容器状态为`stop`
+
+```shell
+# 获得容器id
+$ docker ps -a | grep <target>
+
+# 查看容器信息, 找到 LogPath
+$ docker inspect <containerID>
+
+$ cat <logpath>
+```
