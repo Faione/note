@@ -145,7 +145,7 @@
 - 计算图
   - Node
     - data objects、task
-  - Edge
+  - Edge 
     - data edges, control edges(task之间), stateful edge(actor，捕获调用顺序)
       - 引入 stateful edge
         - 方便将Actor嵌入无状态的计算图中
