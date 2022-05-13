@@ -96,5 +96,3 @@ pub enum AddressingMode {
 - Indirect Y
   - 指令中指定 8 位常量，是数据地址的地址的低有效位，与寄存器Y的和作为数据的地址
 
-
-- [continue](https://bugzmanov.github.io/nes_ebook/chapter_3_1.html)
