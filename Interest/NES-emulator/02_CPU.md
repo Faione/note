@@ -50,3 +50,10 @@
 self.register_x = self.register_x.wrapping_add(1);
 ```
 
+## 指令ADC
+
+- Add with Carry
+  - 将内存中的值，与进位值相加
+
+
+
