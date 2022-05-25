@@ -42,7 +42,7 @@ containers:
       JAEGER_AGENT_PORT: ""
       JAEGER_AGENT_HOST: ""
       PARENT_HOST: ""
-	  PARENT_PORT: ""
+	    PARENT_PORT: ""
     cmd:
     - /bin/bash
     - /root/boot.sh
