@@ -28,8 +28,10 @@ docker cp /usr/share/zoneinfo/Asia/Shanghai <containerId>:/etc/localtime
 
 使用docker image进行构建  
 
-配置文件
+配置文件: config.json
+
 ```json
+{
 "inbounds": [
    {
       "port": 4396, 

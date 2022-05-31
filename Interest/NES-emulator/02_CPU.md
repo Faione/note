@@ -6,6 +6,12 @@
 
 - 取指、译码
 
+## 相关crate
+
+- bitflags
+  - 进行比特位的操作
+    - 设置bit位、判断bit位
+
 ## 指令 LDA
 
 - [load Accumulator](https://www.nesdev.org/obelisk-6502-guide/reference.html#LDA)
@@ -53,7 +59,13 @@ self.register_x = self.register_x.wrapping_add(1);
 ## 指令ADC
 
 - Add with Carry
-  - 将内存中的值，与进位值相加
+  - 将内存中的值，寄存器A中的值，与进位相加
+  - 如果发生溢出，则设置进位
+  - 用来进行多byte的加法
+
+
+- [6502 加法规则](http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html)
+- [6502 溢出规则](http://www.righto.com/2013/01/a-small-part-of-6502-chip-explained.html)
 
 
 
