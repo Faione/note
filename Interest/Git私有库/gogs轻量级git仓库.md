@@ -16,7 +16,8 @@ services:
     mariadb:
         image: "mariadb:latest"
         enviroment:
-            - "MARIADB_USER=fhl"
+            # - MARIADB_DATABASE=gromtest // 默认创建的database, 用户 MARIADB_USER 能获得此数据库的全部权限
+            - "MARIADB_USER=fhl" 
             - "MARIADB_PASSWORD=123456"
             - "MARIADB_ROOT_PASSWORD=123456"
 ```
