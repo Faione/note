@@ -100,3 +100,7 @@ $ docker inspect <containerID>
 
 $ cat <logpath>
 ```
+
+
+# 赋予当前用户docker权限(minikube不推荐使用root启动)
+$ sudo usermod -aG docker $USER && newgrp docker
