@@ -45,3 +45,8 @@
 - 非原生可观测性
   - prometheus、vector
 - 可观测性标签 
+
+
+- agent prometheus 优化
+  - 复制规则
+  - 配置remote write过滤
