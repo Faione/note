@@ -12,6 +12,13 @@ $ minikube start --kubernetes-version=v1.23.0 --memory=6g --bootstrapper=kubeadm
 
 $ minikube start --kubernetes-version=v1.23.0 --memory=6g --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'  --insecure-registry=152.136.134.100:10048 --nodes 3
 ```
+
+- 不允许master调度
+
+```shell
+$ kubectl taint node k8s-master node-role.kubernetes.io/master="":NoSchedule
+```
+
 clone 项目
 
 ```shell

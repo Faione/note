@@ -94,6 +94,18 @@ $ vi /etc/sudoers
 add -> fhl   ALL=(ALL:ALL) ALL
 ```
 
+- CentOS
+
+```
+usermod -aG wheel username
+```
+
+- Ubuntu
+
+```
+usermod -aG sudo username
+```
+
 ### (2) 文件权限
 
 所有权变更
