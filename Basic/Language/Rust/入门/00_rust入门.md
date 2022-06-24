@@ -40,6 +40,32 @@ $ rustup self uninstall
 - vscode
   - 安装 rust 扩展，并自动安装相应的工具
 
+**cargo清华源**
+
+- 新增或修改 `~/.cargo/config`
+
+- 中科大源
+
+```toml
+[source.crates-io]
+registry = "https://github.com/rust-lang/crates.io-index"
+replace-with = 'ustc'
+[source.ustc]
+registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+```
+
+- 清华源
+
+```toml
+[source.crates-io]
+replace-with = 'tuna'
+
+[source.tuna]
+registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+```
+
+
+
 ## Hello World
 
 **编译**
