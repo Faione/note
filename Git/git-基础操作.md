@@ -9,6 +9,8 @@
   - [三、远程管理](#三远程管理)
     - [(1) 简介](#1-简介-1)
     - [(2) 命令](#2-命令-2)
+  - [四、常用开发](#四常用开发)
+    - [(1) bug fix/refactor 分支](#1-bug-fixrefactor-分支)
 
 
 ## 一、分支管理
@@ -174,6 +176,43 @@ pull操作提供了更简介的本地-远程分支合并操作
 ```shell
 $ git pull origin <远程分支名>
 ```
+
+## 四、常用开发
+
+- 查看当前所有分支
+
+```
+$ git branch -a
+```
+
+### (1) bug fix/refactor 分支
+
+- 构造工作分支
+
+```
+$ git checkout -b refactor
+```
+
+- 进行相关工作
+
+```
+$ git add .
+$ git commit -m"finish refactor"
+```
+
+- Rebase 分支
+
+```
+# 在工作分支上
+$ git rebase targetbranch
+
+# 在目标分支上
+$ git rebase refactor
+
+# 删除工作分支
+$ git branch -d refactor
+```
+
 
 
 
