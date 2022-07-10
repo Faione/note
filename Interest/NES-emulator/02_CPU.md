@@ -67,5 +67,21 @@ self.register_x = self.register_x.wrapping_add(1);
 - [6502 加法规则](http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html)
 - [6502 溢出规则](http://www.righto.com/2013/01/a-small-part-of-6502-chip-explained.html)
 
+## 指令AND
 
+- Logical AND运算
+  - 读出一个内存值，与寄存器A中的值按位与
+  - 将结果写入寄存器A中
+
+## 指令ASL
+
+- Arithmetic Shift Left
+  - 将寄存器A或内存中的值左移1一个bit
+  - bit `0` 设为 `0`, bit `7` 放置在 carry flag 中
+
+## 指令BCC
+
+- Branch if Carry Clear
+  - 如果carry flag未使能，则向当前PC增加一个偏移
+  - 使得程序执行流跳转至新的位置
 
