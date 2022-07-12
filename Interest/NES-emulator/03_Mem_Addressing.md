@@ -1,5 +1,6 @@
 # Memory addressing model
 
+- [easy 6502](https://skilldrick.github.io/easy6502/#addressing)
 - 指令与数据都存储在内存中，CPU并不能区分两者的区别，但能够通过 program_counter 寄存器追踪指令流中的位置
 
 ![Memory](./img/2022-05-08-09-18-05.png)
@@ -57,6 +58,8 @@ pub enum AddressingMode {
 }
 ```
 
+- 注意，使用完一个地址后，pc都应当发生变化
+
 - Immediate
   - 立即数寻址: 在指令中直接指定一个 8 位操作数
     - 考虑一次只读取一个字节，因此当前 `pc` 即是该数据的地址 
@@ -74,8 +77,8 @@ pub enum AddressingMode {
     - 从当前`pc`处读出该常量，并与寄存器X求和，即可得到数据的地址
 
 - Relative
-  - 指令中指定一个 8 为常量作为偏移，此偏移与 pc 的和作为数据的地址
-    - 从当前`pc`处读出该常量，与pc求和
+  - 指令中指定一个 8 位常量作为偏移，此偏移与 pc 的和作为数据的地址
+    - 从当前`pc`处读出该常量，与当前pc求和
 
 - Absolute
   - 指令中指定 16 位地址

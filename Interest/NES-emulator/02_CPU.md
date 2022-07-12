@@ -79,9 +79,19 @@ self.register_x = self.register_x.wrapping_add(1);
   - 将寄存器A或内存中的值左移1一个bit
   - bit `0` 设为 `0`, bit `7` 放置在 carry flag 中
 
-## 指令BCC
+## Branch指令
 
-- Branch if Carry Clear
+- BCC - Branch if Carry Clear
   - 如果carry flag未使能，则向当前PC增加一个偏移
   - 使得程序执行流跳转至新的位置
+  - 此时pc指向偏移量的地址，取出偏移后，pc应当+1, 因此，jump的地址应当为 pc + offset + 1 
+
+- BCS - Branch if Carry Set
+- BEQ - Branch if Equal
+- BNE - Branch if Not Equal
+- BMI - Branch if Minus
+- BPL - Branch if Positive
+- BVC - Branch if Overflow Clear
+- BVS - Branch if Overflow Set
+  
 
