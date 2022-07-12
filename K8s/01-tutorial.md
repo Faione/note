@@ -126,12 +126,16 @@ kubectl exec -it <podname> -- bash
 
 ### 四、暴露Service
 
+- [service docs](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 - Kubernetes 的 Service 是一个抽象层，它定义了一组 Pod 的逻辑集，并为这些 Pod 支持外部流量暴露、负载平衡和服务发现
 - Service 允许您的应用程序接收流量。Service 也可以用在 ServiceSpec 标记type的方式暴露
   - ClusterIP (默认)
     - 在集群的内部 IP 上公开 Service 。这种类型使得 Service 只能从集群内访问。
   - NodePort
     - 使用 NAT 在集群中每个选定 Node 的相同端口上公开 Service 。使用<NodeIP>:<NodePort> 从集群外部访问 Service。是 ClusterIP 的超集。
+    - 访问NodePort -> Service Port -> Pod Port
+    - service处显示为 ServicePort:NodePort
   - LoadBalancer
     - 在当前云中创建一个外部负载均衡器(如果支持的话)，并为 Service 分配一个固定的外部IP。是 NodePort 的超集。
   - ExternalName
