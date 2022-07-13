@@ -53,4 +53,66 @@
   - restart 容器
   - 配置导入，容器重载配置
 
+### kubevirt工作流
+
+
+**创建虚拟机**
+
+```plantuml
+@startuml
+skinparam roundCorner 25
+skinparam responseMessageBelowArrow true
+
+participant SDK as f1
+participant agent as f2
+participant k8s as f3
+participant kubevirt as f4
+
+f1    ->     f2  : 请求创建虚拟机
+f2    ->     f2  : 提取yaml
+f2    ->     f3  : 发送apply yaml命令
+f2    ->     f2  : 等待虚拟机创建
+f2    ->     f4  : 启动虚拟机实例
+f2    ->     f2  : 判断是否暴露
+f2    ->     f4  : 发送端口暴露命令
+f2    -->    f1  : 返回结果
+@enduml
+```
+
+**连接虚拟机**
+
+```plantuml
+@startuml
+skinparam roundCorner 25
+skinparam responseMessageBelowArrow true
+
+participant SDK as f1
+participant agent as f2
+participant kubevirt as f3
+
+f1    ->     f2  : 请求连接
+f2    ->     f3  : 发送端口暴露命令
+@enduml
+```
+
+**删除虚拟机**
+
+```plantuml
+@startuml
+skinparam roundCorner 25
+skinparam responseMessageBelowArrow true
+
+participant SDK as f1
+participant agent as f2
+participant k8s as f3
+participant kubevirt as f4
+
+f1    ->     f2  : 请求删除虚拟机
+f2    ->     f2  : 提取yaml
+f2    ->     f4  : 关闭虚拟机实例
+f2    ->     f2  : 等待虚拟机实例关闭
+f2    ->     f3  : 删除namespace
+@enduml
+```
+
 
