@@ -93,5 +93,25 @@ self.register_x = self.register_x.wrapping_add(1);
 - BPL - Branch if Positive
 - BVC - Branch if Overflow Clear
 - BVS - Branch if Overflow Set
+
+## BIT指令
+
+- Bit test
+  - 测试在目标内存位置，一个或多个bit位是否被设置
+  - 寄存器A中的值作为掩码，与目标内存位置的值相与
+  - 结果中的第7位和第6位复制到N、V中
+    - 位数从右往左编码
+  - 结果并不保存
+  - 影响Z、V、N的值
+
+## CLEAR && SET FLAGS指令
+
+- CLC - Clear Carry Flag
+- CLD - Clear Decimal Mode
+- CLI - Clear Interrupt Disable
+- CLV - Clear Overflow Flag
+- SEC - Set Carry Flag
+- SED - Set Decimal Flag
+- SEI - Set Interrupt Disable
   
 
