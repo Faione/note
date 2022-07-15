@@ -114,4 +114,22 @@ self.register_x = self.register_x.wrapping_add(1);
 - SED - Set Decimal Flag
 - SEI - Set Interrupt Disable
   
+## Compare指令
 
+- CMP - Compare
+  - 将内存中的值与寄存器A中的值进行比较
+- CPX - Compare X Register
+  - 将内存中的值与寄存器X中的值进行比较
+- CPY - Compare Y Register
+  - 将内存中的值与寄存器Y中的值进行比较
+- 影响C、Z、N的值
+  - 计算`A-M`的结果，并进行Z、N的设置
+    - 使用`wrapping_sub`
+  - 如果`A>=M`，则将C置为1
+
+## Decrement Memory指令
+
+- DEC - Decrement Memory
+  - 将指定内存中的值减去1
+  - 影响Z、N
+      
