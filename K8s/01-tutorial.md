@@ -10,6 +10,7 @@
     - [五、运行应用的多个实例](#五运行应用的多个实例)
     - [六、应用更新](#六应用更新)
     - [七、配置Java微服务](#七配置java微服务)
+    - [八、k8s dashboard](#八k8s-dashboard)
     - [问题与理解](#问题与理解)
   - [理解](#理解)
   - [问题汇总](#问题汇总)
@@ -202,6 +203,61 @@ $ kubectl rollout undo deployments/kubernetes-bootcamp
 ```
 
 ### 七、配置Java微服务
+
+### 八、k8s dashboard
+
+**配置k8s dashboard**
+
+- [set up k8s dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
+
+
+```shell
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+```
+
+**创建用户及token获取**
+
+- `kubectl apply` 创建用户及角色
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+- 生成当前的token
+
+
+```shell
+$ kubectl -n kubernetes-dashboard create token admin-user
+```
+
+**frp反向代理**
+
+- 使用`host`模式启动frpc容器
+  - 反向代理dashboard前端的`clusterIp`与`port`
+
+- `forbidden`
+  - 修改`http`为`https`方式
+
+
 
 ### 问题与理解
 

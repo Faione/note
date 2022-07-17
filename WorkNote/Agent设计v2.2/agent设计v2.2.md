@@ -53,7 +53,12 @@
   - restart 容器
   - 配置导入，容器重载配置
 
-### kubevirt工作流
+### agent接入kubevirt
+
+**初始环境准备**
+
+- kubevirt环境
+- webssh
 
 
 **创建虚拟机**
@@ -89,9 +94,17 @@ skinparam responseMessageBelowArrow true
 participant SDK as f1
 participant agent as f2
 participant kubevirt as f3
+participant k8s as f4
 
 f1    ->     f2  : 请求连接
 f2    ->     f3  : 发送端口暴露命令
+f3    ->     f3  : 解析命令
+f3    ->     f4  : 创建service
+f2    ->     f4  : 查看service
+f4    -->    f2  : 返回service信息
+f2    ->     f2  : 拼接webssh链接
+f2    -->    f1  : 返回相关信息
+
 @enduml
 ```
 
