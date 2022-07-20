@@ -128,4 +128,15 @@ f2    ->     f3  : 删除namespace
 @enduml
 ```
 
+## 三、重构
 
+### 目录结构
+
+- 增加 api 目录，原有server迁入apiserver
+  - api目录中增加dto数据定义
+
+### RPC Client重构思路
+
+- 提供清晰的接口
+- 内部封装为RPC请求
+- 使用统一的底层RPC Client
