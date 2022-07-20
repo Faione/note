@@ -11,6 +11,7 @@
     - [(2) 命令](#2-命令-2)
   - [四、常用开发](#四常用开发)
     - [(1) bug fix/refactor 分支](#1-bug-fixrefactor-分支)
+    - [(2) 设置远程仓库](#2-设置远程仓库)
 
 
 ## 一、分支管理
@@ -213,10 +214,39 @@ $ git rebase refactor
 $ git branch -d refactor
 ```
 
+### (2) 设置远程仓库
 
+- 全局设置
 
+```shell
+git config --global user.name "Fhl"
+git config --global user.email "1287481902@qq.com"
+```
 
+- 创建git仓库
 
+```shell
+mkdir test
+cd test
+git init 
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/gitee_rubbish/test.git
+git push -u origin "master"
+```
+
+- 已有仓库
+
+```shell
+cd existing_git_repo
+git remote add origin https://gitee.com/gitee_rubbish/test.git
+git push -u origin "master"
+
+# 如仓库进行了初始化而非空仓库时
+git pull --rebase origin master
+git push -u origin "master"
+```
 
 
 
