@@ -94,3 +94,9 @@
 
 ### 为CPU增加Trace
 
+- first column
+  - program counter
+- second column
+
+
+### 使用 test.nes 与 test.log
