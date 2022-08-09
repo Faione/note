@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frpc-config
+  namespace: minikube-frpc
+data:
+  frpc.ini: |
+    [common]
+    server_addr = 39.101.140.145
+    server_port = 7000
+    [prometheus-minikube]
+    local_ip = 10.109.226.133
+    local_port = 9090
+    remote_port = 49998
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frpcd
+  namespace: minikube-frpc
+spec:
+  containers:
+    - name: frp-client
+      image: snowdreamtech/frpc:latest
+      imagePullPolicy: Always
+      volumeMounts:
+        - mountPath: /etc/frp/
+          name: config
+  volumes:
+    - name: config
+      configMap:
+        name: frpc-config
+        items:             
+        - key: frpc.ini             
+          path: frpc.ini

@@ -30,5 +30,4 @@ services:
             - "6832:6832/udp"
             - "5778:5778"
         command: ["--reporter.grpc.host-port=10.16.0.180:14250"]
-        
-        
+

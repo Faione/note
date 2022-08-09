@@ -1,0 +1,11 @@
+# docker run --restart=always --network host -d -v /home/docker/frp/frpc.ini:/etc/frp/frpc.ini --name frpc snowdreamtech/frpc
+
+version: "3"
+services:
+  frpc:
+    image: "snowdreamtech/frpc"
+    container_name: frpc-minikube
+    network_mode: host
+    restart: always
+    volumes:
+      - ./frpc.ini:/etc/frp/frpc.ini
