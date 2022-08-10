@@ -52,3 +52,13 @@ mod tests {
     }
 }
 ```
+
+## 控制Tests的执行
+
+- 默认情况下，cargo test 以多线程的方式运行Test
+  - 需要注意Test之间的依赖
+  - 可以设置线程数为`1`, 从而让Test串行
+
+```shell
+$ cargo test -- --test-threads=1
+```
