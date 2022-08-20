@@ -1,260 +1,3 @@
-# Yaml 配置文件
-
-## 特殊符号
-
-- `|` 保留文本每行尾部的换行符，而 `>` 则会将所有的换行符视为空格
-  - 当 value 为多行文本时
-
-```
-include_newlines: |
-            exactly as you see
-            will appear these three
-            lines of poetry
-
-fold_newlines: >
-            this is really a
-            single line of text
-            despite appearances
-```
-
-- `|+` 在保留文本每行尾部的换行符的同时，还保留结尾行的换行符
-- `|-` 在保留文本每行尾部的换行符的同时，去除结尾行的换行符
-
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: agent-config
-  namespace: gluenet-test1
-data:
-  agent_config.toml: |
-    [host]
-    [host.tags]
-
-    [agent]
-    area = "210018"
-    role = "other"
-    platform = "kubernetes"
-
-    [driver]
-    [driver.rpc]
-    rpc_config = "nats://39.101.140.145:4222"
-    [driver.helm]
-    kube_path = "/kube/config"
-    repo_name = "gluerepo"
-    repo_url = "http://39.101.140.145:30028"
-    [driver.k8s]
-    kube_path = "/kube/config"
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gluenet-agent-deployment
-  namespace: gluenet-test1
-spec:
-  selector:
-    matchLabels:
-      pod: gluenet-agent-pod
-  replica: 1
-  template:
-    metadata:
-      name: gluenet-agent
-      namespace: gluenet-test1
-      labels:
-        pod: gluenet-agent-pod
-    spec:
-      nodeName: worker1.okd.example.com
-      containers:
-        - name: gluenet-agent
-          image: gluenet/agent:0.4
-          imagePullPolicy: Always
-          env:
-            - name: HOST_NAME
-              value: other_cluster
-            - name: GLUENET_CONFIG_ROOT
-              value: /kube/k8s
-          command:
-            - "/app/agent"
-            - "--agent.config.path=/etc/agent/agent_config.toml"
-          volumeMounts:
-            - mountPath: /etc/agent/
-              name: agentconfig
-            - mountPath: /kube/
-              name: kubeconfig
-      volumes:
-        - name: agentconfig
-          configMap:
-            name: agent-config
-            items:             
-            - key: agent_config.toml             
-              path: agent_config.toml
-        - name: kubeconfig
-          persistentVolumeClaim:
-            claimName: config
-```
-
-
-``` yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: prometheus-config
-  namespace: gluenet-test1
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-      evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
-    rule_files:
-    - "/prometheus/rules/*.yml"
-    scrape_configs:
-    remote_write:
-    - url: "http://gluenet-transfer-svc:10099/v2/apis/agent/metric/write"
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: prometheus-rules
-  namespace: gluenet-test1
-data:
-  rules.yml: |
-    groups:
-    - name: user1
-      rules:
-      - alert: cpu_usage_too_hight
-        expr: |
-          sum(metrics{label="tcp_open_total"}) by (container) > 100
-        labels:
-          labels: "test"
-        annotations:
-          summary: "服务 {{ $labels.app_guid }} 下线了"
-          description: "{{ $labels.app_guid }} of job {{ $labels.container }} has been down for more than 1 minutes."
-      - alert: cpu_usage_too_low
-        expr: |
-          sum(metrics{label="tcp_open_total"}) by (container) > 100
-        labels:
-          labels: "test"
-        annotations:
-          summary: "服务 {{ $labels.app_guid }} 下线了"
-          description: "{{ $labels.app_guid }} of job {{ $labels.container }} has been down for more than 1 minutes."
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: glue-stream-prom
-  namespace: gluenet-test1
-  labels:
-    app: glue-stream-prom
-spec:
-  nodeName: worker1.okd.example.com
-  containers:
-    - name: prometheus
-      image: "prom/prometheus:latest"
-      args:
-        - --web.enable-remote-write-receiver
-        - --web.enable-lifecycle
-        - --config.file=/prometheus/config/prometheus.yml
-        - --storage.tsdb.path=/prometheus/data/prom
-      ports:
-        - containerPort: 9090
-          name: prometheus
-      volumeMounts:
-        - mountPath: /prometheus/config/prometheus.yml
-          name: prometheus-config
-          subPath: prometheus.yml
-        - mountPath: /prometheus/rules
-          name: prometheus-rules
-          subPath: rules.yml
-        - mountPath: /prometheus/data/
-          name: kubeconfig
-  volumes:
-    - configMap:
-        name: prometheus-config
-      name: prometheus-config
-    - configMap:
-        name: prometheus-rules
-      name: prometheus-rules
-    - name: kubeconfig
-      persistentVolumeClaim:
-        claimName: config
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-service
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 10000
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: gluenet-transfer
-  labels:
-    app.kubernetes.io/component: gluenet-transfer
-    app.kubernetes.io/name: gluenet-transfer
-    app.kubernetes.io/part-of: kube-prometheus
-    app: gluenet-transfer
-  namespace: gluenet-test1
-spec:
-  containers:
-    - name: glue-transfer
-      image: gluenet/transfer:0.1
-      imagePullPolicy: IfNotPresent
-      ports:
-        - containerPort: 10099
-      env:
-        - name: RPC_CONFIG
-          value: "nats://39.101.140.145:4222"
-        - name: PUSH_TOPIC
-          value: "guid.manager:rpc.apis.data.metrics.push"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gluenet-transfer-svc
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-  - name: gluenet-transfer
-    protocol: TCP
-    port: 10099
-    targetPort: 10099
-  selector:
-    app: gluenet-transfer
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-frontend
-  namespace: gluenet-test1
-spec:
-  type: NodePort
-  ports:
-    - name: http
-      port: 55555
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
-```
-
-
-```
-    remoteWrite:
-    - url: "http://glue-stream-prom-service.gluenet-test1:10000/api/v1/write"
-```
-
-``` yaml
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -286,7 +29,7 @@ data:
       # machine cluster-总和 ，前端的判断标志：当host_name: "*" 为总和
         # 1. machine-cpu总和,单位：%
           - expr: |
-              sum( clamp_max(clamp_min(1 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[1m]))),0),1) * on (instance) label_replace(machine_cpu_cores,"instance","$1","node","(.+)")) * 100 / sum(machine_cpu_cores)
+              sum( clamp_max(clamp_min(1 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[1m]))),0),1) * on (instance) label_replace(machine_cpu_cores{prometheus_replica="prometheus-k8s-0"},"instance","$1","node","(.+)")) * 100 / sum(machine_cpu_cores{prometheus_replica="prometheus-k8s-0"})
             labels:
               organize: "gluenets"
               platform: "kubernetes"
@@ -634,42 +377,42 @@ data:
               label: "application_status_information"
             record: "status"
       #其他
-          - expr: |
-              sum(label_replace(kubelet_node_name,"host_name","$1","node","(.+)")) by (host_name)
-            labels:
-              organize: "gluenets"
-              platform: "kubernetes"
-              object: "machine"
-              agent_guid: "AGENT_GUID"
-              label:  "agent_hosts"
-            record: "info"
-          - expr: |
-              sum(label_replace(label_replace((kube_pod_container_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz",container!~"linkerd-proxy"}) + on (pod,namespace) group_left(node)(0 * kube_pod_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz"}),"application_guid","$1","namespace","(.+)"),"host_name","$1","node","(.+)")) without(uid,job,instance,image_id,image_spec,namespace,node)
-            labels:
-              organize: "gluenets"
-              platform: "kubernetes"
-              object: "application"
-              agent_guid: "AGENT_GUID"
-              label: "instance_containers"
-            record: "info"
-          - expr: |
-              sum(label_replace((kube_pod_container_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz",container!~"linkerd-proxy"} + on (pod,namespace) group_left(host_name)(0 * label_replace(kube_pod_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz"},"host_name","$1","node","(.+)"))),"application_guid","$1","namespace","(.+)")) without(uid,job,instance,image_id,image_spec,namespace)
-            labels:
-              organize: "gluenets"
-              platform: "kubernetes"
-              object: "machine"
-              agent_guid: "AGENT_GUID"
-              label: "agent_containers"
-            record: "info"
-          - expr: |
-              sum(label_replace(kube_pod_container_info{container!~"linkerd-proxy"},"application_guid","$1","namespace","(.+)"))by(container,application_guid,pod,image,container_id)
-            labels:
-              organize: "gluenets"
-              platform: "kubernetes"
-              object: "application"
-              agent_guid: "AGENT_GUID"
-              label: "container_info"
-            record: "info"
+          # - expr: |
+          #     sum(label_replace(kubelet_node_name,"host_name","$1","node","(.+)")) by (host_name)
+          #   labels:
+          #     organize: "gluenets"
+          #     platform: "kubernetes"
+          #     object: "machine"
+          #     agent_guid: "AGENT_GUID"
+          #     label:  "agent_hosts"
+          #   record: "info"
+          # - expr: |
+          #     sum(label_replace(label_replace((kube_pod_container_info{prometheus_replica="prometheus-k8s-0",namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz",container!~"linkerd-proxy"}) + on (pod,namespace) group_left(node)(0 * kube_pod_info{prometheus_replica="prometheus-k8s-0",namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz"}),"application_guid","$1","namespace","(.+)"),"host_name","$1","node","(.+)")) without(uid,job,instance,image_id,image_spec,namespace,node)
+          #   labels:
+          #     organize: "gluenets"
+          #     platform: "kubernetes"
+          #     object: "application"
+          #     agent_guid: "AGENT_GUID"
+          #     label: "instance_containers"
+          #   record: "info"
+          # - expr: |
+          #     sum(label_replace((kube_pod_container_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz",container!~"linkerd-proxy"} + on (pod,namespace) group_left(host_name)(0 * label_replace(kube_pod_info{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz"},"host_name","$1","node","(.+)"))),"application_guid","$1","namespace","(.+)")) without(uid,job,instance,image_id,image_spec,namespace)
+          #   labels:
+          #     organize: "gluenets"
+          #     platform: "kubernetes"
+          #     object: "machine"
+          #     agent_guid: "AGENT_GUID"
+          #     label: "agent_containers"
+          #   record: "info"
+          # - expr: |
+          #     sum(label_replace(kube_pod_container_info{container!~"linkerd-proxy"},"application_guid","$1","namespace","(.+)"))by(container,application_guid,pod,image,container_id)
+          #   labels:
+          #     organize: "gluenets"
+          #     platform: "kubernetes"
+          #     object: "application"
+          #     agent_guid: "AGENT_GUID"
+          #     label: "container_info"
+          #   record: "info"
           - expr: |
               sum(label_replace(kube_pod_container_status_ready{namespace!~"default|monitoring|kube-system|linkerd|linkerd-viz",container!~"linkerd-proxy"},"application_guid","$1","namespace","(.+)")) without(uid,job,instance,namespace)
             labels:
@@ -751,7 +494,7 @@ spec:
         - mountPath: /prometheus/config/prometheus.yml
           name: prometheus-config
           subPath: prometheus.yml
-        - mountPath: /prometheus/rules
+        - mountPath: /prometheus/rules/rules.yml
           name: prometheus-rules
           subPath: rules.yml
         - mountPath: /prometheus/data/
@@ -832,4 +575,3 @@ spec:
       targetPort: 9090
   selector:
     app: glue-stream-prom
-```

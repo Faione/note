@@ -15,6 +15,30 @@ $ minikube start --kubernetes-version=v1.23.0 --memory=6g --bootstrapper=kubeadm
 minikube start --kubernetes-version=v1.23.0 --cpus=4 --memory=6g --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --image-mirror-country='cn'  --insecure-registry=39.101.140.145:10048 --nodes 4
 ```
 
+```shell
+#! /bin/bash
+
+K8S_VERSION=v1.23.0
+
+NODEs=4
+# per node
+CPUs=4
+MEMORY=6g
+
+# for gluenet
+INSECURE_REGISTRY=39.101.140.145:10048
+
+
+minikube start \
+--kubernetes-version=$K8S_VERSION \
+--cpus=$CPUs \
+--memory=$MEMORY \
+--nodes $NODEs \
+--bootstrapper=kubeadm \
+--image-mirror-country='cn' \
+--insecure-registry=$INSECURE_REGISTRY \
+```
+
 
 - 不允许master调度
 

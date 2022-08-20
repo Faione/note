@@ -1,0 +1,737 @@
+Name:         k8s
+Namespace:    openshift-monitoring
+Labels:       app.kubernetes.io/component=prometheus
+              app.kubernetes.io/instance=k8s
+              app.kubernetes.io/name=prometheus
+              app.kubernetes.io/part-of=openshift-monitoring
+              app.kubernetes.io/version=2.32.1
+Annotations:  <none>
+API Version:  monitoring.coreos.com/v1
+Kind:         Prometheus
+Metadata:
+  Creation Timestamp:  2022-08-01T06:39:20Z
+  Generation:          1
+  Managed Fields:
+    API Version:  monitoring.coreos.com/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .:
+          f:app.kubernetes.io/component:
+          f:app.kubernetes.io/instance:
+          f:app.kubernetes.io/name:
+          f:app.kubernetes.io/part-of:
+          f:app.kubernetes.io/version:
+      f:spec:
+        .:
+        f:additionalAlertRelabelConfigs:
+          .:
+          f:key:
+          f:name:
+        f:affinity:
+          .:
+          f:podAntiAffinity:
+            .:
+            f:requiredDuringSchedulingIgnoredDuringExecution:
+        f:alerting:
+          .:
+          f:alertmanagers:
+        f:arbitraryFSAccessThroughSMs:
+        f:configMaps:
+        f:containers:
+        f:externalUrl:
+        f:image:
+        f:listenLocal:
+        f:nodeSelector:
+          .:
+          f:kubernetes.io/os:
+        f:podMetadata:
+          .:
+          f:annotations:
+            .:
+            f:target.workload.openshift.io/management:
+          f:labels:
+            .:
+            f:app.kubernetes.io/component:
+            f:app.kubernetes.io/instance:
+            f:app.kubernetes.io/name:
+            f:app.kubernetes.io/part-of:
+            f:app.kubernetes.io/version:
+        f:podMonitorNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:podMonitorSelector:
+        f:priorityClassName:
+        f:probeNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:probeSelector:
+        f:replicas:
+        f:resources:
+          .:
+          f:requests:
+            .:
+            f:cpu:
+            f:memory:
+        f:retention:
+        f:ruleNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:ruleSelector:
+        f:rules:
+          .:
+          f:alert:
+        f:secrets:
+        f:securityContext:
+          .:
+          f:fsGroup:
+          f:runAsNonRoot:
+          f:runAsUser:
+        f:serviceAccountName:
+        f:serviceMonitorNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:serviceMonitorSelector:
+        f:thanos:
+          .:
+          f:image:
+          f:resources:
+            .:
+            f:requests:
+              .:
+              f:cpu:
+              f:memory:
+          f:version:
+        f:version:
+        f:volumes:
+    Manager:         operator
+    Operation:       Update
+    Time:            2022-08-01T06:39:20Z
+  Resource Version:  19567
+  UID:               65cce833-6188-426a-9111-d4c418bc0e26
+Spec:
+  Additional Alert Relabel Configs:
+    Key:   config.yaml
+    Name:  alert-relabel-configs
+  Affinity:
+    Pod Anti Affinity:
+      Required During Scheduling Ignored During Execution:
+        Label Selector:
+          Match Labels:
+            app.kubernetes.io/component:  prometheus
+            app.kubernetes.io/instance:   k8s
+            app.kubernetes.io/name:       prometheus
+            app.kubernetes.io/part-of:    openshift-monitoring
+        Namespaces:
+          openshift-monitoring
+        Topology Key:  kubernetes.io/hostname
+  Alerting:
+    Alertmanagers:
+      API Version:        v2
+      Bearer Token File:  /var/run/secrets/kubernetes.io/serviceaccount/token
+      Name:               alertmanager-main
+      Namespace:          openshift-monitoring
+      Port:               web
+      Scheme:             https
+      Tls Config:
+        Ca:
+        Ca File:  /etc/prometheus/configmaps/serving-certs-ca-bundle/service-ca.crt
+        Cert:
+        Server Name:  alertmanager-main.openshift-monitoring.svc
+  Arbitrary FS Access Through S Ms:
+  Config Maps:
+    serving-certs-ca-bundle
+    kubelet-serving-ca-bundle
+    metrics-client-ca
+  Containers:
+    Args:
+      -provider=openshift
+      -https-address=:9091
+      -http-address=
+      -email-domain=*
+      -upstream=http://localhost:9090
+      -openshift-service-account=prometheus-k8s
+      -openshift-sar={"resource": "namespaces", "verb": "get"}
+      -openshift-delegate-urls={"/": {"resource": "namespaces", "verb": "get"}}
+      -tls-cert=/etc/tls/private/tls.crt
+      -tls-key=/etc/tls/private/tls.key
+      -client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+      -cookie-secret-file=/etc/proxy/secrets/session_secret
+      -openshift-ca=/etc/pki/tls/cert.pem
+      -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      -htpasswd-file=/etc/proxy/htpasswd/auth
+    Env:
+      Name:  HTTP_PROXY
+      Name:  HTTPS_PROXY
+      Name:  NO_PROXY
+    Image:   quay.io/openshift/okd-content@sha256:4590b27bb9bb73f489572be33a0ba04675ed17f04a4d921dcef1862934bb3d17
+    Name:    prometheus-proxy
+    Ports:
+      Container Port:  9091
+      Name:            web
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  20Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-tls
+      Mount Path:  /etc/proxy/secrets
+      Name:        secret-prometheus-k8s-proxy
+      Mount Path:  /etc/proxy/htpasswd
+      Name:        secret-prometheus-k8s-htpasswd
+      Mount Path:  /etc/pki/ca-trust/extracted/pem/
+      Name:        prometheus-trusted-ca-bundle
+      Read Only:   true
+    Args:
+      --secure-listen-address=0.0.0.0:9092
+      --upstream=http://127.0.0.1:9090
+      --allow-paths=/metrics
+      --config-file=/etc/kube-rbac-proxy/config.yaml
+      --tls-cert-file=/etc/tls/private/tls.crt
+      --tls-private-key-file=/etc/tls/private/tls.key
+      --client-ca-file=/etc/tls/client/client-ca.crt
+      --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      --logtostderr=true
+      --v=10
+      --tls-min-version=VersionTLS12
+    Image:  quay.io/openshift/okd-content@sha256:baedb268ac66456018fb30af395bb3d69af5fff3252ff5d549f0231b1ebb6901
+    Name:   kube-rbac-proxy
+    Ports:
+      Container Port:  9092
+      Name:            metrics
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  15Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-tls
+      Mount Path:  /etc/tls/client
+      Name:        configmap-metrics-client-ca
+      Read Only:   true
+      Mount Path:  /etc/kube-rbac-proxy
+      Name:        secret-kube-rbac-proxy
+    Args:
+      --secure-listen-address=[$(POD_IP)]:10902
+      --upstream=http://127.0.0.1:10902
+      --tls-cert-file=/etc/tls/private/tls.crt
+      --tls-private-key-file=/etc/tls/private/tls.key
+      --client-ca-file=/etc/tls/client/client-ca.crt
+      --config-file=/etc/kube-rbac-proxy/config.yaml
+      --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      --allow-paths=/metrics
+      --logtostderr=true
+      --tls-min-version=VersionTLS12
+      --client-ca-file=/etc/tls/client/client-ca.crt
+    Env:
+      Name:  POD_IP
+      Value From:
+        Field Ref:
+          Field Path:  status.podIP
+    Image:             quay.io/openshift/okd-content@sha256:baedb268ac66456018fb30af395bb3d69af5fff3252ff5d549f0231b1ebb6901
+    Name:              kube-rbac-proxy-thanos
+    Ports:
+      Container Port:  10902
+      Name:            thanos-proxy
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  10Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-thanos-sidecar-tls
+      Mount Path:  /etc/kube-rbac-proxy
+      Name:        secret-kube-rbac-proxy
+      Mount Path:  /etc/tls/client
+      Name:        metrics-client-ca
+      Read Only:   true
+    Args:
+      sidecar
+      --prometheus.url=http://localhost:9090/
+      --tsdb.path=/prometheus
+      --http-address=127.0.0.1:10902
+      --grpc-server-tls-cert=/etc/tls/grpc/server.crt
+      --grpc-server-tls-key=/etc/tls/grpc/server.key
+      --grpc-server-tls-client-ca=/etc/tls/grpc/ca.crt
+    Name:  thanos-sidecar
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  25Mi
+    Volume Mounts:
+      Mount Path:  /etc/tls/grpc
+      Name:        secret-grpc-tls
+    Name:          prometheus
+    Resources:
+    Volume Mounts:
+      Mount Path:  /etc/pki/ca-trust/extracted/pem/
+      Name:        prometheus-trusted-ca-bundle
+      Read Only:   true
+    Name:          config-reloader
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  10Mi
+  External URL:  https://prometheus-k8s-openshift-monitoring.apps.okd.example.com/
+  Image:         quay.io/openshift/okd-content@sha256:68192071ac4177fa85a6cc0481d7447338bd2343ceef30411d5c645717d68222
+  Listen Local:  true
+  Node Selector:
+    kubernetes.io/os:  linux
+  Pod Metadata:
+    Annotations:
+      target.workload.openshift.io/management:  {"effect": "PreferredDuringScheduling"}
+    Labels:
+      app.kubernetes.io/component:  prometheus
+      app.kubernetes.io/instance:   k8s
+      app.kubernetes.io/name:       prometheus
+      app.kubernetes.io/part-of:    openshift-monitoring
+      app.kubernetes.io/version:    2.32.1
+  Pod Monitor Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Pod Monitor Selector:
+  Priority Class Name:  system-cluster-critical
+  Probe Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Probe Selector:
+  Replicas:  2
+  Resources:
+    Requests:
+      Cpu:     70m
+      Memory:  1Gi
+  Retention:   15d
+  Rule Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Rule Selector:
+  Rules:
+    Alert:
+  Secrets:
+    kube-etcd-client-certs
+    prometheus-k8s-tls
+    prometheus-k8s-proxy
+    prometheus-k8s-thanos-sidecar-tls
+    kube-rbac-proxy
+    metrics-client-certs
+  Security Context:
+    Fs Group:            65534
+    Run As Non Root:     true
+    Run As User:         65534
+  Service Account Name:  prometheus-k8s
+  Service Monitor Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Service Monitor Selector:
+  Thanos:
+    Image:  quay.io/openshift/okd-content@sha256:3c0604548faa38d0ece2b05a07a850866b0f23f3ca62d0f4d0f5ff26946d8989
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  100Mi
+    Version:     0.23.1
+  Version:       2.32.1
+  Volumes:
+    Name:  secret-prometheus-k8s-htpasswd
+    Secret:
+      Secret Name:  prometheus-k8s-htpasswd
+    Config Map:
+      Name:  metrics-client-ca
+    Name:    metrics-client-ca
+    Name:    secret-grpc-tls
+    Secret:
+      Secret Name:  prometheus-k8s-grpc-tls-2mh8k7m31kp75
+    Config Map:
+      Items:
+        Key:     ca-bundle.crt
+        Path:    tls-ca-bundle.pem
+      Name:      prometheus-trusted-ca-bundle-2rsonso43rc5p
+      Optional:  true
+    Name:        prometheus-trusted-ca-bundle
+Events:          <none>
+~ $ ^C
+~ $ kubectl describe prometheus k8s -n openshift-monitoring
+I0817 01:50:24.440276     697 request.go:665] Waited for 1.011185443s due to client-side throttling, not priority and fairness, request: GET:https://api.okd.example.com:6443/apis/metal3.io/v1alpha1?timeout=32s
+Name:         k8s
+Namespace:    openshift-monitoring
+Labels:       app.kubernetes.io/component=prometheus
+              app.kubernetes.io/instance=k8s
+              app.kubernetes.io/name=prometheus
+              app.kubernetes.io/part-of=openshift-monitoring
+              app.kubernetes.io/version=2.32.1
+Annotations:  <none>
+API Version:  monitoring.coreos.com/v1
+Kind:         Prometheus
+Metadata:
+  Creation Timestamp:  2022-08-01T06:39:20Z
+  Generation:          1
+  Managed Fields:
+    API Version:  monitoring.coreos.com/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .:
+          f:app.kubernetes.io/component:
+          f:app.kubernetes.io/instance:
+          f:app.kubernetes.io/name:
+          f:app.kubernetes.io/part-of:
+          f:app.kubernetes.io/version:
+      f:spec:
+        .:
+        f:additionalAlertRelabelConfigs:
+          .:
+          f:key:
+          f:name:
+        f:affinity:
+          .:
+          f:podAntiAffinity:
+            .:
+            f:requiredDuringSchedulingIgnoredDuringExecution:
+        f:alerting:
+          .:
+          f:alertmanagers:
+        f:arbitraryFSAccessThroughSMs:
+        f:configMaps:
+        f:containers:
+        f:externalUrl:
+        f:image:
+        f:listenLocal:
+        f:nodeSelector:
+          .:
+          f:kubernetes.io/os:
+        f:podMetadata:
+          .:
+          f:annotations:
+            .:
+            f:target.workload.openshift.io/management:
+          f:labels:
+            .:
+            f:app.kubernetes.io/component:
+            f:app.kubernetes.io/instance:
+            f:app.kubernetes.io/name:
+            f:app.kubernetes.io/part-of:
+            f:app.kubernetes.io/version:
+        f:podMonitorNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:podMonitorSelector:
+        f:priorityClassName:
+        f:probeNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:probeSelector:
+        f:replicas:
+        f:resources:
+          .:
+          f:requests:
+            .:
+            f:cpu:
+            f:memory:
+        f:retention:
+        f:ruleNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:ruleSelector:
+        f:rules:
+          .:
+          f:alert:
+        f:secrets:
+        f:securityContext:
+          .:
+          f:fsGroup:
+          f:runAsNonRoot:
+          f:runAsUser:
+        f:serviceAccountName:
+        f:serviceMonitorNamespaceSelector:
+          .:
+          f:matchLabels:
+            .:
+            f:openshift.io/cluster-monitoring:
+        f:serviceMonitorSelector:
+        f:thanos:
+          .:
+          f:image:
+          f:resources:
+            .:
+            f:requests:
+              .:
+              f:cpu:
+              f:memory:
+          f:version:
+        f:version:
+        f:volumes:
+    Manager:         operator
+    Operation:       Update
+    Time:            2022-08-01T06:39:20Z
+  Resource Version:  19567
+  UID:               65cce833-6188-426a-9111-d4c418bc0e26
+Spec:
+  Additional Alert Relabel Configs:
+    Key:   config.yaml
+    Name:  alert-relabel-configs
+  Affinity:
+    Pod Anti Affinity:
+      Required During Scheduling Ignored During Execution:
+        Label Selector:
+          Match Labels:
+            app.kubernetes.io/component:  prometheus
+            app.kubernetes.io/instance:   k8s
+            app.kubernetes.io/name:       prometheus
+            app.kubernetes.io/part-of:    openshift-monitoring
+        Namespaces:
+          openshift-monitoring
+        Topology Key:  kubernetes.io/hostname
+  Alerting:
+    Alertmanagers:
+      API Version:        v2
+      Bearer Token File:  /var/run/secrets/kubernetes.io/serviceaccount/token
+      Name:               alertmanager-main
+      Namespace:          openshift-monitoring
+      Port:               web
+      Scheme:             https
+      Tls Config:
+        Ca:
+        Ca File:  /etc/prometheus/configmaps/serving-certs-ca-bundle/service-ca.crt
+        Cert:
+        Server Name:  alertmanager-main.openshift-monitoring.svc
+  Arbitrary FS Access Through S Ms:
+  Config Maps:
+    serving-certs-ca-bundle
+    kubelet-serving-ca-bundle
+    metrics-client-ca
+  Containers:
+    Args:
+      -provider=openshift
+      -https-address=:9091
+      -http-address=
+      -email-domain=*
+      -upstream=http://localhost:9090
+      -openshift-service-account=prometheus-k8s
+      -openshift-sar={"resource": "namespaces", "verb": "get"}
+      -openshift-delegate-urls={"/": {"resource": "namespaces", "verb": "get"}}
+      -tls-cert=/etc/tls/private/tls.crt
+      -tls-key=/etc/tls/private/tls.key
+      -client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+      -cookie-secret-file=/etc/proxy/secrets/session_secret
+      -openshift-ca=/etc/pki/tls/cert.pem
+      -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      -htpasswd-file=/etc/proxy/htpasswd/auth
+    Env:
+      Name:  HTTP_PROXY
+      Name:  HTTPS_PROXY
+      Name:  NO_PROXY
+    Image:   quay.io/openshift/okd-content@sha256:4590b27bb9bb73f489572be33a0ba04675ed17f04a4d921dcef1862934bb3d17
+    Name:    prometheus-proxy
+    Ports:
+      Container Port:  9091
+      Name:            web
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  20Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-tls
+      Mount Path:  /etc/proxy/secrets
+      Name:        secret-prometheus-k8s-proxy
+      Mount Path:  /etc/proxy/htpasswd
+      Name:        secret-prometheus-k8s-htpasswd
+      Mount Path:  /etc/pki/ca-trust/extracted/pem/
+      Name:        prometheus-trusted-ca-bundle
+      Read Only:   true
+    Args:
+      --secure-listen-address=0.0.0.0:9092
+      --upstream=http://127.0.0.1:9090
+      --allow-paths=/metrics
+      --config-file=/etc/kube-rbac-proxy/config.yaml
+      --tls-cert-file=/etc/tls/private/tls.crt
+      --tls-private-key-file=/etc/tls/private/tls.key
+      --client-ca-file=/etc/tls/client/client-ca.crt
+      --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      --logtostderr=true
+      --v=10
+      --tls-min-version=VersionTLS12
+    Image:  quay.io/openshift/okd-content@sha256:baedb268ac66456018fb30af395bb3d69af5fff3252ff5d549f0231b1ebb6901
+    Name:   kube-rbac-proxy
+    Ports:
+      Container Port:  9092
+      Name:            metrics
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  15Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-tls
+      Mount Path:  /etc/tls/client
+      Name:        configmap-metrics-client-ca
+      Read Only:   true
+      Mount Path:  /etc/kube-rbac-proxy
+      Name:        secret-kube-rbac-proxy
+    Args:
+      --secure-listen-address=[$(POD_IP)]:10902
+      --upstream=http://127.0.0.1:10902
+      --tls-cert-file=/etc/tls/private/tls.crt
+      --tls-private-key-file=/etc/tls/private/tls.key
+      --client-ca-file=/etc/tls/client/client-ca.crt
+      --config-file=/etc/kube-rbac-proxy/config.yaml
+      --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      --allow-paths=/metrics
+      --logtostderr=true
+      --tls-min-version=VersionTLS12
+      --client-ca-file=/etc/tls/client/client-ca.crt
+    Env:
+      Name:  POD_IP
+      Value From:
+        Field Ref:
+          Field Path:  status.podIP
+    Image:             quay.io/openshift/okd-content@sha256:baedb268ac66456018fb30af395bb3d69af5fff3252ff5d549f0231b1ebb6901
+    Name:              kube-rbac-proxy-thanos
+    Ports:
+      Container Port:  10902
+      Name:            thanos-proxy
+      Protocol:        TCP
+    Resources:
+      Requests:
+        Cpu:                     1m
+        Memory:                  10Mi
+    Termination Message Policy:  FallbackToLogsOnError
+    Volume Mounts:
+      Mount Path:  /etc/tls/private
+      Name:        secret-prometheus-k8s-thanos-sidecar-tls
+      Mount Path:  /etc/kube-rbac-proxy
+      Name:        secret-kube-rbac-proxy
+      Mount Path:  /etc/tls/client
+      Name:        metrics-client-ca
+      Read Only:   true
+    Args:
+      sidecar
+      --prometheus.url=http://localhost:9090/
+      --tsdb.path=/prometheus
+      --http-address=127.0.0.1:10902
+      --grpc-server-tls-cert=/etc/tls/grpc/server.crt
+      --grpc-server-tls-key=/etc/tls/grpc/server.key
+      --grpc-server-tls-client-ca=/etc/tls/grpc/ca.crt
+    Name:  thanos-sidecar
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  25Mi
+    Volume Mounts:
+      Mount Path:  /etc/tls/grpc
+      Name:        secret-grpc-tls
+    Name:          prometheus
+    Resources:
+    Volume Mounts:
+      Mount Path:  /etc/pki/ca-trust/extracted/pem/
+      Name:        prometheus-trusted-ca-bundle
+      Read Only:   true
+    Name:          config-reloader
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  10Mi
+  External URL:  https://prometheus-k8s-openshift-monitoring.apps.okd.example.com/
+  Image:         quay.io/openshift/okd-content@sha256:68192071ac4177fa85a6cc0481d7447338bd2343ceef30411d5c645717d68222
+  Listen Local:  true
+  Node Selector:
+    kubernetes.io/os:  linux
+  Pod Metadata:
+    Annotations:
+      target.workload.openshift.io/management:  {"effect": "PreferredDuringScheduling"}
+    Labels:
+      app.kubernetes.io/component:  prometheus
+      app.kubernetes.io/instance:   k8s
+      app.kubernetes.io/name:       prometheus
+      app.kubernetes.io/part-of:    openshift-monitoring
+      app.kubernetes.io/version:    2.32.1
+  Pod Monitor Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Pod Monitor Selector:
+  Priority Class Name:  system-cluster-critical
+  Probe Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Probe Selector:
+  Replicas:  2
+  Resources:
+    Requests:
+      Cpu:     70m
+      Memory:  1Gi
+  Retention:   15d
+  Rule Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Rule Selector:
+  Rules:
+    Alert:
+  Secrets:
+    kube-etcd-client-certs
+    prometheus-k8s-tls
+    prometheus-k8s-proxy
+    prometheus-k8s-thanos-sidecar-tls
+    kube-rbac-proxy
+    metrics-client-certs
+  Security Context:
+    Fs Group:            65534
+    Run As Non Root:     true
+    Run As User:         65534
+  Service Account Name:  prometheus-k8s
+  Service Monitor Namespace Selector:
+    Match Labels:
+      openshift.io/cluster-monitoring:  true
+  Service Monitor Selector:
+  Thanos:
+    Image:  quay.io/openshift/okd-content@sha256:3c0604548faa38d0ece2b05a07a850866b0f23f3ca62d0f4d0f5ff26946d8989
+    Resources:
+      Requests:
+        Cpu:     1m
+        Memory:  100Mi
+    Version:     0.23.1
+  Version:       2.32.1
+  Volumes:
+    Name:  secret-prometheus-k8s-htpasswd
+    Secret:
+      Secret Name:  prometheus-k8s-htpasswd
+    Config Map:
+      Name:  metrics-client-ca
+    Name:    metrics-client-ca
+    Name:    secret-grpc-tls
+    Secret:
+      Secret Name:  prometheus-k8s-grpc-tls-2mh8k7m31kp75
+    Config Map:
+      Items:
+        Key:     ca-bundle.crt
+        Path:    tls-ca-bundle.pem
+      Name:      prometheus-trusted-ca-bundle-2rsonso43rc5p
+      Optional:  true
+    Name:        prometheus-trusted-ca-bundle
+Events:          <none>
