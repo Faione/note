@@ -107,3 +107,54 @@ $ cat <logpath>
 ```shell
 $ sudo usermod -aG docker $USER && newgrp docker
 ```
+
+version: "3"
+services:
+  prometheus:
+    image: "gluenet/prometheus:arm7"
+    container_name: "{AGENT_GUID}_gluenet-promethues-server"
+    network_mode: "host"
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+  cadvisor:
+    image: "gluenet/cadvisor:arm7"
+    container_name: "{AGENT_GUID}_gluenet-exporter-cadvisor"
+    ports:
+      - "10001:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /etc/machine-id:/etc/machine-id:ro 
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    privileged: true
+  node:
+    image: "gluenet/node-exporter:arm7"
+    container_name: "{AGENT_GUID}_exporter-node"
+    network_mode: "host"
+    volumes:
+      - /:/host:ro,rslave
+    command: 
+      - "--path.rootfs=/host"
+      - "--web.listen-address=:10000"
+
+version: "3"
+services:
+  jaeger-collector:
+    image: "gluenet/jaeger-collector:arm7"
+    container_name: "{AGENT_GUID}_gluenet-jaeger-collector"
+    environment:
+      - "SPAN_STORAGE_TYPE=gluenet"
+      - "GUID={AGENT_GUID}"
+      - "SERVER_ADDR=nats://39.101.140.145:4222"
+      - "PUSH_TO=rpc.apis.data.traces.push"
+  jaeger-agent:
+    image: "gluenet/jaeger-agent:arm7"
+    container_name: "{AGENT_GUID}_gluenet-jaeger-agent"
+    ports:
+      - "6831:6831/udp"
+    command: 
+      - "--reporter.grpc.host-port=jaeger-collector:14250"

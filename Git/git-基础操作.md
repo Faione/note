@@ -12,6 +12,7 @@
   - [四、常用开发](#四常用开发)
     - [(1) bug fix/refactor 分支](#1-bug-fixrefactor-分支)
     - [(2) 设置远程仓库](#2-设置远程仓库)
+    - [(3) 合并commit](#3-合并commit)
 
 
 ## 一、分支管理
@@ -246,6 +247,22 @@ git push -u origin "master"
 # 如仓库进行了初始化而非空仓库时
 git pull --rebase origin master
 git push -u origin "master"
+```
+
+### (3) 合并commit
+
+- [合并commit](https://blog.csdn.net/Spade_/article/details/108698036)
+
+```shell
+# 查看分支
+$ git log
+
+# 定位要合并的分支
+$ git rebase -i <要合并commit中最后一个commit的父节点>
+
+# 设置合并策略
+# commit从后往前一次排列
+# pick 第一个，之后的使用fixup(丢弃提交信息)或squash(合并提交信息)
 ```
 
 

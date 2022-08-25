@@ -16,6 +16,9 @@
 
 ## High Performance and Presistent Cache
 
+- 配置
+- 运行时对象
+
 - k,v 存储
 - sdk
 

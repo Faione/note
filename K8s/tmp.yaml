@@ -1,277 +1,3 @@
-# Yaml 配置文件
-
-## 特殊符号
-
-- `|` 保留文本每行尾部的换行符，而 `>` 则会将所有的换行符视为空格
-  - 当 value 为多行文本时
-
-```
-include_newlines: |
-            exactly as you see
-            will appear these three
-            lines of poetry
-
-fold_newlines: >
-            this is really a
-            single line of text
-            despite appearances
-```
-
-- `|+` 在保留文本每行尾部的换行符的同时，还保留结尾行的换行符
-- `|-` 在保留文本每行尾部的换行符的同时，去除结尾行的换行符
-
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: agent-config
-  namespace: gluenet-test1
-data:
-  agent_config.toml: |
-    [host]
-    [host.tags]
-
-    [agent]
-    area = "210018"
-    role = "other"
-    platform = "kubernetes"
-
-    [driver]
-    [driver.rpc]
-    rpc_config = "nats://39.101.140.145:4222"
-    [driver.helm]
-    kube_path = "/kube/config"
-    repo_name = "gluerepo"
-    repo_url = "http://39.101.140.145:30028"
-    [driver.k8s]
-    kube_path = "/kube/config"
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gluenet-agent-deployment
-  namespace: gluenet-test1
-spec:
-  selector:
-    matchLabels:
-      pod: gluenet-agent-pod
-  replica: 1
-  template:
-    metadata:
-      name: gluenet-agent
-      namespace: gluenet-test1
-      labels:
-        pod: gluenet-agent-pod
-    spec:
-      nodeName: worker1.okd.example.com
-      containers:
-        - name: gluenet-agent
-          image: gluenet/agent:0.5
-          imagePullPolicy: Always
-          env:
-            - name: HOST_NAME
-              value: other_cluster
-            - name: GLUENET_CONFIG_ROOT
-              value: /kube/k8s
-          command:
-            - "/app/agent"
-            - "--agent.config.path=/etc/agent/agent_config.toml"
-            - "--without.components"
-          volumeMounts:
-            - mountPath: /etc/agent/
-              name: agentconfig
-            - mountPath: /kube/
-              name: kubeconfig
-      volumes:
-        - name: agentconfig
-          configMap:
-            name: agent-config
-            items:             
-            - key: agent_config.toml             
-              path: agent_config.toml
-        - name: kubeconfig
-          persistentVolumeClaim:
-            claimName: config
-```
-
-
-``` yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: prometheus-config
-  namespace: gluenet-test1
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-      evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
-    rule_files:
-    - "/prometheus/rules/*.yml"
-    scrape_configs:
-    remote_write:
-    - url: "http://gluenet-transfer-svc:10099/v2/apis/agent/metric/write"
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: prometheus-rules
-  namespace: gluenet-test1
-data:
-  rules.yml: |
-    groups:
-    - name: user1
-      rules:
-      - alert: cpu_usage_too_hight
-        expr: |
-          sum(metrics{label="tcp_open_total"}) by (container) > 100
-        labels:
-          labels: "test"
-        annotations:
-          summary: "服务 {{ $labels.app_guid }} 下线了"
-          description: "{{ $labels.app_guid }} of job {{ $labels.container }} has been down for more than 1 minutes."
-      - alert: cpu_usage_too_low
-        expr: |
-          sum(metrics{label="tcp_open_total"}) by (container) > 100
-        labels:
-          labels: "test"
-        annotations:
-          summary: "服务 {{ $labels.app_guid }} 下线了"
-          description: "{{ $labels.app_guid }} of job {{ $labels.container }} has been down for more than 1 minutes."
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: glue-stream-prom
-  namespace: gluenet-test1
-  labels:
-    app: glue-stream-prom
-spec:
-  nodeName: worker1.okd.example.com
-  containers:
-    - name: prometheus
-      image: "prom/prometheus:latest"
-      args:
-        - --web.enable-remote-write-receiver
-        - --web.enable-lifecycle
-        - --config.file=/prometheus/config/prometheus.yml
-        - --storage.tsdb.path=/prometheus/data/prom
-      ports:
-        - containerPort: 9090
-          name: prometheus
-      volumeMounts:
-        - mountPath: /prometheus/config/prometheus.yml
-          name: prometheus-config
-          subPath: prometheus.yml
-        - mountPath: /prometheus/rules
-          name: prometheus-rules
-          subPath: rules.yml
-        - mountPath: /prometheus/data/
-          name: kubeconfig
-  volumes:
-    - configMap:
-        name: prometheus-config
-      name: prometheus-config
-    - configMap:
-        name: prometheus-rules
-      name: prometheus-rules
-    - name: kubeconfig
-      persistentVolumeClaim:
-        claimName: config
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-service
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 10000
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: gluenet-transfer
-  labels:
-    app.kubernetes.io/component: gluenet-transfer
-    app.kubernetes.io/name: gluenet-transfer
-    app.kubernetes.io/part-of: kube-prometheus
-    app: gluenet-transfer
-  namespace: gluenet-test1
-spec:
-  containers:
-    - name: glue-transfer
-      image: gluenet/transfer:0.1
-      imagePullPolicy: IfNotPresent
-      ports:
-        - containerPort: 10099
-      env:
-        - name: RPC_CONFIG
-          value: "nats://39.101.140.145:4222"
-        - name: PUSH_TOPIC
-          value: "guid.manager:rpc.apis.data.metrics.push"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gluenet-transfer-svc
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-  - name: gluenet-transfer
-    protocol: TCP
-    port: 10099
-    targetPort: 10099
-  selector:
-    app: gluenet-transfer
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-frontend
-  namespace: gluenet-test1
-spec:
-  type: NodePort
-  ports:
-    - name: http
-      port: 55555
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
-```
-
-
-```
-    remoteWrite:
-    - url: "http://glue-stream-prom-service.gluenet-test1:10000/api/v1/write"
-```
-
-``` yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: prometheus-config
-  namespace: gluenet-test1
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-      evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
-    rule_files:
-    - "/prometheus/rules/*.yml"
-    scrape_configs:
-    remote_write:
-    - url: "http://gluenet-transfer-svc:10099/v2/apis/agent/metric/write"
----
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -583,7 +309,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               host_name: "*"
               label: "cluster_cpu_usage"
             record: "metrics"
@@ -594,7 +320,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               host_name: "*"
               label: "cluster_memory_usage"
             record: "metrics"
@@ -606,7 +332,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_cpu_cores"
             record: "metrics"
           - expr: |
@@ -615,7 +341,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_cpu_physical_cores"
             record: "metrics"
           - expr: |
@@ -624,7 +350,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_memory_bytes"
             record: "metrics"
       # machine-单个
@@ -636,7 +362,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_cpu_usage"
             record: "metrics"
           # 2.cpu处于用户时间的使用率
@@ -646,7 +372,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_cpu_user_usage"
             record: "metrics"
           # 3.cpu处于系统时间的使用率
@@ -656,7 +382,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_cpu_system_usage"
             record: "metrics"
         # 二、memory相关指标
@@ -667,7 +393,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_memory_usage"
             record: "metrics"
           # 2.memory使用量（已经用了多少）单位：byte
@@ -677,7 +403,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_memory_used"
             record: "metrics"
           # 3.memory剩余量 单位：byte
@@ -687,7 +413,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_memory_avilable"
             record: "metrics"
         # 三、disk相关指标
@@ -697,7 +423,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_space_usage"
             record: "metrics"
           - expr: |
@@ -706,7 +432,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_activity_time"
             record: "metrics"
           - expr: |
@@ -715,7 +441,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_read_rate"
             record: "metrics"
           - expr: |
@@ -724,7 +450,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_written_rate"
             record: "metrics"
           - expr: |
@@ -733,7 +459,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_reads_iops"
             record: "metrics"
           - expr: |
@@ -742,7 +468,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_disk_writes_iops"
             record: "metrics"
         # 四、network相关指标
@@ -752,7 +478,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_network_receive_kbps"
             record: "metrics"
           - expr: |
@@ -761,7 +487,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "node_network_transmit_kbps"
             record: "metrics"
       # apllication 总和，把每个application对应的容器加和（还未添加）
@@ -772,7 +498,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               container: "*"
               label: "application_cpu_usage"
             record: "metrics"
@@ -783,7 +509,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               container: "*"
               label: "application_cpu_used_seconds"
             record: "metrics"
@@ -793,7 +519,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               container: "*"
               label: "application_memory_used_bytes_total"
             record: "metrics"
@@ -805,7 +531,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_usage"
             record: "metrics"
           - expr: |
@@ -814,7 +540,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_system_usage"
             record: "metrics"
           - expr: |
@@ -823,7 +549,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_user_usage"
             record: "metrics"
           # 保留但是不用做指标
@@ -833,7 +559,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_used_seconds"
             record: "metrics"
           - expr: |
@@ -842,7 +568,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_system_used_seconds"
             record: "metrics"
           - expr: |
@@ -851,7 +577,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_user_used_seconds"
             record: "metrics"
         # 二 、container单个-memory相关指标
@@ -862,7 +588,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_memory_used"
             record: "metrics"
         # 三、container单个-disk相关指标
@@ -873,7 +599,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_disk_write_rate"
             record: "metrics"
           # 2. 容器磁盘读速率
@@ -883,7 +609,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_disk_read_rate"
             record: "metrics"
           # 四、container-network相关指标
@@ -893,7 +619,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_network_receive_kbps"
             record: "metrics"
           - expr: |
@@ -902,7 +628,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_network_transmit_kbps"
             record: "metrics"
       #状态
@@ -912,7 +638,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_status_information"
             record: "status"
           - expr: |
@@ -922,7 +648,7 @@ data:
               platform: "kubernetes"
               object: "application"
               container: "*"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "application_status_information"
             record: "status"
       #其他
@@ -932,7 +658,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label:  "agent_hosts"
             record: "info"
           - expr: |
@@ -941,7 +667,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "instance_containers"
             record: "info"
           - expr: |
@@ -950,7 +676,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "machine"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "agent_containers"
             record: "info"
           - expr: |
@@ -959,7 +685,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_info"
             record: "info"
           - expr: |
@@ -968,7 +694,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_state_ready"
             record: "status"
           - expr: |
@@ -977,7 +703,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_state_not_ready"
             record: "status"
           - expr: |
@@ -986,7 +712,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               container: "*"
               label: "application_state_ready"
             record: "status"
@@ -996,7 +722,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               container: "*"
               label: "application_state_not_ready"
             record: "status"
@@ -1006,7 +732,7 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_memory_limits"
             record: "resources"
           - expr: |
@@ -1015,134 +741,6 @@ data:
               organize: "gluenets"
               platform: "kubernetes"
               object: "application"
-              agent_guid: "AGENT_GUID"
+              agent_guid: "6dd54a15f863c04db6eedbc775ff6a9f"
               label: "container_cpu_memory_request"
             record: "resources"
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: glue-stream-prom
-  namespace: gluenet-test1
-  labels:
-    app: glue-stream-prom
-spec:
-  nodeName: worker1.okd.example.com
-  containers:
-    - name: prometheus
-      image: "registry.example.com:8443/prom/prometheus:latest"
-      args:
-        - --web.enable-remote-write-receiver
-        - --web.enable-lifecycle
-        - --config.file=/prometheus/config/prometheus.yml
-        - --storage.tsdb.path=/prometheus/data/prom
-      ports:
-        - containerPort: 9090
-          name: prometheus
-      volumeMounts:
-        - mountPath: /prometheus/config/prometheus.yml
-          name: prometheus-config
-          subPath: prometheus.yml
-        - mountPath: /prometheus/rules/rules.yml
-          name: prometheus-rules
-          subPath: rules.yml
-        - mountPath: /prometheus/data/
-          name: kubeconfig
-  volumes:
-    - configMap:
-        name: prometheus-config
-      name: prometheus-config
-    - configMap:
-        name: prometheus-rules
-      name: prometheus-rules
-    - name: kubeconfig
-      persistentVolumeClaim:
-        claimName: config
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-service
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 10000
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: gluenet-transfer
-  labels:
-    app.kubernetes.io/component: gluenet-transfer
-    app.kubernetes.io/name: gluenet-transfer
-    app.kubernetes.io/part-of: kube-prometheus
-    app: gluenet-transfer
-  namespace: gluenet-test1
-spec:
-  containers:
-    - name: glue-transfer
-      image: gluenet/transfer:0.1
-      imagePullPolicy: IfNotPresent
-      ports:
-        - containerPort: 10099
-      env:
-        - name: RPC_CONFIG
-          value: "nats://39.101.140.145:4222"
-        - name: PUSH_TOPIC
-          value: "guid.manager:rpc.apis.data.metrics.push"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gluenet-transfer-svc
-  namespace: gluenet-test1
-spec:
-  type: ClusterIP
-  ports:
-  - name: gluenet-transfer
-    protocol: TCP
-    port: 10099
-    targetPort: 10099
-  selector:
-    app: gluenet-transfer
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: glue-stream-prom-frontend
-  namespace: gluenet-test1
-spec:
-  type: NodePort
-  ports:
-    - name: http
-      port: 55555
-      targetPort: 9090
-  selector:
-    app: glue-stream-prom
-```
-
-
-```yaml
-apiVersion: v1
-data:
-  config.yaml: |
-    prometheusK8s:
-      remoteWrite:
-      - url: "http://glue-stream-prom-service.gluenet-test1:10000/api/v1/write"
-        writeRelabelConfigs:
-        - sourceLabels: ["prometheus_replica"]
-          regex: "prometheus-k8s-0"
-          action: "keep"
-        - sourceLabels: ["namespace"]
-          regex: "openshift.*|kube-.*|open-cluster.*|linkerd|monitoring|gluenet-test1"
-          action: "drop"
-kind: ConfigMap
-metadata:
-  name: cluster-monitoring-config
-  namespace: openshift-monitoring
-```
