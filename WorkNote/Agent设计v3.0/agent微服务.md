@@ -38,6 +38,9 @@
 
 ## Driver Server
 
+- 依赖注入
+- [ ]driver获取工厂化
+
 ### Docker
 
 ### k8s

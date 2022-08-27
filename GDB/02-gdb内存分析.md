@@ -21,3 +21,13 @@
 
 - [gdb查看内存](http://c.biancheng.net/view/7470.html)
 - [gdb内存分析](https://www.cnblogs.com/azhao/p/12074656.html)
+
+## 反汇编
+
+- `x/10i $pc`
+  - 从当前PC值的位置开始，在内存中反汇编10条指令
+
+- `p/x $t0`
+  - 以16进制打印寄存器 t0 的值
+- `p/d $x1`
+  - 以10进制打印寄存器 t0 的值

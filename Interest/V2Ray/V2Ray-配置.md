@@ -1,5 +1,7 @@
 # Server端配置
 
+- [pac配置](https://qv2ray.net/lang/zh/manual/route.html#%E5%85%A8%E5%B1%80%E8%B7%AF%E7%94%B1%E8%A7%84%E5%88%99)
+
 ## 配置格式
 
 ```json
