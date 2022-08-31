@@ -53,6 +53,8 @@
 
 ## Observerty Scripts
 
+- 通过 agent sdk 与agent交互，不直接集成在agent中
+
 ### Docker
 
 ### K8s

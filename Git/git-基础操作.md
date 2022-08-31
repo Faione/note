@@ -261,8 +261,13 @@ $ git log
 $ git rebase -i <要合并commit中最后一个commit的父节点>
 
 # 设置合并策略
-# commit从后往前一次排列
+# commit从早到晚依次排列
 # pick 第一个，之后的使用fixup(丢弃提交信息)或squash(合并提交信息)
+```
+
+修改commit信息
+```
+$ git commit --amend -m "new message"
 ```
 
 
