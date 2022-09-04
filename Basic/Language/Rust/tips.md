@@ -1,6 +1,7 @@
 
 - [crate仓库](https://crates.io/)
 - [格式化打印](https://blog.csdn.net/linysuccess/article/details/123971519)
+- [rust构建脚本](https://course.rs/cargo/reference/build-script/intro.html)
 
 ```rust
 // 二进制
