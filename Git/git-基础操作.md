@@ -266,6 +266,7 @@ $ git rebase -i <要合并commit中最后一个commit的父节点>
 ```
 
 修改commit信息
+
 ```
 $ git commit --amend -m "new message"
 ```
