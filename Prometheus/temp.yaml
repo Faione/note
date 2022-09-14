@@ -575,3 +575,59 @@ spec:
       targetPort: 9090
   selector:
     app: glue-stream-prom
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glue-stream-prome-deploy
+  namespace: gluenet-test1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glue-stream-prom
+  template:
+    metadata:
+      name: glue-stream-prom
+      namespace: gluenet-test1
+      labels:
+        app: glue-stream-prom
+    spec:
+      nodeName: worker1.okd.example.com
+      containers:
+        - name: prometheus
+          image: "registry.example.com:8443/prom/prometheus:latest"
+          args:
+            - --web.enable-remote-write-receiver
+            - --web.enable-lifecycle
+            - --config.file=/prometheus/config/prometheus.yml
+            - --storage.tsdb.path=/prometheus/data/prom
+          ports:
+            - containerPort: 9090
+              name: prometheus
+          volumeMounts:
+            - mountPath: /prometheus/config/prometheus.yml
+              name: prometheus-config
+              subPath: prometheus.yml
+            - mountPath: /prometheus/rules/rules.yml
+              name: prometheus-rules
+              subPath: rules.yml
+            - mountPath: /prometheus/data/
+              name: kubeconfig
+      volumes:
+        - configMap:
+            name: prometheus-config
+          name: prometheus-config
+        - configMap:
+            name: prometheus-rules
+          name: prometheus-rules
+        - name: kubeconfig
+          persistentVolumeClaim:
+            claimName: config
+
+
+
+sum(label_replace(sum(response_latency_ms_count{namespace!~"linkerd-viz|monitoring|default",status_code="200"}) by(namespace,pod)  + on (pod,namespace) group_left(container)(0*sum(container_cpu_load_average_10s{image!="",namespace!~"default|kube-system|monitoring|linkerd-viz",container!~"POD|linkerd-proxy",pod!~"jaeger-glue"}) by(namespace,pod,container)),"application_guid","$1","namespace","(.+)")) without(namespace)
