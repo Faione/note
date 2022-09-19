@@ -13,24 +13,39 @@ data:
     local_port = 9090
     remote_port = 49998
 ---
-
 apiVersion: v1
-kind: Pod
+kind: Namespace
 metadata:
-  name: frpcd
+  name: minikube-frpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minikube-frpc-deploy
   namespace: minikube-frpc
 spec:
-  containers:
-    - name: frp-client
-      image: snowdreamtech/frpc:latest
-      imagePullPolicy: Always
-      volumeMounts:
-        - mountPath: /etc/frp/
-          name: config
-  volumes:
-    - name: config
-      configMap:
-        name: frpc-config
-        items:             
-        - key: frpc.ini             
-          path: frpc.ini
+  selector:
+    matchLabels:
+      app: minikube-frpc-app
+  replicas: 1
+  template:
+    metadata:
+      name: frpc
+      namespace: minikube-frpc
+      labels:
+        app: minikube-frpc-app
+    spec:
+      containers:
+        - name: frp-client
+          image: snowdreamtech/frpc:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /etc/frp/
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: frpc-config
+            items:             
+            - key: frpc.ini             
+              path: frpc.ini
