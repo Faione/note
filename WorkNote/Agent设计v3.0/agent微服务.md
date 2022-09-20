@@ -28,12 +28,13 @@
 
 ## Daemon Server
 
-- 注册
+- 注册并同步当前agent功能
 - Cache初始化
 - Plug in/Plug out
   - 分发Agent Guid, Cache Token
   - 管理Driver Server(Stateful)
   - 管理Scripts(Stateless)
+
 
 
 ## Driver Server

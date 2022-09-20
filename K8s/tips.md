@@ -12,3 +12,15 @@ $ kubectl config view --minify=true --flatten=true
 ```shell
 $ kubectl config use-context kubevrit | cilium 
 ```
+
+# jsonPath
+
+[intro](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
+
+查看pod中的container
+
+
+
+```
+$ kubectl get pods <podname> -o jsonpath='{.spec.containers[*].name}'
+```
