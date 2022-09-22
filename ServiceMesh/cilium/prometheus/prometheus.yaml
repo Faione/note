@@ -25,6 +25,8 @@ data:
       evaluation_interval: 10s
     rule_files:
       - "/etc/prometheus-rules/*.rules"
+    remote_write:
+      - url: "http://transfer:10099/v2/apis/agent/metric/write"
     scrape_configs:
       # https://github.com/prometheus/prometheus/blob/master/documentation/examples/prometheus-kubernetes.yml#L79
       - job_name: 'kubernetes-endpoints'

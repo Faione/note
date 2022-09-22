@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gluenet-http-transfer
+  name: gluenet-http-transfer
+  namespace: cilium-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gluenet-http-transfer
+  template:
+    metadata:
+      labels:
+        app: gluenet-http-transfer
+      name: transfer
+    spec:
+      containers:
+        - name: glue-transfer
+          image: gluenet/transfer:0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 10099
+          env:
+            - name: RPC_CONFIG
+              value: "nats://39.101.140.145:4222"
+            - name: PUSH_TOPIC
+              value: "guid.manager:rpc.apis.data.metrics.push"      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transfer
+  namespace: cilium-monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - name: gluenet-transfer
+    protocol: http
+    port: 10099
+    targetPort: 10099
+  selector:
+    app: gluenet-http-transfer
+
