@@ -17,3 +17,12 @@ docker run -it --rm --privileged -v ~/workplace/c/stream/out:/app/bin docker-per
 5. 数据发送: 守护进程通过rpc client 将数据发送到总线的指定topic中 | 守护进程将数据发送到prometheus临时数据存储库中，prometheus再将数据发送到总控中
 
 目标: 后台启动一个应用，前台能够访问某个接口获得应用执行整个周期的perf数据
+
+## 数据存储
+
+
+perf -> output file -> file-watcher -> pushGateWay -> prometheus
+
+```
+docker run -d -p 27182:9091 prom/pushgateway
+```

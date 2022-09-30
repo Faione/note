@@ -30,6 +30,6 @@
 
 **HTTPS请求流程**
 
-- [http通信原理](https://zhuanlan.zhihu.com/p/56663184)
+- [https通信原理](https://zhuanlan.zhihu.com/p/56663184)
 
 ![](./img/2022-06-04-20-46-22.png)

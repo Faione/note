@@ -1,5 +1,6 @@
 # Yaml 配置文件
 
+- [yaml变量引用](https://blog.csdn.net/weichi7549/article/details/112240408)
 ## 特殊符号
 
 - `|` 保留文本每行尾部的换行符，而 `>` 则会将所有的换行符视为空格
