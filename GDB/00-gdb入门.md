@@ -18,6 +18,11 @@
 $ gdb test.out
 ```
 
+```
+# 让程序开始运行
+$(gdb) start
+```
+
 - 查看源代码
   - 默认情况下，l只显示10行源码
 ```shell
@@ -51,6 +56,8 @@ $(gdb) n
 ```shell
 $(gdb) c
 ```
+单步执行`si`, single instruction
+
 ![GDB简单调试命令](./img/2022-03-27-09-45-31.png)
 
 
