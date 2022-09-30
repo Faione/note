@@ -21,7 +21,7 @@ docker run -it --rm --privileged -v ~/workplace/c/stream/out:/app/bin docker-per
 ## 数据存储
 
 
-file-watcher -> pushGateWay -> prometheus
+perf -> output file -> file-watcher -> pushGateWay -> prometheus
 
 ```
 docker run -d -p 27182:9091 prom/pushgateway

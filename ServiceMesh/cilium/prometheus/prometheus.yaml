@@ -25,17 +25,17 @@ data:
       evaluation_interval: 10s
     rule_files:
       - "/etc/prometheus-rules/*.rules"
-    remote_write:
-      - url: "http://transfer:10099/v2/apis/agent/metric/write"
+    # remote_write:
+    #   - url: "http://transfer:10099/v2/apis/agent/metric/write"
     scrape_configs:
       # https://github.com/prometheus/prometheus/blob/master/documentation/examples/prometheus-kubernetes.yml#L79
       - job_name: 'kubernetes-endpoints'
         kubernetes_sd_configs:
           - role: endpoints
         relabel_configs:
-          # - source_labels: [__meta_kubernetes_pod_label_k8s_app]
-          #   action: keep
-          #   regex: cilium
+          - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+            action: keep
+            regex: cilium
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
             regex: true
