@@ -26,3 +26,104 @@
 	]
 }
 ```
+
+## ELF数据格式
+
+查看elf文件中的内容
+
+```shell
+$ rust-readobj -all <target_file>
+```
+
+ELF内容构成(?不区分顺序)
+- ELF header
+- 若干个 program header
+- 程序各个段的实际数据
+- 若干的 section header
+
+示例
+
+```
+File: target/debug/os
+Format: elf64-x86-64
+Arch: x86_64
+AddressSize: 64bit
+LoadName:
+ElfHeader {
+Ident {
+   Magic: (7F 45 4C 46)
+   Class: 64-bit (0x2)
+   DataEncoding: LittleEndian (0x1)
+   FileVersion: 1
+   OS/ABI: SystemV (0x0)
+   ABIVersion: 0
+   Unused: (00 00 00 00 00 00 00)
+}
+Type: SharedObject (0x3)
+Machine: EM_X86_64 (0x3E)
+Version: 1
+Entry: 0x5070
+ProgramHeaderOffset: 0x40
+SectionHeaderOffset: 0x32D8D0
+Flags [ (0x0)
+]
+HeaderSize: 64
+ProgramHeaderEntrySize: 56
+ProgramHeaderCount: 12
+SectionHeaderEntrySize: 64
+SectionHeaderCount: 42
+StringTableSectionIndex: 41
+}
+......
+```
+
+- Magic: 魔数，一个独特的常数，存放在 ELF header 的一个固定位置
+  - 当加载器将 ELF 文件加载到内存之前，通常会查看 该位置的值是否正确，来快速确认被加载的文件是不是一个 ELF 
+- Entry: 给出可执行文件的入口点
+- 除了 ELF header 之外，还有另外两种不同的 header，分别称为 program header 和 section header，ELF header 中给出了其他两种header 的大小、在文件中的位置以及数目，以 `*EntrySize/*Offset/*Count` 的条目给出
+
+Section head
+- 名为 `.text` 的代码段将要被加载到地址 `0x5070` 处，大小为 `208067`
+
+```
+Section {
+   Index: 14
+   Name: .text (157)
+   Type: SHT_PROGBITS (0x1)
+   Flags [ (0x6)
+      SHF_ALLOC (0x2)
+      SHF_EXECINSTR (0x4)
+   ]
+   Address: 0x5070
+   Offset: 0x5070
+   Size: 208067
+   Link: 0
+   Info: 0
+   AddressAlignment: 16
+   EntrySize: 0
+}
+```
+
+程序符号表
+
+```
+Symbol {
+  Name: _start (37994)
+  Value: 0x5070
+  Size: 47
+  Binding: Global (0x1)
+  Type: Function (0x2)
+  Other: 0
+  Section: .text (0xE)
+}
+ Symbol {
+    Name: main (38021)
+    Value: 0x51A0
+    Size: 47
+    Binding: Global (0x1)
+    Type: Function (0x2)
+    Other: 0
+    Section: .text (0xE)
+ }
+```
+
