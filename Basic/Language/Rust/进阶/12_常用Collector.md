@@ -12,6 +12,7 @@
 ## Vector
 
 - [手册](https://doc.rust-lang.org/std/vec/struct.Vec.html)
+- [vec deref](https://www.codenong.com/32789069/)
 
 - 允许存储多个相同类型数据的数据结构
   - 值彼此相邻存储，当扩大时，需要重新申请空间
@@ -119,8 +120,6 @@ for b in "नमस्ते".bytes() {
     println!("{}", b);
 }
 ```
-
-
 ## Hash Map
 
 - 默认使用 SipHash 散列函数

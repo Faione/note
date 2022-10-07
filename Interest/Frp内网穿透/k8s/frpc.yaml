@@ -21,7 +21,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: minikube-frpc-deploy
+  name: minikube-frpc
   namespace: minikube-frpc
 spec:
   selector:
@@ -31,21 +31,24 @@ spec:
   template:
     metadata:
       name: frpc
-      namespace: minikube-frpc
       labels:
         app: minikube-frpc-app
     spec:
       containers:
         - name: frp-client
           image: snowdreamtech/frpc:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/frp/
               name: config
+          command: ["/usr/bin/frpc", "reload"]
+          args: 
+            - -c=/etc/frp/frpc.ini
       volumes:
         - name: config
           configMap:
             name: frpc-config
-            items:             
-            - key: frpc.ini             
+            items:
+            - key: frpc.ini
               path: frpc.ini
+

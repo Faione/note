@@ -43,3 +43,18 @@ func TestStruct(t *testing.T) {
 	fmt.Println(test)
 }
 ```
+
+通过label标记循环，实现break指定循环
+
+```go
+
+mainLoop:
+	for {
+		select {
+		case iner, ok := <-lines:
+			dowork()
+		case <-sig:
+			break mainLoop
+		}
+	}
+```

@@ -1,0 +1,15 @@
+groups:
+  - name: userdefine
+    rules:
+      - expr: |
+          sum (perf_event_count{event=~"r5301c7|r5302c7|r5304c7|r5308c7|r5310c7|r5320c7|r5340c7|r5380c7"}) by (app_id)
+        record: "total_flops"
+      - expr: |
+          sum (perf_event_count{event="r5300c0"}) by(app_id) - sum(perf_event_count{event=~"r5300c4|r5381d0|r5382d0"})by(app_id)
+        record: "total_calculate"
+      - expr: |
+          sum (perf_event_sum{event=~"r5301c7|r5302c7|r5304c7|r5308c7|r5310c7|r5320c7|r5340c7|r5380c7"}) by (app_id)
+        record: "total_flops_sum"
+      - expr: |
+          sum (perf_event_sum{event="r5300c0"}) by(app_id) - sum(perf_event_sum{event=~"r5300c4|r5381d0|r5382d0"})by(app_id)
+        record: "total_calculate_sum"

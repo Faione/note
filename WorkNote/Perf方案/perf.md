@@ -26,3 +26,7 @@ perf -> output file -> file-watcher -> pushGateWay -> prometheus
 ```
 docker run -d -p 27182:9091 prom/pushgateway
 ```
+
+pusher定时push
+
+watcher触发式更新

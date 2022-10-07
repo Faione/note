@@ -16,7 +16,7 @@ services:
     mariadb:
         image: "mariadb:latest"
         enviroment:
-            # - MARIADB_DATABASE=gromtest // 默认创建的database, 用户 MARIADB_USER 能获得此数据库的全部权限
+            - "MARIADB_DATABASE=gogs" // 默认创建的database, 用户 MARIADB_USER 能获得此数据库的全部权限
             - "MARIADB_USER=fhl" 
             - "MARIADB_PASSWORD=123456"
             - "MARIADB_ROOT_PASSWORD=123456"
@@ -28,7 +28,7 @@ $ docker exec -it <mariadbId> /bin/bash
 
 # 登入数据库
 # 小写 p 指定将要输入的密码
-$mariadbId mysql -p
+$mariadbId mysql -u fhl -p
 
 # 创建指定类型的数据库
 $mysql CREATE DATABASE IF NOT EXISTS gogs DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
@@ -57,7 +57,7 @@ Docker配置注意事项
 1. 数据库地址可以指定: mariadb:3306 
    - 同一个 docker-compose文件中
 2. Domain填写公网ip(公网访问需求)
-3. SSH Port, HTTP Port 分别使用暴露的端口
+<!-- 3. SSH Port, HTTP Port 分别使用暴露的端口 -->
 4. Application URL使用: <Domain>:<HTTP Port>
 
 
@@ -83,6 +83,7 @@ services:
         volumes:
         - ./var/mariadb:/var/lib/mysql 
         environment:
+            - "MARIADB_DATABASE=gogs"
             - "MARIADB_USER=fhl"
             - "MARIADB_PASSWORD=123456"
             - "MARIADB_ROOT_PASSWORD=123456"
