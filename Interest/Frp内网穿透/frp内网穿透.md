@@ -7,10 +7,8 @@
   - [二、搭建](#二搭建)
     - [(1) 暴露ssh](#1-暴露ssh)
 
-
-- [frp github](https://github.com/fatedier/frp)
-- [frp 内网穿透 web](https://www.jianshu.com/p/57658825ff0d)
-
+[frp 内网穿透 web](https://www.jianshu.com/p/57658825ff0d)
+[frp github](https://github.com/fatedier/frp)
 ## 一、说明
 
 ### (1) 内网穿透

@@ -9,3 +9,14 @@ services:
     restart: always
     volumes:
       - ./frpc.ini:/etc/frp/frpc.ini
+
+version: "3"
+services:
+  frpc:
+    image: "snowdreamtech/frps:latest"
+    container_name: fhl-frps
+    network_mode: host
+    restart: always
+    volumes:
+      - ./frps.ini:/etc/frp/frps.ini
+    

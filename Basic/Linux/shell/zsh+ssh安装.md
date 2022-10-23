@@ -74,6 +74,28 @@ $ vi ~/.zshrc
 -> ZSH_THEME="ys" 
 ```
 
+### (6) more than zsh
+
+
+```shell
+# 可使用 gitee 地址替代
+$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+$ git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+
+```shell
+plugins=(
+      git 
+      zsh-autosuggestions # 代码建议
+      zsh-vi-mode # vi mod，可以在命令行中使用vi命令
+      zsh-syntax-highlighting # 语法高亮
+      colored-man-pages # man 高亮
+)
+```
+
+autojump， 使用 `j dir_perfix` 跳转到之前访问过的目录中
+zsh-autosuggestions, 使用方向键 `->` 补全推荐的代码
 
 
 
