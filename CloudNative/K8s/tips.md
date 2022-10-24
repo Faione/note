@@ -23,7 +23,7 @@ $ kubectl config use-context kubevrit | cilium
 $ kubectl get pods <podname> -o jsonpath='{.spec.containers[*].name}'
 ```
 
-## commands && args
+## command && args
 
 [commands && args](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/)
 
@@ -31,3 +31,6 @@ $ kubectl get pods <podname> -o jsonpath='{.spec.containers[*].name}'
 - 如果提供 `command` 但没有提供 `args` 参数，则仅使用提供的 `command`, Docker镜像中定义的默认EntryPoint和默认Cmd将被忽略
 - 如果仅为容器提供 `args`，则Docker镜像中定义的默认Entrypoint将与您提供的 `args` 一起运行
 - 如果提供 `command` 和 `args`，则将忽略Docker镜像中定义的默认Entrypoint和默认Cmd, 您的command与 args一起运行
+
+
+/root/.gluenet/monitor/k8s/metric/set_or_clear.sh /root/.kube/config set 035c742acc7b0c0df6ed9de98ff6be66

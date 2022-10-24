@@ -24,3 +24,26 @@ spec:
     scheme: http
   jobLabel: cprofile-exporter
 ```
+
+选择器匹配问题
+[port name](https://kubesphere.com.cn/forum/d/2701-serviceservicemonitor/2)
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gluenet-cilium-exporter
+  namespace: monitoring
+  labels:
+    app: cilium-exporter
+spec:
+  selector:
+    matchLabels: 
+      app: cilium-exporter
+  endpoints:
+  - interval: 30s 
+    port: metric
+    path: /metrics
+    scheme: http
+  jobLabel: gluenet-cilium-exporter
+```
