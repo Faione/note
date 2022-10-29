@@ -66,3 +66,13 @@ git push
 ```shell
 git config --global credential.helper store
 ```
+
+#### (5) 源码编译
+
+注意相关依赖库的安装
+
+[](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%AE%89%E8%A3%85-Git)
+
+vscode git 地址配置
+- 设置中选中 `远程`
+- 搜索配置项 `git.path`, 修改为git bin所在的位置，不可使用相对地址

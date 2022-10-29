@@ -283,6 +283,9 @@ $ git push --force
 $ git commit --amend -m "new message"
 ```
 
+删除远程分支
 
-
+```shell
+$ git push origin --delete <branch_name>
+```
 
