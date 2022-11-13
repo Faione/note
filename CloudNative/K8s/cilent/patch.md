@@ -1,0 +1,1 @@
+[usage of k8s client patch](https://developer.aliyun.com/article/703438)

@@ -78,7 +78,7 @@ $ vi ~/.zshrc
 
 
 ```shell
-# 可使用 gitee 地址替代
+# 可使用 gitee 地址替代 github即可
 $ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 $ git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting

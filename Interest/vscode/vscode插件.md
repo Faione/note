@@ -2,6 +2,11 @@
 
 ## 一、remote-ssh
 
+默认情况会转发至localhost, 按照如下配置则可以将数据转发至所有端口(0.0.0.0)
+
+```json
+"remote.localPortHost": "allInterfaces",
+```
 **安装插件**
 
 扩展中搜索 Remote-SSH

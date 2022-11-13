@@ -45,5 +45,26 @@ println!("{:E}", 1000f64); // 1E3，科学计数(大写)
 
 ## Rust版本控制
 
-- 
+## range
+
+exclusive range 与 inclusive range
+- match 中仅支持 exclusive range
+
+1..5 // 1, 2, 3, 4
+1..=5 // 1, 2, 3, 4, 5
+
+## ref 关键字
+
+[ref](https://doc.rust-lang.org/std/keyword.ref.html)
+
+
+## install
+
+```shell
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# 中科大源
+export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+```
 

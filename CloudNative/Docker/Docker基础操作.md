@@ -37,6 +37,7 @@
 
 - --volume , -v: 绑定一个卷
 
+- --entrypoint="/bin/bash", 用来覆盖默认的 entrypoint
 
 ## 二、docker exec
 此条命令即期望容器执行一条命令，如 "/bin/bash"， 从而生成一个假终端进行交互  
@@ -107,3 +108,5 @@ $ cat <logpath>
 ```shell
 $ sudo usermod -aG docker $USER && newgrp docker
 ```
+
+

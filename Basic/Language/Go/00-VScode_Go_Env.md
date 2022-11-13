@@ -82,23 +82,3 @@ $ go env -w GO111MODULE=auto
    - [参考](https://blog.csdn.net/qq_41891425/article/details/110675093)
 
 
-- 注册 guid
-   - info
-      - Host
-         - Host Name
-         - mac
-         - random 
-      - Container --> agent
-         - container name 
-      - Stratege  --> agent
-   - type
-   - other_info 
-
-- 修改策略
-   - 关联依赖关系（Host） 
-
-agent端口
-   - collector
-   - RESTFul
-
-

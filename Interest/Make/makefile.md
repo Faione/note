@@ -1,5 +1,7 @@
 # MakeFile
 
+[教程](https://www.ruanyifeng.com/blog/2015/02/make.html)
+
 makefile 规则
    - target
    - prerequisites

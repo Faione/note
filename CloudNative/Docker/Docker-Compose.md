@@ -1,4 +1,6 @@
 # Docker Compose
+
+[compose file v3](https://docs.docker.com/compose/compose-file/compose-file-v3/)
 [菜鸟教程](https://www.runoob.com/docker/docker-compose.html)  
 
 ## 一、简介
@@ -41,7 +43,9 @@ Dockerfile是一个文本文件，包含了构建一个镜像所需的指令
 ```dockerfile
 # 基于 python:3.7-alpine 镜像构建一个新的镜像
 FROM python:3.7-alpine 
-WORKDIR /code
+
+# WorkDir 设置 Run 以及容器运行时的目录
+WORKDIR /code 
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 RUN apk add --no-cache gcc musl-dev linux-headers
@@ -58,8 +62,8 @@ CMD ["flask", "run"]
 ```yml
 version: "3.9"  # optional since v1.27.0
 services:
-  web:
-    build: .
+  web:  
+    build: . # 默认使用当前文件夹的名称作为镜像名称，否则则需要使用 image 给出
     ports:
       - "5000:5000"
     volumes:
@@ -78,6 +82,7 @@ volumes:
 ```shell
 # 依次按照配置启动容器
 # docker-compose up -d, 可让将要启动的容器全部后台运行
+# docker-compose up --build 让docker先构建镜像，然后用新构建的镜像启动
 $ docker-compose up 
 
 # 关闭容器并删除

@@ -5,7 +5,7 @@
    - [Docker博客](https://zhuanlan.zhihu.com/p/89587030)
 ## 一、Docker基础模块
 ### (1) 总体架构
-![image](/Docker/image/docker架构图.jpg)
+![image](./image/docker架构图.jpg)
 
 ### (1) 主要模块
 Docker Client、Docker Daemon、Docker Registry、Grap、Driver、libcontainer、Docker  Container

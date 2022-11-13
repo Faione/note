@@ -1,0 +1,1 @@
+[nc](https://www.cnblogs.com/leoshi/p/12670957.html)
