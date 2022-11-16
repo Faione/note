@@ -76,6 +76,21 @@ $ vi ~/.zshrc
 
 ### (6) more than zsh
 
+```shel
+sh -c  "https://gitee.com/gitee_rubbish/codes/hjuwc6orm8b0v4i135fdg74/raw?blob_name=insatll_oh_my_zsh.sh"
+
+git clone https://gitee.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+git clone https://gitee.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+plugins=(
+      git
+      zsh-autosuggestions
+      zsh-syntax-highlighting
+      colored-man-pages
+)
+```
+
 
 ```shell
 # 可使用 gitee 地址替代 github即可

@@ -1,0 +1,15 @@
+{
+    "code": 200,
+    "message": "succeed",
+    "data": {
+        "total_count": 99,
+        "latency": {
+            "avg": 1666857110,
+            "0.5": 1666857110,
+            "0.95": 1666857110,
+            "0.99": 1666857110
+        },
+        "err_count": 1,
+        "success_rate": 0.99
+    }
+}

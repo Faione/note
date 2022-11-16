@@ -1,1 +1,0 @@
-[drone](https://www.drone.io/)

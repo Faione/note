@@ -1,6 +1,8 @@
 # Vim-Base
 
 - [lunarvim](https://zhuanlan.zhihu.com/p/518029277)
+
+- [rust with nvim](https://sharksforarms.dev/posts/neovim-rust/)
 ## 插入
 
 o: 下方插入

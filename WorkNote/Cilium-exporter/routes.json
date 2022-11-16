@@ -1,0 +1,4 @@
+{
+    "/apis/monitor/:agent_guid/dag/:guid/:level/servicemap": "/servicemaps",
+    "/apis/monitor/:agent_guid/dag/:guid/:level/respones": "/responses"
+}
