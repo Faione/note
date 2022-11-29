@@ -5,12 +5,14 @@
 - [guidence](https://github.com/LearningOS/rCore-Tutorial-Code-2022S)
 - [blogos](https://os.phil-opp.com/freestanding-rust-binary/)
 
-
 **RiscV**
 
 - [guidence](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md)
 - [参考](https://riscv.org/wp-content/)
 
+
+qemu
+- `ctrl` + `a` then `x` to quit from qemu
 
 - 解决vscode rust报错`can't find crate for `test``
   - [](https://www.cnblogs.com/dou-fu-gan/p/15870905.html)

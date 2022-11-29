@@ -1,0 +1,97 @@
+{
+    "code": 200,
+    "message": "succeed",
+    "data": {
+        "graph": {
+            "demo-service-1": {
+                "demo-service-2": [
+                    0,
+                    1
+                ],
+                "demo-service-3": [
+                    2,
+                    3
+                ]
+            }
+        },
+        "services": {
+            "demo-service-1": {
+                "name": "demo-service-3",
+                "ip": "sourceIp",
+                "ports": {
+                    "80": {
+                        "port": "80",
+                        "protocol": "http",
+                        "urls": [
+                            "/users"
+                        ]
+                    }
+                }
+            },
+            "demo-service-2": {
+                "name": "demo-service-5",
+                "ip": "sourceIp",
+                "ports": {
+                    "80": {
+                        "port": "80",
+                        "protocol": "http",
+                        "urls": [
+                            "/users"
+                        ]
+                    }
+                }
+            },
+            "demo-service-3": {
+                "name": "demo-service-7",
+                "ip": "sourceIp",
+                "ports": {
+                    "80": {
+                        "port": "80",
+                        "protocol": "http",
+                        "urls": [
+                            "/users"
+                        ]
+                    }
+                }
+            }
+        },
+        "requests": [
+            {
+                "source_pod": "demo-service-1",
+                "destination_pod": "demo-service-2",
+                "destination_port": "80",
+                "method": "GET",
+                "url": "/articles",
+                "verdict": "FORWARDED",
+                "protocol": "http"
+            },
+            {
+                "source_pod": "demo-service-1",
+                "destination_pod": "demo-service-2",
+                "destination_port": "80",
+                "method": "GET",
+                "url": "/users",
+                "verdict": "FORWARDED",
+                "protocol": "http"
+            },
+            {
+                "source_pod": "demo-service-1",
+                "destination_pod": "demo-service-3",
+                "destination_port": "80",
+                "method": "GET",
+                "url": "/articles",
+                "verdict": "FORWARDED",
+                "protocol": "http"
+            },
+            {
+                "source_pod": "demo-service-1",
+                "destination_pod": "demo-service-3",
+                "destination_port": "80",
+                "method": "GET",
+                "url": "/users",
+                "verdict": "FORWARDED",
+                "protocol": "http"
+            }
+        ]
+    }
+}

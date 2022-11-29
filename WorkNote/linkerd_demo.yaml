@@ -1,222 +1,34 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: emojivoto
-annotations:
-  linkerd.io/inject: enabled
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: emoji
-  namespace: emojivoto
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: voting
-  namespace: emojivoto
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: web
-  namespace: emojivoto
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: emoji-svc
-  namespace: emojivoto
-spec:
-  ports:
-  - name: grpc
-    port: 8080
-    targetPort: 8080
-  - name: prom
-    port: 8801
-    targetPort: 8801
-  selector:
-    app: emoji-svc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: voting-svc
-  namespace: emojivoto
-spec:
-  ports:
-  - name: grpc
-    port: 8080
-    targetPort: 8080
-  - name: prom
-    port: 8801
-    targetPort: 8801
-  selector:
-    app: voting-svc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-svc
-  namespace: emojivoto
-spec:
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
-  selector:
-    app: web-svc
-  type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/name: emoji
-    app.kubernetes.io/part-of: emojivoto
-    app.kubernetes.io/version: v11
-  name: emoji
-  namespace: emojivoto
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: emoji-svc
-      version: v11
-  template:
-    metadata:
-      labels:
-        app: emoji-svc
-        version: v11
-    spec:
-      containers:
-      - env:
-        - name: GRPC_PORT
-          value: "8080"
-        - name: PROM_PORT
-          value: "8801"
-        image: docker.l5d.io/buoyantio/emojivoto-emoji-svc:v11
-        name: emoji-svc
-        ports:
-        - containerPort: 8080
-          name: grpc
-        - containerPort: 8801
-          name: prom
-        resources:
-          requests:
-            cpu: 100m
-      serviceAccountName: emoji
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/name: vote-bot
-    app.kubernetes.io/part-of: emojivoto
-    app.kubernetes.io/version: v11
-  name: vote-bot
-  namespace: emojivoto
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: vote-bot
-      version: v11
-  template:
-    metadata:
-      labels:
-        app: vote-bot
-        version: v11
-    spec:
-      containers:
-      - command:
-        - emojivoto-vote-bot
-        env:
-        - name: WEB_HOST
-          value: web-svc.emojivoto:80
-        image: docker.l5d.io/buoyantio/emojivoto-web:v11
-        name: vote-bot
-        resources:
-          requests:
-            cpu: 10m
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/name: voting
-    app.kubernetes.io/part-of: emojivoto
-    app.kubernetes.io/version: v11
-  name: voting
-  namespace: emojivoto
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: voting-svc
-      version: v11
-  template:
-    metadata:
-      labels:
-        app: voting-svc
-        version: v11
-    spec:
-      containers:
-      - env:
-        - name: GRPC_PORT
-          value: "8080"
-        - name: PROM_PORT
-          value: "8801"
-        image: docker.l5d.io/buoyantio/emojivoto-voting-svc:v11
-        name: voting-svc
-        ports:
-        - containerPort: 8080
-          name: grpc
-        - containerPort: 8801
-          name: prom
-        resources:
-          requests:
-            cpu: 100m
-      serviceAccountName: voting
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/name: web
-    app.kubernetes.io/part-of: emojivoto
-    app.kubernetes.io/version: v11
-  name: web
-  namespace: emojivoto
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: web-svc
-      version: v11
-  template:
-    metadata:
-      labels:
-        app: web-svc
-        version: v11
-    spec:
-      containers:
-      - env:
-        - name: WEB_PORT
-          value: "8080"
-        - name: EMOJISVC_HOST
-          value: emoji-svc.emojivoto:8080
-        - name: VOTINGSVC_HOST
-          value: voting-svc.emojivoto:8080
-        - name: INDEX_BUNDLE
-          value: dist/index_bundle.js
-        image: docker.l5d.io/buoyantio/emojivoto-web:v11
-        name: web-svc
-        ports:
-        - containerPort: 8080
-          name: http
-        resources:
-          requests:
-            cpu: 100m
-      serviceAccountName: web
+NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
+casdoor-svc                      ClusterIP      10.104.30.68     <none>        10000/TCP                       135d
+casnode-svc                      ClusterIP      10.97.224.5      <none>        10000/TCP,10001/TCP             99d
+docker-registry                  ClusterIP      10.107.108.78    <none>        5000/TCP                        104d
+glue-apis                        ClusterIP      10.100.255.148   <none>        10000/TCP                       227d
+glue-apiserver                   ClusterIP      10.96.138.15     <none>        10000/TCP                       42d
+glue-console                     ClusterIP      10.105.154.107   <none>        22/TCP                          136d
+glue-core                        ClusterIP      10.106.27.76     <none>        10000/TCP                       114d
+glue-data-es-service             ClusterIP      10.111.105.47    <none>        9200/TCP,9300/TCP               228d
+glue-data-influxdb-log-service   ClusterIP      10.101.23.58     <none>        8086/TCP,10000/TCP              174d
+glue-data-influxdb-service       ClusterIP      10.101.21.41     <none>        8086/TCP,10000/TCP              251d
+glue-data-jaeger-ui-service      ClusterIP      10.97.235.78     <none>        16686/TCP,16687/TCP             227d
+glue-data-kibana-service         ClusterIP      10.100.34.114    <none>        5601/TCP                        109d
+glue-data-mysql-service          ClusterIP      10.107.47.48     <none>        3306/TCP                        237d
+glue-data-registry-service       ClusterIP      10.102.85.29     <none>        8080/TCP                        222d
+glue-etcd                        ClusterIP      10.106.112.2     <none>        2379/TCP                        123d
+glue-guid-service                ClusterIP      10.100.194.85    <none>        18888/TCP                       244d
+glue-mquery                      ClusterIP      10.99.117.27     <none>        10000/TCP                       6d17h
+glue-scheduler-service           ClusterIP      10.103.56.25     <none>        10000/TCP                       250d
+glue-srvm                        ClusterIP      10.96.255.235    <none>        10000/TCP                       26d
+glue-srvp                        ClusterIP      10.98.98.17      <none>        10000/TCP                       33d
+glue-stream-prom-service         ClusterIP      10.105.214.213   <none>        10000/TCP,10001/TCP,10002/TCP   143d
+glue-stream-service              ClusterIP      10.110.86.150    <none>        10000/TCP                       157d
+glue-ui                          ClusterIP      10.96.105.229    <none>        80/TCP                          135d
+glue-web-console                 ClusterIP      10.98.179.91     <none>        10000/TCP                       136d
+glue-websocket-service           ClusterIP      10.106.84.254    <none>        10001/TCP,10002/TCP             142d
+grafana-svc                      ClusterIP      10.98.84.185     <none>        3000/TCP                        87d
+happy-panda-mariadb              ClusterIP      10.105.79.185    <none>        3306/TCP                        90d
+happy-panda-wordpress            LoadBalancer   10.98.22.242     <pending>     80:31495/TCP,443:31234/TCP      90d
+kubernetes                       ClusterIP      10.96.0.1        <none>        443/TCP                         254d
+my-chart                         NodePort       10.96.122.88     <none>        80:31648/TCP                    90d
+router-proxy-service             ClusterIP      10.111.46.28     <none>        1010/TCP                        75d
+sponge-service                   ClusterIP      10.102.196.44    <none>        8087/TCP                        235d
+test-deomo-web-proxy-svc         ClusterIP      10.109.173.177   <none>        8000/TCP,8080/TCP  

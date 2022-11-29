@@ -2,6 +2,8 @@
 
 - [kube prometheus](https://github.com/prometheus-operator/kube-prometheus)
 
+- [serviceMonitor](https://stackoverflow.com/questions/68085831/add-podmonitor-or-servicemonitor-outside-of-kube-prometheus-stack-helm-values)
+
 ## 部署
 
 **Minikube**

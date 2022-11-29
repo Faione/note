@@ -38,3 +38,9 @@ kubectl edit configMap frpc
 
 kubectl get pod test -o yaml | kubectl apply -f -
 
+
+kubectl config view --minify=true --flatten=true  > deploy/helm/manager/v0.3/k8sconfig
+
+IMAGE_TAG=test APP=apiserver make remake redeploy-app
+
+[k8s-api](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/)

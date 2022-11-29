@@ -1,0 +1,554 @@
+{
+    "services": [
+        {
+            "parents": [],
+            "children": [
+                {
+                    "parents": [
+                        "demo-service-1"
+                    ],
+                    "children": [
+                        {
+                            "parents": [
+                                "demo-service-2"
+                            ],
+                            "children": [
+                                {
+                                    "parents": [
+                                        "demo-service-4"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-8",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "parents": [
+                                        "demo-service-4"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-9",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "name": "demo-service-4",
+                                "ip": "sourceIp",
+                                "ports": {
+                                    "80": {
+                                        "port": "80",
+                                        "protocol": "http",
+                                        "urls": [
+                                            "/articles",
+                                            "/users"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "parents": [
+                                "demo-service-2"
+                            ],
+                            "children": [
+                                {
+                                    "parents": [
+                                        "demo-service-5"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-10",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "parents": [
+                                        "demo-service-5"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-11",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "name": "demo-service-5",
+                                "ip": "sourceIp",
+                                "ports": {
+                                    "80": {
+                                        "port": "80",
+                                        "protocol": "http",
+                                        "urls": [
+                                            "/articles",
+                                            "/users"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "name": "demo-service-2",
+                        "ip": "sourceIp",
+                        "ports": {
+                            "80": {
+                                "port": "80",
+                                "protocol": "http",
+                                "urls": [
+                                    "/articles",
+                                    "/users"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "parents": [
+                        "demo-service-1"
+                    ],
+                    "children": [
+                        {
+                            "parents": [
+                                "demo-service-3"
+                            ],
+                            "children": [
+                                {
+                                    "parents": [
+                                        "demo-service-6"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-12",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "parents": [
+                                        "demo-service-6"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-13",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "name": "demo-service-6",
+                                "ip": "sourceIp",
+                                "ports": {
+                                    "80": {
+                                        "port": "80",
+                                        "protocol": "http",
+                                        "urls": [
+                                            "/articles",
+                                            "/users"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "parents": [
+                                "demo-service-3"
+                            ],
+                            "children": [
+                                {
+                                    "parents": [
+                                        "demo-service-7"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-14",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "parents": [
+                                        "demo-service-7"
+                                    ],
+                                    "children": [],
+                                    "meta": {
+                                        "name": "demo-service-15",
+                                        "ip": "sourceIp",
+                                        "ports": {
+                                            "80": {
+                                                "port": "80",
+                                                "protocol": "http",
+                                                "urls": [
+                                                    "/articles",
+                                                    "/users"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "name": "demo-service-7",
+                                "ip": "sourceIp",
+                                "ports": {
+                                    "80": {
+                                        "port": "80",
+                                        "protocol": "http",
+                                        "urls": [
+                                            "/articles",
+                                            "/users"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "name": "demo-service-3",
+                        "ip": "sourceIp",
+                        "ports": {
+                            "80": {
+                                "port": "80",
+                                "protocol": "http",
+                                "urls": [
+                                    "/articles",
+                                    "/users"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "name": "demo-service-1",
+                "ip": "destinationIp",
+                "ports": {}
+            }
+        }
+    ],
+    "requests": [
+        {
+            "source_pod": "demo-service-1",
+            "destination_pod": "demo-service-2",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-1",
+            "destination_pod": "demo-service-2",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-1",
+            "destination_pod": "demo-service-3",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-1",
+            "destination_pod": "demo-service-3",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-2",
+            "destination_pod": "demo-service-5",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-2",
+            "destination_pod": "demo-service-5",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-2",
+            "destination_pod": "demo-service-4",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-2",
+            "destination_pod": "demo-service-4",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-3",
+            "destination_pod": "demo-service-6",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-3",
+            "destination_pod": "demo-service-6",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-3",
+            "destination_pod": "demo-service-7",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-3",
+            "destination_pod": "demo-service-7",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-4",
+            "destination_pod": "demo-service-8",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-4",
+            "destination_pod": "demo-service-8",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-4",
+            "destination_pod": "demo-service-9",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-4",
+            "destination_pod": "demo-service-9",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-5",
+            "destination_pod": "demo-service-10",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-5",
+            "destination_pod": "demo-service-10",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-5",
+            "destination_pod": "demo-service-11",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-5",
+            "destination_pod": "demo-service-11",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-6",
+            "destination_pod": "demo-service-13",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-6",
+            "destination_pod": "demo-service-13",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-6",
+            "destination_pod": "demo-service-12",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-6",
+            "destination_pod": "demo-service-12",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-7",
+            "destination_pod": "demo-service-14",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-7",
+            "destination_pod": "demo-service-14",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-7",
+            "destination_pod": "demo-service-15",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/articles",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        },
+        {
+            "source_pod": "demo-service-7",
+            "destination_pod": "demo-service-15",
+            "destination_port": "80",
+            "method": "GET",
+            "url": "/users",
+            "verdict": "FORWARDED",
+            "protocol": "http"
+        }
+    ]
+}
