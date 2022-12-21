@@ -119,7 +119,12 @@ $ git branch -f <分支名称> <commit tag>
 
 ```shell
 $ git reset <commit tag>
+
+# 回退至上一次commit, 并保留变更的文件
+$ git reset --soft HEAD^
 ```
+
+[撤销 reset](https://blog.csdn.net/mhlghy/article/details/84786497)
 
 - revert
 
@@ -133,9 +138,11 @@ $ git revert <commit tag>
 
 ## 三、远程管理
 ### (1) 简介
+
 远程仓库是本地仓库的备份
 
 ### (2) 命令
+
 1. 克隆远程仓库
 
 ```shell
@@ -177,6 +184,12 @@ pull操作提供了更简介的本地-远程分支合并操作
 
 ```shell
 $ git pull origin <远程分支名>
+```
+
+4. 删除远程分支
+
+```shell
+$ git push <remote> -d <remote_branch>
 ```
 
 ## 四、常用开发

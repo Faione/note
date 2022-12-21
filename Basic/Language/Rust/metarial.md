@@ -20,3 +20,6 @@
 # 数组地址可以与引用地址相同
 assert_eq!([2, 3, 4], nice_slice)
 ```
+
+[ownership & lifecircle](https://blogs.harvard.edu/kapolos/rusty-ownership-and-the-lifecycles-stone/)
+[cargo config](https://doc.rust-lang.org/cargo/index.html)

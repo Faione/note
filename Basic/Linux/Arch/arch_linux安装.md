@@ -35,6 +35,15 @@ host烧录在镜像中，直接读取到内存中运行，具备基本的安装�
 - todo 分析软件行为
 - 内核也是一个软件
 
+[openssl 安装报错](https://blog.csdn.net/TG_hupo/article/details/126146210)
+
+```shell
+# 注意同步时间 `timedatectl set-ntp true`
+pacman -S archlinux-keyring
+```
+
+[archlinuxcn 镜像站](https://mirrors.tuna.tsinghua.edu.cn/help/archlinuxcn/)
+
 
 
 ## host系统
