@@ -54,3 +54,7 @@ pacman -S archlinux-keyring
 # 安装桌面环境
 
 [](https://zhuanlan.zhihu.com/p/405352705)
+
+
+downgrade 工具可以安装早版本的包
+pacman -Sc 用来清理缓存

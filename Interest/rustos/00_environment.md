@@ -4,6 +4,7 @@
 - [2022训练营](https://learningos.github.io/rust-based-os-comp2022/)
 - [guidence](https://github.com/LearningOS/rCore-Tutorial-Code-2022S)
 - [blogos](https://os.phil-opp.com/freestanding-rust-binary/)
+- [risc-v sbi doc](https://github.com/riscv-non-isa/riscv-sbi-doc)
 
 **RiscV**
 
