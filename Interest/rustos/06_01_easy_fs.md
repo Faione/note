@@ -217,3 +217,12 @@ EasyFileSystem 实现了磁盘布局并能够将磁盘块有效的管理起来�
 ## 文件创建
 
 disk inode 存储在 inode area 中， 而用于间接索引的索引块存放在 data area 中
+
+## 用户态进行测试
+
+## 打包应用为 easy-fs 镜像
+
+efs基于块设备的抽象进行工作，而linux中的普通文件就可以当作是一个块设备, 因而打包easy-fs镜像的过程即是在linux环境中初始化 efs, 创建文件 `fs.img` 作为块设备，并将其传入 efs 中，
+1. 清空 `fs.img` 文件，初始化文件系统，将文件以block的形式组织起来，完成 super_block, inode_bitmap, inode_area, data_bitmap, data_area 的初始布局
+2. 以字节流的方式读入程序的 elf 文件， 保存到根目录的文件中
+3. 然后在系统启动时，便可以直接从 `fs.img` 还原对应的efs, 并操作相关文件

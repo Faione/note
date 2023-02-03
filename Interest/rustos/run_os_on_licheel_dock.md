@@ -14,6 +14,8 @@ DRAM SPACE | 0x4000 0000---0xBFFF FFFF
 ### 转接驱动
 
 安装 `FT232` 驱动, [驱动链接](http://ftdichip.cn/Drivers/D2XX/Linux/libftd2xx-x86_64-1.4.27.tgz)
+- 多数发行版 linux 中已经内置了 ftdi 设备 驱动，因此不必安装
+- vmware 虚拟机无法连接 ftdi usb设备解决方法(https://blog.csdn.net/lxhujinghui2011/article/details/124533017)
 
 
 ### 串口软件
@@ -31,6 +33,7 @@ $ sudo picocom -b 115200 /dev/ttyUSB0 --imap lfcrlf
 
 测试启动模式 `xfel --------> see -> kernel`, [rustSBI使用手册](https://github.com/rustsbi/rustsbi-d1)
 - xfel 工具能够直连开发板并执行执行程序
+- xfel 通过荔枝派的 c口 连接到开发板
 
 编译  `see.bin`
 
