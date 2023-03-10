@@ -12,6 +12,8 @@
 - [参考](https://riscv.org/wp-content/)
 
 
+在未开启指令压缩的前提下，riscv指令的长度通常为32bit, 无论是 riscv-32 还是 riscv-64
+
 qemu
 - `ctrl` + `a` then `x` to quit from qemu
 
@@ -129,8 +131,6 @@ Symbol {
     Section: .text (0xE)
  }
 ```
-
-
 
 机制和策略分离
 - 进程的机制 与 进程的调度
