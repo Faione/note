@@ -58,3 +58,10 @@ pacman -S archlinux-keyring
 
 downgrade 工具可以安装早版本的包
 pacman -Sc 用来清理缓存
+
+修改 `/etc/pacman.conf` 中的 `IgnorePkg` 处的字段，即可让 pacman 忽略指定的软件包更新
+
+
+[manage](https://arch-linux.osrc.com/advanced/system-ctl.html#pacman-%E5%8C%85%E7%AE%A1%E7%90%86)
+
+[解决 kde 无法与宿主机拷贝内容bug](https://blog.azurezeng.com/installation-guide-for-archlinux-kde/)

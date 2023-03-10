@@ -83,3 +83,26 @@ Rust 提供了 spin_loop_hint 函数，我们可以在循环体内调用该函�
 ## Atomics and Locks
 
 [](https://marabos.nl/atomics/)
+
+## WorkSpace
+
+[](https://kaisery.github.io/trpl-zh-cn/ch14-03-cargo-workspaces.html)
+
+在 Rust 中，! 被称为 never type，表示一个永远不会有值的类型。 它可以用作函数的返回类型，表示函数永远不会正常返回，而是在运行时发生 panic
+
+## Global Variables
+
+[](https://www.sitepoint.com/rust-global-variables)
+
+## Deref
+
+?`*<*T>` 对应方法 `<*T>.deref()`, 会返回T, 这是一个栈上数据 
+
+## 裸指针转化
+
+智能指针(Smart Pointer)和 Rust 中的其他两类指针：裸指针 `*const T/*mut T` 和引用 `&T/&mut T` 一样，都指向地址空间中的另一个区域并包含它的位置信息。但它们携带的信息数量不等，需要经过编译器不同等级的安全检查，所以它们在可靠性和灵活程度也有所不同
+- 裸指针`*const T/*mut T`基本等价于 C/C++ 里面的普通指针`*T`，它自身的内容仅仅是一个地址。它最为灵活，但是也最不安全。编译器只能对它进行最基本的可变性检查(只读的数据不能写)，通过裸指针解引用来访问数据的行为是 unsafe 行为，需要被包裹在 unsafe 块中
+- 引用`&T/&mut T`实质上只是一个地址范围，但是 Rust 编译器会在编译的时候进行比较严格的借用检查 (Borrow Check)，来确保在编译期就解决掉很多内存不安全问题
+- 智能指针不仅包含它指向区域的地址范围，还含有一些额外的信息，因此这个类型的大小大于裸指针的大小，属于一种"胖"指针。从用途上看，它不仅可以作为一个媒介来访问它指向的数据，还能在这个过程中起到管理和控制的功能
+
+将`usize`转化为裸指针是允许的，但是任何对于裸指针数据的访问都是`unsafe`的
