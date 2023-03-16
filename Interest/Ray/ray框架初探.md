@@ -15,7 +15,7 @@
     - [actor 命名](#actor-命名)
     - [actor 生命周期](#actor-生命周期)
     - [actor 池](#actor-池)
-    - [worker && actor](#worker--actor)
+    - [worker \&\& actor](#worker--actor)
   - [五、Namespaces](#五namespaces)
     - [匿名空间](#匿名空间)
   - [六、Runtime Environment](#六runtime-environment)
@@ -32,7 +32,7 @@
     - [REST API](#rest-api)
   - [八、Ray Serve](#八ray-serve)
   - [九、其他](#九其他)
-    - [task && trace](#task--trace)
+    - [task \&\& trace](#task--trace)
     - [actor模型](#actor模型)
     - [接入策略](#接入策略)
 

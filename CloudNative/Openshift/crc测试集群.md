@@ -11,7 +11,7 @@ pullsecret 地址
 ?X11与crc存在冲突，当存在 `.Xauthority` 文件时, crc 的执行会异常缓慢
 - 开启X11, 并在每次登陆时删除 `.Xauthority`
 
-windows访问
+windows访
 - ssh隧道目标ip与端口
 - 修改windows host文件 `C:\Windows\System32\drivers\etc\hosts`
 

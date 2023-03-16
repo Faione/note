@@ -19,7 +19,7 @@ Metric有四种类型[^2], Counter、Gauge、Histogram和Summary，用于不同�
 
 Counter: 表示单个单调递增的单个数值，对应的value只能增加或是通过重启来清0，如请求的次数，完成任务的数量，错误数量等
 Guage: 表示单个数值，能够任意的增加或减少，如当前的温度，内存使用，并发请求的数量等
-Histogram: 
+Histogram:  
 
 
 ### Vec类型
