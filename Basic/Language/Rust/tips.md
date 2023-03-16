@@ -6,6 +6,10 @@
 - [rust构建脚本](https://course.rs/cargo/reference/build-script/intro.html)
 - [rust月刊](https://rustmagazine.github.io/)
 
+
+- [rustup](https://rust-lang.github.io/rustup/cross-compilation.html)
+- [rust_platform_support](https://doc.rust-lang.org/nightly/rustc/platform-support.html)
+
 ```rust
 // 二进制
 println!("0b{:b}", 0b11_01); // 0b1101
@@ -93,6 +97,12 @@ Rust 提供了 spin_loop_hint 函数，我们可以在循环体内调用该函�
 ## Global Variables
 
 [](https://www.sitepoint.com/rust-global-variables)
+
+## Reference
+
+[string_vs_str](https://blog.thoughtram.io/string-vs-str-in-rust/)
+
+[ownership](https://blog.thoughtram.io/ownership-in-rust/)
 
 ## Deref
 
