@@ -16,6 +16,7 @@
     - [(4) working on mutiple branch](#4-working-on-mutiple-branch)
     - [submodule](#submodule)
     - [(4) git submodule](#4-git-submodule)
+    - [(5) git tags](#5-git-tags)
 
 
 ## 一、分支管理
@@ -346,3 +347,61 @@ git clone --recursive <gitpath>
 
 ### (4) git submodule
 
+```shell
+# 添加 submodule
+git submodule add <url> <path>
+
+# 删除 submodule
+git rm --cached <path>
+```
+
+[^6]: [git_submodule](https://iphysresearch.github.io/blog/post/programing/git/git_submodule/)
+[^7]: [git_submodule_official](https://git-scm.com/docs/git-submodule)
+
+### (5) git tags
+
+标签是比分支更为固定和不可更改的指针，它们指向的是代码库中的某个特殊提交，并通过注释信息描述该提交的含义。
+
+需要注意的是，与分支不同，标签不能被移动或更改。如果要修改一个旧的标签，必须删除它并创建一个新的标签
+
+创建tag
+
+```shell
+$ git tag <tagname>
+
+# use `-m` with `-a`
+$ git tag -a <tagname> -m <msg>
+```
+
+查看所有的tag
+
+```shell
+$ git tag
+```
+
+切换到某个tag
+
+```shell
+$ git checkout <tagname>
+```
+
+在特定tag上创建分支
+
+```shell
+$ git checkout -b <branchname> <tagname>
+```
+
+删除tag
+
+```shell
+$ git tag -d <tagname>
+```
+
+推送tag到远程仓库
+
+```shell
+$ git push origin <tagname>
+```
+
+
+[^8]: [git_tag](https://git-scm.com/docs/git-tag)

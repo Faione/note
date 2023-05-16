@@ -101,8 +101,8 @@ type BitmapBlock = [u64; 64];
 u64::trailing_ones 用于计算给出的 u64 中, 从低位开始的连续 1 的数量, 初始时全0, 因此返回 0, 在 modify 中相当于为 u64 末尾置1, 之后, 则会返回 1, 而在 modify 中, 相当于将 u64 的低 2 位置1, 由此进行位图的分配
 
 block id 计算
-- block_id * BLOCK_BITS + bits64_pos * 64 + inner_pos as usize
-- {在bitmap中的偏移} + {在[u64;64]及bitmap_block中的偏移} + {在 u64 中的偏移(从右往左}
+- bitmap_block_id * BLOCK_BITS + bits64_pos * 64 + inner_pos as usize
+- {在bitmap中的偏移} + {在`[u64;64]`及bitmap_block中的偏移} + {在 u64 中的偏移(从右往左)}
 
 ```rust
 // 遍历 bitmap 中的所有 BitmapBlock
@@ -177,13 +177,13 @@ pub enum DiskInodeType {
 
 为了充分利用空间，我们将 DiskInode 的大小设置为 128 字节，每个块正好能够容纳 4 个 DiskInode 。在后续需要支持更多类型的元数据的时候，可以适当缩减直接索引 direct 的块数，并将节约出来的空间用来存放其他元数据，仍可保证 DiskInode 的总大小为 128 字节
 
+**思考**
 
-每个文件对应的数据可以理解为一个超大的 [u8] 数组, 通过 offset 与 len 在文件中读取指定位置的数据, 这个 [u8] 数据用 block 来组织, 每个 block 中保存 512Byte 的数据, 即[u8;512], ?实际中, block并不是顺序摆放的(类似于内存)?, 而为维护用户读取文件的 offset 到实际block_id的映射, 需要为每个文件维护一个索引块, 用来保存这些数据块的 block_id (通过这个block_id可以找到对应的数据块), 因而索引块可以理解为一个 [u32] 数组
+每个文件对应的数据可以理解为一个超大的 [u8] 数组, 通过 offset 与 len 在文件中读取指定位置的数据, 这个 [u8] 数据用 block 来组织, 每个 block 中保存 512Byte 的数据, 即[u8;512], ?实际中, block并不是顺序摆放的(类似于内存)?, 而为维护用户读取文件的 offset 到实际block_id的映射, 需要为每个文件维护一个索引块, 用来保存这些数据块的 block_id (通过这个block_id可以找到对应的数据块), 因而索引块可以理解为一个 [u32] 数组 (多极索引也是对于此概念的扩展)
 
-将文件以 block 划分, 计算offset可以知道数据落在那些 block 中(block顺序排列), 这个即是 inner_id, 作为索引块中 [u32] 的下标, 可以得到实际的 block_id
+将文件以 block 划分, 计算offset可以知道数据落在那些 block 中(block顺序排列), 这个即是 inner_id(即对于当前文件而言，数据在第几个block中), 作为索引块中 [u32] 的下标, 可以得到实际的 block_id 
 
-inner_id 是索引块中对于 block_id 的下标, block_id 是 PADDR
-
+inner_id 是索引块中对于 block_id 的下标,可以类别 inner_id 为虚拟地址， 通过索引块(页表), 翻译得到 block_id(物理地址)， 而存储这一映射关系的不是一个页表项，而是通过一个 index map 实现
 
 write_at 的实现思路基本上和 read_at 完全相同。但不同的是 write_at 不会出现失败的情况；只要 Inode 管理的数据块的大小足够，传入的整个缓冲区的数据都必定会被写入到文件中。当从 offset 开始的区间超出了文件范围的时候，就需要调用者在调用 write_at 之前提前调用 increase_size ，将文件大小扩充到区间的右端，保证写入的完整性
 
@@ -207,6 +207,8 @@ EasyFileSystem 知道整个磁盘布局，即可以从 inode位图 或数据块�
 ## 索引节点
 
 EasyFileSystem 实现了磁盘布局并能够将磁盘块有效的管理起来。但是对于文件系统的使用者而言，他们往往不关心磁盘布局是如何实现的，而是更希望能够直接看到目录树结构中逻辑上的文件和目录。为此需要设计索引节点 Inode 暴露给文件系统的使用者，让他们能够直接对文件和目录进行操作。 Inode 和 DiskInode 的区别从它们的名字中就可以看出： DiskInode 放在磁盘块中比较固定的位置，而 Inode 是放在内存中的记录文件索引节点信息的数据结构
+
+`inode_id` 指示了index node的编号，通过这个编号可以计算得到index nodex的block id
 
 ### 获取根目录 inode
 

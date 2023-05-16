@@ -1,5 +1,7 @@
 # virtio设备驱动程序
 
+[virtio_docs](http://docs.oasis-open.org/virtio/)
+
 virtio 协议是对hypervisor 中的一组通用模拟设备的抽象，即virtio协议定义了虚拟设备的输入/输出接口。而基于virtio协议的I/O设备称为virtio设备
 
 ![](./img/2023-03-09-10-08-54.png)
@@ -7,6 +9,8 @@ virtio 协议是对hypervisor 中的一组通用模拟设备的抽象，即virti
 虚拟机模拟外设的传统方案中，如果guest VM 要使用底层 host主机的资源，需要 Hypervisor 截获所有的I/O请求指令，然后模拟出这些I/O指令的行为，这会带来较大的性能开销
 
 virtio方案中，模拟的外设实现了功能最小化，即虚拟外设的数据面接口主要是与guest VM 共享的内存、控制面接口主要基于内存映射的寄存器和中断机制。这样guest VM 通过访问虚拟外设来使用底层 host主机的资源时，Hypervisor只需对少数寄存器访问和中断机制进行处理，实现了高效的I/O虚拟化过程
+
+**数据面与控制平面**
 
 数据面（Data Plane）
 - 设备与处理器之间的I/O数据传输相关的数据设定（地址、布局等）与传输方式（基于内存或寄存器等）
@@ -281,7 +285,7 @@ virtio_driver 模块中实现了通用的virtio驱动程序框架，各种virtio
 
 ```rust
 // virtio_drivers/src/header.rs
-pub struct VirtIOHeader {
+pub struct VirtIOHeader 
 // Queue notifier 用户虚拟队列通知的寄存器
 queue_notify: WriteOnly<u32>,
 ...
