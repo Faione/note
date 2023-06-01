@@ -176,5 +176,23 @@ async fn main() {
 ```
 
 
+## Async block && Async closure
+
+
+`async || {}` 是 异步闭包, 这是一个尚未stable的特性 , `|| async {}` 是一个普通闭包, 只不过调用这个闭包会返回一个 Future 对象, 即通过 `async {}` 所声明的异步block
+
+```
+|| async {}
+
+
+|| {
+    async {}
+}
+```
+
+
+
 
 [1]: [std_future](https://rust-lang.github.io/async-book/02_execution/02_future.html)
+
+[2]: [async_block](https://stackoverflow.com/questions/59156473/what-is-the-difference-between-async-move-and-async-move)

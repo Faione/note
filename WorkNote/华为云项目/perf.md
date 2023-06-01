@@ -45,7 +45,6 @@ $ perf list | grep LLC
 LLC MPKI = LLC 缓存失效总数 / 执行指令总数 * 1000
 ```
 
-
 ```shell
 sudo perf stat \
   -e instructions \

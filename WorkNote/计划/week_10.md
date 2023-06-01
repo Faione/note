@@ -2,34 +2,31 @@
 
 |          |       |
 | :------: | :---: |
-| complete |   3   |
-|  delay   |  29   |
+| complete |   0   |
+|  delay   |   0   |
 |  cancel  |   0   |
-|  total   |  31   |
+|  total   |  30   |
 
 华为合作
-
-<!-- redis， memcache， nginx， mysql， kafka， keydb， elasitc search，clickhouse，spark，hive -->
-
 - [ ] {文档} 调研典型业务画像过程
 - [ ] {文档} 调研典型业务负载分析方式
 - [ ] {代码} 典型应用 syscall 画像
 - [ ] {文档} memtier 压测工具调研
 - [ ] {文档} 制定 perf 采集方案
+- [ ] {文档} otel 采集
 
-rcore
-- [ ] {文档} 整理 rust 相关内容(引用与解引用)
-- [ ] {文档} arceos课程及习题
+
+arceos
 - [ ] {文档} arceos源码阅读
 - [ ] {文档} opensbi
-- [x] {文档} visionfive2上电流程
-- [ ] {文档} uboot
+- [ ] {代码} 网卡移植
+- [ ] {文档} hypervisor 练习
 
 工作
 - [ ] {文档} 开源之夏项目文档
 
 学术
-- [ ] {文档} laTex语法学习{5.1}
+- [ ] {文档} laTex语法学习
 - [ ] {文档} LibOS/Unikernel调研
 
 ebpf
@@ -43,13 +40,12 @@ ebpf
 
 k8s
 - [ ] {文档} k8s原理复习
-- [x] {文档} k8s Reconcile
 - [ ] {文档} k8s 各组件之间如何响应资源的CRUD
 - [ ] {代码} operator 相关api
 - [ ] {文档} operator 教程
-- [x] {代码} frp operator
 
 container
+- [ ] {文档} podman调研
 - [ ] {文档} docker原理复习
 - [ ] {文档} runC架构
 - [ ] {文档} youki调研
@@ -58,7 +54,7 @@ container
 - [ ] {文档} OCI标准调研
 
 其他
-- [x] {文档} tryC解释器
+- [ ] {文档} 整理 rust 相关内容(引用与解引用)
 
 
 <table>
@@ -79,28 +75,21 @@ container
 
 <!-- 周一 -->
 <th>
-1. frp operator <br>
-2. visionfive2上电流程 <br>
+1. 组会
 </th>
 
 <!-- 周二 -->
 <th>
-1. 尝试解决youki在podman rootless下的问题 <br>
-2. OCI标准调研 <br>
-3. LibOS/Unikernel调研 <br>
-4. tryC解释器 <br>
+2. 简历
 </th>
 
 <!-- 周三 -->
 <th>
-1. tryC解释器 <br>
+3. ebpf网络性能调优
 </th>
 
 <!-- 周四 -->
 <th>
-1. LibOS/Unikernel调研 <br>
-2. 扩展常见容器业务 <br>
-3. arceos课程及习题 <br>
 </th>
 
 <!-- 周五 -->
@@ -123,18 +112,17 @@ container
 
 <!-- 周一 -->
 <th>
-1. 完成frp operator <br>
-1. 调研完成visionfive2上电流程 <br>
+
 </th>
 
 <!-- 周二 -->
 <th>
-1. 学习 tryC 解释器概念 <br>
+
 </th>
 
 <!-- 周三 -->
 <th>
-1. 完成 tryC解释器 <br>
+
 </th>
 
 <!-- 周四 -->
@@ -190,3 +178,51 @@ container
 </tr>
 
 </table>
+
+209: 滑动窗口, 注意并非找到滑动窗口的最优解并跳出, 而是基于滑动窗口来实现 On 的遍历, 在暴力算法中, 可以通过移动右边界, 再遍历左边界的方式来遍历所有可能的子序列, 但考虑到假如一个子序列满足 sum >= target, 那么左边界以左的区间实际并没有考虑的意义, 因为其长度必然大于当前的长度, 故可以在当前的基础上, 向左移动左边界来找到最优解
+26: 快慢指针, 可以想象为两个数组,一个是原数组, 用来遍历, 另一个是结果数组, 保存符合要求的数据, 只不过在同一个实际数组上, 有序情况下, 慢指针的移动只需判断最后一个值即可
+283: 快慢指针, 遍历完毕之后, 末尾填充0即可
+844: 快慢指针, 首先通过快慢指针处理字符串中的 '#', 再进行比较
+
+
+快慢指针模板, 其中 flag 用来判断当前元素是否符合要求
+
+```
+int slow = 0;
+for (int fast = 0; fast < numsSize; fast++)
+{
+    bool flag = ;
+    if (flag)
+    {
+        nums[slow++] = nums[fast];
+    }
+}
+```
+
+```
+int removeElement(int* nums, int numsSize, int val){
+
+    int left, right;
+    left = 0;
+    right = numsSize - 1;
+
+    while (left <= right)
+    {
+        while ((left <= right) && (nums[left] != val))
+        {
+            left++;
+        }
+        while ( (left <= right) && nums[right] == val)
+        {
+            right--;
+        }
+
+        if (left < right)
+        {
+            nums[left++] = nums[right--];
+        }
+
+    }
+    return left;
+}
+```

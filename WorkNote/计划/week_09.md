@@ -2,34 +2,33 @@
 
 |          |       |
 | :------: | :---: |
-| complete |   3   |
-|  delay   |  29   |
+| complete |   0   |
+|  delay   |   0   |
 |  cancel  |   0   |
-|  total   |  31   |
+|  total   |  30   |
 
 华为合作
-
-<!-- redis， memcache， nginx， mysql， kafka， keydb， elasitc search，clickhouse，spark，hive -->
-
 - [ ] {文档} 调研典型业务画像过程
 - [ ] {文档} 调研典型业务负载分析方式
 - [ ] {代码} 典型应用 syscall 画像
 - [ ] {文档} memtier 压测工具调研
 - [ ] {文档} 制定 perf 采集方案
+- [ ] {文档} otel 采集
 
-rcore
-- [ ] {文档} 整理 rust 相关内容(引用与解引用)
-- [ ] {文档} arceos课程及习题
+
+arceos
 - [ ] {文档} arceos源码阅读
 - [ ] {文档} opensbi
-- [x] {文档} visionfive2上电流程
-- [ ] {文档} uboot
+- [x] {文档} uboot
+- [x] {文档} hello world 移植
+- [ ] {代码} 网卡移植
+- [ ] {文档} hypervisor 练习
 
 工作
 - [ ] {文档} 开源之夏项目文档
 
 学术
-- [ ] {文档} laTex语法学习{5.1}
+- [ ] {文档} laTex语法学习
 - [ ] {文档} LibOS/Unikernel调研
 
 ebpf
@@ -43,13 +42,12 @@ ebpf
 
 k8s
 - [ ] {文档} k8s原理复习
-- [x] {文档} k8s Reconcile
 - [ ] {文档} k8s 各组件之间如何响应资源的CRUD
 - [ ] {代码} operator 相关api
 - [ ] {文档} operator 教程
-- [x] {代码} frp operator
 
 container
+- [ ] {文档} podman调研
 - [ ] {文档} docker原理复习
 - [ ] {文档} runC架构
 - [ ] {文档} youki调研
@@ -58,7 +56,7 @@ container
 - [ ] {文档} OCI标准调研
 
 其他
-- [x] {文档} tryC解释器
+- [ ] {文档} 整理 rust 相关内容(引用与解引用)
 
 
 <table>
@@ -79,32 +77,30 @@ container
 
 <!-- 周一 -->
 <th>
-1. frp operator <br>
-2. visionfive2上电流程 <br>
+1. hello world 移植 <br>
 </th>
 
 <!-- 周二 -->
 <th>
-1. 尝试解决youki在podman rootless下的问题 <br>
-2. OCI标准调研 <br>
-3. LibOS/Unikernel调研 <br>
-4. tryC解释器 <br>
+1. uboot <br>
 </th>
 
 <!-- 周三 -->
 <th>
-1. tryC解释器 <br>
+1. hypervisor 练习 <br>
+2. podman调研 <br>
 </th>
 
 <!-- 周四 -->
 <th>
-1. LibOS/Unikernel调研 <br>
-2. 扩展常见容器业务 <br>
-3. arceos课程及习题 <br>
+1. prometheus-rs 调研
+2. axum web框架
+3. rust 闭包, 闭包捕获 调研
 </th>
 
 <!-- 周五 -->
 <th>
+1. otel调研
 </th>
 
 <!-- 周六 -->
@@ -123,26 +119,29 @@ container
 
 <!-- 周一 -->
 <th>
-1. 完成frp operator <br>
-1. 调研完成visionfive2上电流程 <br>
+1. hello world 移植完毕 <br>
 </th>
 
 <!-- 周二 -->
 <th>
-1. 学习 tryC 解释器概念 <br>
+1. uboot简单调研完毕 <br>
 </th>
 
 <!-- 周三 -->
 <th>
-1. 完成 tryC解释器 <br>
+1. podman网络调研 <br>
 </th>
 
 <!-- 周四 -->
 <th>
+1. prometheus-rs 调研
+2. axum web框架, 完成简单 exporter 编写
 </th>
 
 <!-- 周五 -->
 <th>
+1. otel 更多针对于应用的指标暴露, 不适合实现 exporter
+2. rust web 编程生态仍然很初级
 </th>
 
 <!-- 周六 -->
