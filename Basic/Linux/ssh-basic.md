@@ -75,7 +75,8 @@ mkdir .ssh
 touch .ssh/authorized_keys
 
 # 权限赋予, 防止登录失败
-chown -R git:git .ssh # 赋予用户组git的用户git .ssh文件目录的使用权限
+# 赋予用户组git的用户git .ssh文件目录的使用权限
+chown -R git:git .ssh 
 chmod 700 .ssh
 chmod 600 .ssh/authorized_keys
 

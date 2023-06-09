@@ -66,3 +66,31 @@ sudo docker run \
   --privileged \
   --device=/dev/kmsg \
   cadvisor:latest
+
+
+## Perf Exporter
+
+1. 能够进行perf数据采集(受限的, 基于util提供的event), 获取给定 cgroup 中的 perf event 事件计数, 并输出到命令行
+
+2. 能以 server 模式启动, 提供 `add` `del` cgroup 接口, 动态增加计数器, 生成相应的metric指标
+
+3. 能够指定一个root目录, 递归地对其中子目录进行 perf event 采集
+
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"cgroup": "/sys/fs/cgroup/perf_event/docker/6308ca09cdb3904341decd05233d4696799d5669419af8d92d5ba0801b800f9b"}' localhost:9991/api/v1/collector/perfevent
+
+curl -X POST -H "Content-Type: application/json" -d '{"cgroup": "/sys/fs/cgroup/perf_event/docker/6308ca09cdb3904341decd05233d4696799d5669419af8d92d5ba0801b800f9b"}' localhost:9991/api/v1/collector/perfevent/del
+
+curl localhost:9991/metrics
+```
+
+
+cgroup: 76
+
+host: 55
+
+qos: 
+
+- rps
+- latency per request
