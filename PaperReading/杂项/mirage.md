@@ -3,7 +3,7 @@
 
 - [Unikernels: Library Operating Systems for the Cloud](#unikernels-library-operating-systems-for-the-cloud)
   - [阅读记录](#阅读记录)
-    - [Problem & Background](#problem--background)
+    - [Problem \& Background](#problem--background)
     - [Challenges](#challenges)
     - [State-of-the-arts](#state-of-the-arts)
     - [Key insights/ideas/techniques](#key-insightsideastechniques)
@@ -146,3 +146,22 @@
 
 
 ### Lessons learned from experiments
+
+Unikraft 遵循 Everything is a micro-library 的原则。图中每个黑色的方块，代表的是一套 API，除此之外每个小方块代表一个 library，处于同一个白色方框中的方块可以互相取代。自上而下比较重要的组件有
+- 经过若干个小 patch 移植的 libc，比如 musl 和 newlib，
+- syscall-shim：将 syscall 变成 function call，实现 kernel bypass 提升性能，
+- 其他提供 posix 标准的 library，
+- 网络协议栈，比如 lwip、mtcp，
+- 文件系统，比如 9pfs，ramfs，
+- 调度器，
+- Booter，
+- 内存分配器，比如 buddy allocator，
+- 不同 hypervisor 平台需要的 driver，
+
+其中只有 Booter 是每个 application 都必须使用的，其余的模块都是可选的
+
+经过测试，在 Linux 中，一次 syscall 带来的 overhead 在 154 个 cycle 左右，而如果加入了一些针对 vulnerability 的 mitigation，则需要 222 个 cycle。动态 syscall 翻译的 unikraft 需要 84 个 cycle。而使用 syscall-shim 的 unikraft 中，syscall 和普通的 function call 一样，只需要 4 个 cycle。
+
+然而不提供 User mode / Kernel mode 的隔离肯定会带来安全问题的考虑，unikraft 给出的 argument 是，VM 之间的隔离应该由 hypervisor 提供。这个 argument 听起来并不够 strong，因此也产出了 SGX 上的 CubicleOS（ASPLOS'21）这样的工作，它使用了 unikraft，在 SGX 中保证了不同 component 之间的隔离性
+
+在 paper 完成之时，unikraft 已经支持了 146 个 syscall，到现在应该支持了更多。而根据已有的科研工作，只需要 100 ~ 150 个 syscall 就已经能够运行很多主流的应用程序

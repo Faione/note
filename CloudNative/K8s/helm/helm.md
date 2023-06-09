@@ -4,6 +4,8 @@
 - [helm go client](https://manuelmazzuola.dev/2021/03/28/deploy-helm-chart-go#the-helm-go-sdk)
 - [helm go client mittwald](https://pkg.go.dev/github.com/mittwald/go-helm-client#NewClientFromKubeConf)
 
+[artifactHub](https://artifacthub.io/)类似于 docker hub, 是一个 helm hub
+
 ## What is Helm
 
 - helm是k8s的包管理工具

@@ -6,6 +6,10 @@
 - [rust构建脚本](https://course.rs/cargo/reference/build-script/intro.html)
 - [rust月刊](https://rustmagazine.github.io/)
 
+
+- [rustup](https://rust-lang.github.io/rustup/cross-compilation.html)
+- [rust_platform_support](https://doc.rust-lang.org/nightly/rustc/platform-support.html)
+
 ```rust
 // 二进制
 println!("0b{:b}", 0b11_01); // 0b1101
@@ -90,9 +94,16 @@ Rust 提供了 spin_loop_hint 函数，我们可以在循环体内调用该函�
 
 在 Rust 中，! 被称为 never type，表示一个永远不会有值的类型。 它可以用作函数的返回类型，表示函数永远不会正常返回，而是在运行时发生 panic
 
-## Global Variables
+## Global Variablesk
+
 
 [](https://www.sitepoint.com/rust-global-variables)
+
+## Reference
+
+[string_vs_str](https://blog.thoughtram.io/string-vs-str-in-rust/)
+
+[ownership](https://blog.thoughtram.io/ownership-in-rust/)
 
 ## Deref
 
@@ -106,3 +117,11 @@ Rust 提供了 spin_loop_hint 函数，我们可以在循环体内调用该函�
 - 智能指针不仅包含它指向区域的地址范围，还含有一些额外的信息，因此这个类型的大小大于裸指针的大小，属于一种"胖"指针。从用途上看，它不仅可以作为一个媒介来访问它指向的数据，还能在这个过程中起到管理和控制的功能
 
 将`usize`转化为裸指针是允许的，但是任何对于裸指针数据的访问都是`unsafe`的
+
+
+
+第一个 `as` 用于消除类型， 第二个 `as` 则从一个无类型的应用转化为 `u8`
+
+```
+&T as *const _ as *mut
+```

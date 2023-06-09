@@ -13,6 +13,10 @@
     - [(1) bug fix/refactor 分支](#1-bug-fixrefactor-分支)
     - [(2) 设置远程仓库](#2-设置远程仓库)
     - [(3) 合并commit](#3-合并commit)
+    - [(4) working on mutiple branch](#4-working-on-mutiple-branch)
+    - [submodule](#submodule)
+    - [(4) git submodule](#4-git-submodule)
+    - [(5) git tags](#5-git-tags)
 
 
 ## 一、分支管理
@@ -111,7 +115,7 @@ $ git branch -f <分支名称> <commit tag>
 ```
 
 5. 撤销变更
-- reset
+- reset[^1]
 
 >撤销本地变更
 >将当前分支回退至 commit tag处，并使得改tag之后的commit无效
@@ -123,8 +127,6 @@ $ git reset <commit tag>
 # 回退至上一次commit, 并保留变更的文件
 $ git reset --soft HEAD^
 ```
-
-[撤销 reset](https://blog.csdn.net/mhlghy/article/details/84786497)
 
 - revert
 
@@ -202,10 +204,7 @@ $ git branch -a
 
 ### (1) bug fix/refactor 分支
 
-- [git merge 解析](https://www.jianshu.com/p/58a166f24c81)
-- [git 分支模型](https://www.jianshu.com/p/b357df6794e3)
-
-- 构造工作分支
+- 构造工作分支[^2][^3]
 
 ```
 $ git checkout -b refactor
@@ -288,8 +287,6 @@ $ git rebase -i <要合并commit中最后一个commit的父节点>
 $ git push --force 
 ```
 
- 
-
 修改commit信息
 
 ```
@@ -302,3 +299,109 @@ $ git commit --amend -m "new message"
 $ git push origin --delete <branch_name>
 ```
 
+### (4) working on mutiple branch
+
+切换分支通常使用`git checkout <branch>`，但切换前后的文件都限于当前目录，这意味着同一时间只能存在一个分支，而要想维护不同版本的代码，就必须来回切换
+
+`git worktree`[^4]能够将分支检出到不同文件夹，这使得切换文件夹就能够切花代码版本，也意味着能够同时维护多个分支的代码或对比不同分支代码的行为等
+
+```shell
+git worktree add <target_path> <branch>
+```
+- 默认情况下检出当前`HEAD`分支
+- 指定branch时，如果其已经关联到了一个worktree(需注意默认有一个worktree), 则add会被拒绝执行，可通过`-f`来强制执行，不指定branch时，会使用path(截)作为分支名称
+- 与`checkout`类似，可使用`-b`来创建分支并关联worktree, 当分支已经存在时，可使用`-B`强制执行
+
+相关命令[^5]
+
+> lock: If a worktree is on a portable device or network share which is not always mounted, lock it to prevent its administrative files from being pruned automatically. This also prevents it from being moved or deleted
+
+```shell
+# 添加worktree
+git worktree add [-f] [--checkout -b <new-branch>] <path> <commit-ish>
+# 列出所有worktree
+git worktree list [--porcelain]
+# worktree上锁
+git worktree lock [--reason <string> <worktree>]
+# worktree解锁
+git worktree unlock <worktree>
+# 移动worktree到其他目录
+git worktree move <worktree> <new-path>
+# 清除那些检出目录已经被删除的worktree
+git worktree prune -n --expire <expire>
+# 删除worktree, 同时删除检出目录
+git worktree remove -f <worktree>
+```
+
+### submodule
+
+```shell
+git clone --recursive <gitpath>
+```
+
+[^1]: [撤销_reset](https://blog.csdn.net/mhlghy/article/details/84786497)
+[^2]: [git_merge_解析](https://www.jianshu.com/p/58a166f24c81)
+[^3]: [git_分支模型](https://www.jianshu.com/p/b357df6794e3)
+[^4]: [git_worktree](https://jasonkayzk.github.io/2020/05/03/Git-Worktree%E7%9A%84%E4%BD%BF%E7%94%A8/)
+[^5]: [git_worktree_official](https://git-scm.com/docs/git-worktree)
+
+### (4) git submodule
+
+```shell
+# 添加 submodule
+git submodule add <url> <path>
+
+# 删除 submodule
+git rm --cached <path>
+```
+
+[^6]: [git_submodule](https://iphysresearch.github.io/blog/post/programing/git/git_submodule/)
+[^7]: [git_submodule_official](https://git-scm.com/docs/git-submodule)
+
+### (5) git tags
+
+标签是比分支更为固定和不可更改的指针，它们指向的是代码库中的某个特殊提交，并通过注释信息描述该提交的含义。
+
+需要注意的是，与分支不同，标签不能被移动或更改。如果要修改一个旧的标签，必须删除它并创建一个新的标签
+
+创建tag
+
+```shell
+$ git tag <tagname>
+
+# use `-m` with `-a`
+$ git tag -a <tagname> -m <msg>
+```
+
+查看所有的tag
+
+```shell
+$ git tag
+```
+
+切换到某个tag
+
+```shell
+$ git checkout <tagname>
+```
+
+在特定tag上创建分支
+
+```shell
+$ git checkout -b <branchname> <tagname>
+```
+
+删除tag
+
+```shell
+$ git tag -d <tagname>
+```
+
+推送tag到远程仓库
+
+```shell
+$ git push origin <tagname>
+```
+
+
+[^8]: [git_tag](https://git-scm.com/docs/git-tag)

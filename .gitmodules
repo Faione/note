@@ -1,0 +1,6 @@
+[submodule "Interest/EBpf"]
+	path = Interest/EBpf
+	url = https://github.com/Faione/ebpf-doc.git
+[submodule "CloudNative/Prometheus/Exporter"]
+	path = CloudNative/Prometheus/Exporter
+	url = https://github.com/Faione/exporter-doc.git

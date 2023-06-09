@@ -17,6 +17,7 @@ download from [kernel org](https://www.kernel.org/)
 ## Config
 
 ```shell
+# 使用LLVM 工具链来代替 GNU 工具链
 make LLVM=1 menuconfig
 ```
 
@@ -46,7 +47,7 @@ make LLVM=1 -j 10
 get filesystem image from [dqib](https://people.debian.org/~gio/dqib/)
 
 ```
-KERNEL=""
+KERNEL="/home/fhl/Workplace/c/linux-6.1.11/arch/x86/boot/bzImage"
 
 qemu-system-x86_64 \
     -machine pc \

@@ -3,8 +3,6 @@
 - [unikernel项目汇总](http://unikernel.org/projects/)
 - [unikernel摘要分析](https://github.com/cetic/unikernels) 
 
-
-
 ## 一、理论概念
 
 - Anil Madhavapeddy 于 2013 年左右在一篇题为“Unikernels: Library Operating Systems for the Cloud”的论文中首次引入（Madhavapeddy 等人, 2013 年）
@@ -54,13 +52,13 @@
 
 ### VM | Container | Unikernel
 
-- virtual machine 基于 hyperviser 管理程序实现，hyperviser提供硬件资源的抽象，而运行在这些抽象资源的上的每个OS就是 virtual machine，程序依赖 vm 运行
+- virtual machine 基于 hypervisor 管理程序实现，hyperviser提供硬件资源的抽象，而运行在这些抽象资源的上的每个OS就是 virtual machine，程序依赖 vm 运行
 - container 基于 namespace，cgroup 所提供的隔离机制，共享同一个内核，相比于 virtual machine 更轻量，但由于共享内核，安全上难以保证
-- unikernel 同样基于 hyperviser 提供的硬件资源抽象，但不同的是，unikernel中的程序 以 library os 利用硬件资源，unikernel给予了程序直接运行在 hyperviser抽象层之上的能力
+- unikernel 同样基于 hypervisor 提供的硬件资源抽象，但不同的是，unikernel中的程序 以 library os 利用硬件资源，unikernel给予了程序直接运行在 hypervisor抽象层之上的能力
   - 在生产环境上仍然不够成熟
 
-| Technology | Pros | Cons |
-| --- | --- | --- |
-| Virtual Machines | - Allows deploying different operating systems on a single host<br> - Complete isolation from host<br> - Orchestration solutions available | - Requires compute power proportional to number of instances<br> - Requires large infrastructures<br> - Each instance loads an entire operating system |
-| Linux Containers | - Lightweight virtualization<br> - Fast boot times<br> - Ochestration solutions<br> - Dynamic resource allocation | - Reduced isolation between host and guest due to shared kernel<br> - Less flexible (i.e.: dependent on host kernel)<br> - Network is less flexible |
-| Unikernels | - Lightweight images<br> - Specialized application<br> - Complete isolation from host<br> - Higher security against absent functionalities (e.g.: remote command execution) | - Not mature enough yet for production<br> - Requires developing applications from the grounds up<br> - Limited deployment possibilities<br> - Lack of complete IDE support<br> - Static resource allocation<br> - Lack of orchestration tools |
+| Technology       | Pros                                                                                                                                                                        | Cons                                                                                                                                                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Virtual Machines | - Allows deploying different operating systems on a single host<br> - Complete isolation from host<br> - Orchestration solutions available                                  | - Requires compute power proportional to number of instances<br> - Requires large infrastructures<br> - Each instance loads an entire operating system                                                                                         |
+| Linux Containers | - Lightweight virtualization<br> - Fast boot times<br> - Ochestration solutions<br> - Dynamic resource allocation                                                           | - Reduced isolation between host and guest due to shared kernel<br> - Less flexible (i.e.: dependent on host kernel)<br> - Network is less flexible                                                                                            |
+| Unikernels       | - Lightweight images<br> - Specialized application<br> - Complete isolation from host<br> - Higher security against absent functionalities (e.g.: remote command execution) | - Not mature enough yet for production<br> - Requires developing applications from the grounds up<br> - Limited deployment possibilities<br> - Lack of complete IDE support<br> - Static resource allocation<br> - Lack of orchestration tools |
