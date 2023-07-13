@@ -22,10 +22,6 @@
   - [二、Go埋点示例](#二go埋点示例)
   - [三、异步追踪](#三异步追踪)
 
-- [opentracing中文博客](https://wu-sheng.gitbooks.io/opentracing-io/content/pages/instrumentation/common-use-cases.html)
-
-- [opentracing-tutorial](https://github.com/yurishkuro/opentracing-tutorial)
-
 
 ## 一、Python埋点示例
 
@@ -100,7 +96,7 @@ with tracer.start_span('test_process') as span:
 #### 关联span
 
 ```python
-# 改方法会创建一个span, 并声明 root_span 依赖此span
+# 该方法会创建一个span, 并声明 root_span 依赖此span
 def get_data(root_span, url):
     with tracer.start_span('test_process', child_of=root_span) as span:
         ...

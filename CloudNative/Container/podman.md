@@ -14,3 +14,40 @@ Conmon启动后会与容器运行时进行通信，并监听Unix套接字，以�
 ## Pod
 
 [^1]: [podman_network](https://github.com/containers/podman/blob/main/docs/tutorials/basic_networking.md)
+
+
+## Podman Arch
+
+podman中所有的运行时依赖都使用 `cmd/podman/registry/registry` pkg 进行管理
+- `ContainerEngine`: 容器引擎, 按定义的规范[^1]实现的容器运行时, 如 runc \ crun \ youki 等
+- `ImageEngine`: 镜像引擎, 能够根据[^2]中的规范对镜像进行操作, podman在 libpod 中对其进行了实现
+
+registry 中维护了 `ContainerEngine` 与 `ImageEngine` 的全局变量, 同时两者都以 interface 的形式对外提供调用
+
+`ContainerEngine` 的初始化在 `pkg/domain/infra/runtime_abi.go` 中 , 而无论 `ContainerEngine` 还是 `imageEngine`, 都是 `libpod.Runtime` 的包装, 实际上 `libpod.Runtime` 实现了一切功能
+
+
+`libpod.Runtime` 本身同样由多个 interface 组成
+- `State`: 负责管理容器的状态
+- `OCIRuntime`: 负责容器的相关操作
+
+`libpod.Runtime` 在 `libpod/runtime.go #299 makeRuntime` 中完成初始化, 其中 `State` 通常为 `libpod/boltdb_state.go`,  通过一个 boltdb 来管理容器的信息
+
+`OCIRuntime` 为 `libpod/oci_conmon_common.go`, podman在初始化时, 会根据配置选择一个可用的容器运行时, 并将其地址保存到 `ConmonOCIRuntime` 中, `OCIRuntime` 通过拼接命令行的形式, 调用容器运行时来完成各种容器操作
+
+podman采用 `DDD` 架构, `Runtime` \ `OCIRuntime` 与 `State` 被进一步封装到 `libpod.Container` 中, start容器的请求到来之后, 主要逻辑会在 `pkg/domain/infra/abi/containers.go` 中进行, 首先通过 namesOrIds 从 boltdb 中 获取容器的相关信息, 并构造 `containerWrapper`, 其中包含 `libpod.Container`, 最后只需要调用相应的方法就可以完成各种容器操作
+
+
+[^1]: [container_spec_runtime](https://github.com/opencontainers/runtime-spec/blob/main/runtime.md)
+[^2]: [opencontainer_image_spec](https://github.com/opencontainers/image-spec/blob/main/spec.md)
+
+
+## Container Life Circle
+
+start cmd
+  -> init -> create -> start conmon -> start container
+
+exit
+  -> conmon exit -> podman cleanup
+
+

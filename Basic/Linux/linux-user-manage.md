@@ -10,7 +10,7 @@ useradd 选项 用户名
 
 ```shell
 # -m 参数能够在没有用户目录的情况下创建用户目录
-$ useradd -c "a handsome man" -d /home/fhl -s /bin/zsh fhl 
+$ useradd -c "a handsome man" -d /home/fhl -s /bin/bash -m fhl 
 ```
 
 ### (2) 删除用户

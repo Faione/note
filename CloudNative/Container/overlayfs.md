@@ -10,13 +10,15 @@ OverlayFS通常表现为混合的，因为出现在其中的兑现通常并不�
 统一底层fs的文件会反馈底层fs的 `st_ino` 和 overlayfs 的 `st_dev`, 这使得很容易就能够区分 overlay fs 中的文件与底层fs中文件
 
 ### Upper And Lower
+
 一个overlayfs通常由 upper fs 和 lower fs 组成，而如果个文件系统中都存在同名文件，则只有 upper fs 中的文件可见
 
 ### Directories
 
 如果同名的是目录而不是文件，则会构造一个 merge directories，将两个目录文件中的索引对象组合起来
-- workdir需要是同在upper fs中的空文件夹，用于存储操作overlayfs过程中产生的临时文件和中间状态(inode, dentry)
-- 可以将 `$PWD/overlay` 理解为实际的overlayfs, 通过mount挂载到了 `$PWD/merged` 中
+- `$PWD/overlay` 仅作为占位, 表示 mount 的源目录, 实际并没有作用, 可以任意指定(也不一定需要存在), 通过mount挂载到了 `$PWD/merged` 中
+- `workdir` 是与 `upperdir` 在统一fs中的空目录，用于存储操作overlayfs过程中产生的临时文件和中间状态(inode, dentry)
+- `upperdir` 记录文件的修改, 要修改的文件会被复制到 `upperdir`, 如被删除的文件会在 `upperdir` 中以 `c` 类型呈现
 - 如果不给出 `upperdir` 与 `workdir`， 则overlayfs将是只读的
 
 ```shell
@@ -63,6 +65,6 @@ sudo mount -t overlay  -olowerdir=$PWD/lower:$PWD/other,upperdir=$PWD/upper,work
 
 通过内核配置选项`CONFIG_OVERLAY_FS_METACOPY` 或者挂载选项 `metacopy=on/off` 实现
 
-[^1]: [overlayFs](https://dev.to/napicella/how-are-docker-images-built-a-look-into-the-linux-overlay-file-systems-and-the-oci-specification-175n)
+[^1]: [overlayFs](https://dev.to/nampicella/how-are-docker-images-built-a-look-into-the-linux-overlay-file-systems-and-the-oci-specification-175n)
 
 [^2]: [overlayFs_kernel_doc](https://www.kernel.org/doc/html/latest/filesystems/overlayfs.html?highlight=overlayfs)
