@@ -94,3 +94,20 @@ qos:
 
 - rps
 - latency per request
+
+
+
+```
+sudo perf stat -I 1000 -p 4381 \
+  -e dtlb_store_misses.miss_causes_a_walk \
+  -e dtlb_store_misses.walk_completed  \
+  -e dtlb_load_misses.miss_causes_a_walk \
+  -e tlb_flush.dtlb_thread \
+  -e baclears.any \
+  -e int_misc.recovery_cycles \
+  -e offcore_requests_outstanding.cycles_with_data_rd \
+  -e machine_clears.memory_ordering \
+  -e inst_retired.any \
+  -e idq.ms_switches \
+  -e idq.ms_uops
+```

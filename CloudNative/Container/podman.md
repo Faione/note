@@ -14,6 +14,7 @@ Conmon启动后会与容器运行时进行通信，并监听Unix套接字，以�
 ## Pod
 
 [^1]: [podman_network](https://github.com/containers/podman/blob/main/docs/tutorials/basic_networking.md)
+[^2]: [podmna_on_alpine](https://wiki.alpinelinux.org/wiki/Podman)
 
 
 ## Podman Arch
@@ -50,4 +51,10 @@ start cmd
 exit
   -> conmon exit -> podman cleanup
 
+
+## Settings
+
+podman 启动 pod 时依赖 `pause` infra 容器，4x版本中已将此容器内置，早期版本则需要从 `k8s.gcr.io` 中获取， 为解决 404 问题，需要对 `/usr/share/containers/containers.conf` 中 `infra_image` 进行修改， 如使用 docker hub 中的 `docker.io/dyrnq/pause:3.3`
+
+[change_default_infra_container](https://serverfault.com/questions/1080486/how-to-change-the-default-infra-container-in-podman)
 

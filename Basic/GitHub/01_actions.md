@@ -10,9 +10,6 @@
 
 
 github actions是github提供的一种ci/cd方案，与gitlab类似，可用来进行软件构建、测试、打包、通过git pages部署等
-
-[^1] [git_actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions)
-
 ## Components
 
 Actions的核心是workflow，一个workflow中包含有多个job, 每个job都将在自己的虚拟机或容器中允许，并包含有多个步骤，这些步骤可以是预先定义好的脚本，也可以是可运行的一些操作
@@ -42,3 +39,6 @@ Actions是GitHub Actions平台中提供的自定义app, 能够执行一些复杂
 ### Runners
 
 Runners是一个服务器，它在触发工作流时运行工作流。每个Runners一次可以运行一个作业
+
+[^1]: [git_actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions)
+[^2]: [rust_pj_action](https://dzfrias.dev/blog/deploy-rust-cross-platform-github-actions)

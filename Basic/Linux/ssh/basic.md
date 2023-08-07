@@ -130,3 +130,13 @@ ssh登陆指定 port
 ```shell
 $ ssh -oPort=10101 root@47.108.237.20
 ```
+
+## Format
+
+从 openssh 7.6 开始提供了更安全的私钥格式，需要进行格式转化，否则会提示 `invalid format`
+
+```shell
+ssh-keygen -f ~/.ssh/id_rsa -p
+```
+
+[ssh_key_format_invalid](https://serverfault.com/questions/854208/ssh-suddenly-returning-invalid-format)

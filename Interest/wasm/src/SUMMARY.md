@@ -6,6 +6,7 @@
   - [go](./wasmer/go.md)
 - [wasi](./wasi.md)
   - [rust](./wasi/rust.md)
+- [core](./core.md)
 
 # example 
 - [example](./example.md)

@@ -26,7 +26,13 @@ sudo cat /boot/config-`uname -r` | grep CONFIG_X86_CPU_RESCTRL
 GRUB_CMDLINE_LINUX="...rdt=cmt,mbmtotal,mbmlocal,l3cat,l3cdp,mba"
 
 # update grub
-sudo update-grub
+sudo update-grub && sudo reboot
+```
+
+挂载 resctrl
+
+```shell
+$ sudo mount -t resctrl resctrl -o cdp,mba_MBps /sys/fs/resctrl
 ```
 
 ## Interface
@@ -40,3 +46,5 @@ RDT 主要提供了两套方式来进行资源控制, 其中一种是通过修�
 [^2]: [kernel_parameters](https://docs.kernel.org/admin-guide/kernel-parameters.html)
 
 [^3]: [intel_cmt_cat](https://github.com/intel/intel-cmt-cat)
+
+[^4]: [zihao's_qos_agent](https://github.com/ChangZihao/QoS-Agent/blob/master/llcManager.go)
