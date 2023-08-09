@@ -14,3 +14,9 @@ docker run -d --rm -p 0.0.0.0:69:69/udp -v /var/tftpboot:/var/tftpboot  pghallid
 ## wlan连接
 
 [wpa配置wlan网络](https://www.cnblogs.com/hokori/p/14168584.html)
+
+## SSD Support
+
+从nvme启动需要固件支持， 入发现 pci 无法找到的问题，可能是uboot启动参数问题
+
+[nvme_boot_env](https://forum.rvspace.org/t/nvme-boot-not-working-on-visionfive-2-qspi-with-new-firmware/3293)

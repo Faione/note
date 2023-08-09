@@ -62,4 +62,6 @@ qemu-system-x86_64 \
     -append "root=LABEL=rootfs console=ttyS0"
 ```
 
+debian登录管理器的初始用户密码为 `root root`
+
 

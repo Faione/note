@@ -33,7 +33,7 @@ int minSubArrayLen(int target, vector<int>& nums) {
 
 [283](https://leetcode.cn/problems/move-zeroes/): 快慢指针, 遍历完毕之后, 末尾填充0即可
 
-[844](https://leetcode.cn/problems/backspace-string-compare/): 快慢指针, 首先通过快慢指针处理字符串中的 '#', 再进行比较
+[844](https://leetcode.cn/problems/backspace-string-compare/): 快慢指针, 慢指针记录去除退格符号的数组长度，快指针进行遍历，当发现元素为正常字符时，复制并移动慢指针，反之则缩小慢指针
 
 
 快慢指针模板, 其中 flag 用来判断当前元素是否符合要求
@@ -142,9 +142,9 @@ int removeElement(int* nums, int numsSize, int val){
 
 [111](https://leetcode.cn/problems/minimum-depth-of-binary-tree/): 层序遍历, 如遍历到某个节点没有左右字节点时, 返回当前深度即可
 
+层序遍历模板
 ```c++
 queue<Node*> q;
-
 if (root != NULL) q.push(root);
 
 while(!q.empty())
@@ -513,7 +513,7 @@ int maxProfit(int k, vector<int>& prices) {
     }
 ```
 
-[647](https://leetcode.cn/problems/palindromic-substrings/description/): dp[i][j] 定义为 [i, j] 为回文串; 如果s[i] == s[j]时，如果 j-i < 1, 则必然时回文串，否则若 dp[i+1][j-1] 为 true ，则也为回文串; 注意 d[i][j] 由 dp[i+1][j-1] 推导而来，因此 i必须从大到小，j必须从小到大
+[647](https://leetcode.cn/problems/palindromic-substrings/description/): dp[i][j] 定义为 [i, j] 为回文串; 如果s[i] == s[j]时，如果 j-i < 1, 则必然是回文串，否则若 dp[i+1][j-1] 为 true ，则也为回文串; 注意 d[i][j] 由 dp[i+1][j-1] 推导而来，因此 i必须从大到小，j必须从小到大
 
 ```c++
 int countSubstrings(string s) {
@@ -533,7 +533,7 @@ int countSubstrings(string s) {
 }
 ```
 
-[516](https://leetcode.cn/problems/longest-palindromic-subsequence/):  dp[i][j] 定义为 [i, j] 内最长的回文子串长度;只要s[i] == s[j]， dp[i][j] = dp[i+1][j-1] + 2, 否则 dp[i][j] = max(dp[i+1][j], dp[i][j-1]);为了遍历时的方便，可以将 dp[i][i] = 1， 这样就不用在循环中考虑 i == j 的情况
+[516](https://leetcode.cn/problems/longest-palindromic-subsequence/):  子序列可删除元素，dp[i][j] 定义为 [i, j] 内最长的回文子序列长度;只要s[i] == s[j]， dp[i][j] = dp[i+1][j-1] + 2, 否则 dp[i][j] = max(dp[i+1][j], dp[i][j-1]);为了遍历时的方便，可以将 dp[i][i] = 1， 这样就不用在循环中考虑 i == j 的情况
 
 
 ## 单调栈
@@ -577,6 +577,15 @@ int countSubstrings(string s) {
 
 [1002](https://leetcode.cn/problems/find-common-characters/description/): 共用字符即统计某一个字符在所有字符串中的最小出现次数，即每个字符串中都至少有n个该字符，注意插入字符串到尾部时，要么使用 string s(1, c)， 这是因为，vector push_back 不会调用构造函数， 而 vector emplace_back 则不必如此，因为其会调用构造函数
 
+[1382](https://leetcode.cn/problems/balance-a-binary-search-tree/description/): 链表问题几乎都可以转化为数组进行解决，一颗平衡的二叉搜索树即对于一个有序序列而言，每次二分的值都作为根节点，按此思路，首先将二叉树转化为数组，再根据数组进行树的构造即可
+
+[649](https://leetcode.cn/problems/dota2-senate/description/): 对任何一个人而言，目标都是将自己之后的非同阵营投出去，才能获取最终胜利，使用 R，D两个bool表示每轮之后两个阵营中是否还有人存在，使用 flag 记录 i 之前 R 的数量，于是；每轮中都从0到末尾开始遍历，遍历到 D 时，如果 flag > 0， 那么自己被置空， 同时 flag--, 对于 R， 如果 flag < 0, 即前面有 D，同样地自己也置空，只要没有置空，R或D就为true， 而只要其中有一个 false， 表示对应的阵营在某轮投票中失败
+
+[1221](https://leetcode.cn/problems/split-a-string-in-balanced-strings/description/): 局部最优是每找到一个子串，其中 L 与 R 相等就进行分割，这样的能够得到最大的子串数量，而按此思路，使用一个 flag 记录当前遍历到的 L 的数量， 而每遍历到一个 R 就让 flag 减少， 如果某次处理之后 flag==0 即找到了一个子串
+
+[5](https://leetcode.cn/problems/longest-palindromic-substring/description/): dp[i][j] 为 [i, j] 是否为回文子串; 判断 s[j] 与 s[i] 相等， 如果 j - i  <= 1, 则dp[i][j] = 1, 否则判断 dp[i+1][j-1], dp[i][j] = dp[i+1][j-1] + 2;根据递推公式, i必须从大到小，j必须从小到大
+
+[132](https://leetcode.cn/problems/palindrome-partitioning-ii/description/): dp[i]定义为[0, i]内回文子串的最小分割次数
 
 ## 剑指offer
 

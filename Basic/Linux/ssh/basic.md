@@ -69,6 +69,7 @@ systemctl restart sshd
 cd ~
 
 # 创建 .ssh 文件夹
+# cd ~ && mkdir .ssh && touch .ssh/authorized_keys && chmod 700 .ssh && chmod 600 .ssh/authorized_keys
 mkdir .ssh
 
 # 创建 authorized_keys 
