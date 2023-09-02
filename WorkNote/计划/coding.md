@@ -108,18 +108,19 @@ int removeElement(int* nums, int numsSize, int val){
 
 [1207](https://leetcode.cn/problems/unique-number-of-occurrences/description/): 使用hash记录每个元素的count, 然后再用一个hash记录每个count是否出现过，连续出现两次则意味着不是独一无二
 
-[242](https://leetcode.cn/problems/valid-anagram/): 考虑字符串为字母且均为小写, 因此可以使用一个 int[26] 数组作为hash表, 使用 `*s - 'a'` 计算下标
+[242](https://leetcode.cn/problems/valid-anagram/): 考虑字符串为字母且均为小写, 因此可以使用一个 int[26] 数组作为hash表, 使用 `*s - 'a'` 计算下标，遍历 s 计算 workMap， 再遍历 t 反向计算， 如果最终结果中 wordMap非全0，则返回false，否则返回true
 
-[349](https://leetcode.cn/problems/intersection-of-two-arrays/): 使用数组hash, 遍历一个得到map ,再遍历另一个, 注意修改 map 值以处理另一个数组中的重复
+[349](https://leetcode.cn/problems/intersection-of-two-arrays/): 使用数组hash, 遍历一个得到map, 标记已经出现过的数，然后再遍历另一个数组, 若元素在上一个数组中出现了，那么就加入到结果数组中，同时修改其映射值以保证结果中的元素的唯一性
 
 [202](https://leetcode.cn/problems/happy-number/): 存储计算的结果到map中 ,如果某次计算结果与之前的相同, 则说明会进入无限循环
 
-[1](https://leetcode.cn/problems/two-sum/): 保存已遍历值的下标为map, 后续比较即可
+[1](https://leetcode.cn/problems/two-sum/): 遍历所有元素，将当前target与当前元素之差作为key, 当前元素下标作为value保存到map中，后续只需要判断当前元素是否在map中即可
 
-[454](https://leetcode.cn/problems/4sum-ii/): 四数看成两两组合(也可以1,3, 但不如22效率搞), 记录22组合的和构成map, 然后再对剩余的部分进行遍历即可
+[454](https://leetcode.cn/problems/4sum-ii/): 四数看成两两组合(也可以1,3, 但不如22效率高), 记录22组合的和构成一个map, 然后对剩下的两个元素构成的组合遍历即可
 
-[383](https://leetcode.cn/problems/ransom-note/): 使用 wordMap
+[383](https://leetcode.cn/problems/ransom-note/): 使用 wordMap(数组形式) 记录 magazine 中字符出现的次数，然后遍历randomnote，将对应的字符--， 如果小于0则返回false， 否则返回true
 
+## 字符串
 
 [28](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/): KMP 算法, 核心在与找到 next 数组, next 数组指示了匹配串中, 某一下标所对于字符的等效位置(最长相等前后缀), 当此下标的下一个元素不匹配时, 可以对齐等效位置, 继续比较. next数组的生成在于找到下标 i 的等效位置 j, 满足 [0, j] 与 [i - j, i] 完全相同, 即最长的前后缀, 没有则 j = -1
 [459](https://leetcode.cn/problems/repeated-substring-pattern/): 构建next数组, 对于重复字串的字符串, 比如有最长相等前后缀之差为一个重复单元, 满足 s_len % (s_len - 1 - next[s_len - 1]) == 0
@@ -199,7 +200,7 @@ bool isSameTree(struct TreeNode* p, struct TreeNode* q){
 
 [106](https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/submissions/): 后序列表最后一个是根, 找到其在中序列表中的位置, 左边是左子树, 右边是右子树, 而后序数组的组成为(左子树, 右子树, 根), 基于这一分析, 使用递归, 如果数组为空, 则返回空节点, 否则则根据分析得到根节点, 以及左右子树的中序 / 后序数组, 递归生成子树即可
 
-[105](https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/submissions/): 前序第一个是根, 组成为(根, 左子树, 右子树)
+[105](https://leetcode.cn/problems/construct-bina ry-tree-from-preorder-and-inorder-traversal/submissions/): 前序第一个是根, 组成为(根, 左子树, 右子树)
 
 [654](https://leetcode.cn/problems/maximum-binary-tree/): 递归, 序列中最大的为根, 左边为左序列, 右边为右序列
 
@@ -226,6 +227,8 @@ bool isSameTree(struct TreeNode* p, struct TreeNode* q){
 [108](https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/): 递归构造, 对于有序数组, 每次取中间位置的数字构造节点即可, 然后将数组分割, 向左/右构造即可
 
 [538](https://leetcode.cn/problems/convert-bst-to-greater-tree/): 递归, 使用一个全局的 sum 来保存当前的累加值, 然后再按 右 中 左的顺序构造即可
+
+### 回溯
 
 [77](https://leetcode.cn/problems/combinations/): 使用回溯模板进行构造, 使用 `n - (k - path.size()) + 1` 进行剪枝
 
@@ -264,11 +267,11 @@ public:
 };
 ```
 
-[216](https://leetcode.cn/problems/combination-sum-iii/): 基于回溯模板, 增加 sum 计算当前 path 的综合, 用于判断是否继续往子节点进行回溯
+[216](https://leetcode.cn/problems/combination-sum-iii/): 基于回溯模板, 将元素压入 path 的同时更新 sum 的值，同时在pop时还原，当path长度为k时同样返回，但逻辑中只将sum为n的push到rlt中
 
 [17](https://leetcode.cn/problems/letter-combinations-of-a-phone-number/): 基于回溯模板, 实际仍然是一个组合问题, 数字map到对应的字符串进行回溯, 需要计算当前数字对应的 字符串起点与长度
 
-[39](https://leetcode.cn/problems/combination-sum/): 组合, 使用 start 避免重复选择, 考虑到单个元素可重复, 因此 start 设置为当前的 i即可
+[39](https://leetcode.cn/problems/combination-sum/): 组合, 使用 start 避免重复选择, 考虑到当前元素可重复选取, 因此 start 设置为当前的 i即可
 
 [40](https://leetcode.cn/problems/combination-sum-ii/): 组合, 使用 start 避免重复选择, 单个元素不可重复,应此 start 应当设置为 i+1, 同时由于 candidates 可能存在重复, 应此应当对 candidates 进行排序, 然后在垂直方向探测时, 如果当前元素与上一个元素相同, 则不进行回溯
 
@@ -473,13 +476,13 @@ int maxProfit(int k, vector<int>& prices) {
 
 [714](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/description/): 每天都有两个状态，持有股票或不持有股票, 其中 dp[0] = max(dp[0], dp[1] - price[i]), dp[1] = dp[0] + price[i] - fee;
 
-[300](https://leetcode.cn/problems/longest-increasing-subsequence/): dp[i]为对于当前数组而言，以i为结尾的数组对应的最长递增的子序列长度; 求解dp[i] 需要遍历 d[j], j [0, i), 只要nums[j] < nums[i], dp[i] = max(dp[i], dp[j] + 1);显然对于任意子序列， 最长严格递增子序列的长度都至少是1， 故dp[*] = 1
+[300](https://leetcode.cn/problems/longest-increasing-subsequence/): dp[i]为对于当前数组而言，以i为结尾的数组对应的最长递增的子序列长度; 求解dp[i] 需要遍历 d[j], j [0, i), 只要nums[j] < nums[i], dp[i] = max(dp[i], dp[j] + 1), 考虑序列以i为结尾nums[j] > nums[i],不能让 dp[i] = dp[j];显然对于任意子序列， 最长严格递增子序列的长度都至少是1， 故dp[*] = 1
 
 [674](https://leetcode.cn/problems/longest-continuous-increasing-subsequence/): dp[i]为对于当前数组而言， 以i为结尾的数组对应的最长连续递增的子序列长度, 相比于300，因连续，只需要对 i-1 判断即可，不必遍历 0, i-1
 
-[718](https://leetcode.cn/problems/maximum-length-of-repeated-subarray/): dp[i][j]对于nums1和nums2而言，指以nums1中以i-1为结尾，nums2中以j-1为结尾的最长公共子数组的长度(不适用之前的初始化方式是为了减少初始化工作); nums1[i-1] == nums2[j-1] 时， dp[i][j] = dp[i-1][j-1] + 1; 如不这样设置， dp[0][*] 和 dp[*][0] 都需要进行初始化才能进行判断
+[718](https://leetcode.cn/problems/maximum-length-of-repeated-subarray/): dp[i][j]对于nums1和nums2而言，指以nums1中以i-1为结尾，nums2中以j-1为结尾的最长公共子数组的长度(不使用之前的初始化方式是为了减少初始化工作); nums1[i-1] == nums2[j-1] 时， dp[i][j] = dp[i-1][j-1] + 1; 如不这样设置， dp[0][*] 和 dp[*][0] 都需要进行初始化才能进行判断
 
-[1143](https://leetcode.cn/problems/longest-common-subsequence/): 与718不同的是，子序列无需连续，这意味在不相等时，还需要继续判断, dp定义与718相同;s1[i-1] = s2[j-1]时，dp[i][j] = dp[i-1][j-1] + 1, 而else时不再时初始化的值，而是 dp[i][j] = max(dp[i-1][j], dp[i][j-1]) (#此处dp[i-1][j-1]无意义，因为上一个也来自次)， 即回退; dp初始时均为0;考虑 dp[i][j] 由左、上，左上推得，故最大值必然出现在右下角
+[1143](https://leetcode.cn/problems/longest-common-subsequence/): 与718不同的是，子序列无需连续，这意味在不相等时，还需要继续判断, dp定义与718相同;s1[i-1] = s2[j-1]时，dp[i][j] = dp[i-1][j-1] + 1, 而else时不再时初始化的值，而是 dp[i][j] = max(dp[i-1][j], dp[i][j-1]) (此处dp[i-1][j-1]无意义，因为上一个也来自此)， 即回退; dp初始时均为0;考虑 dp[i][j] 由左、上，左上推得，故最大值必然出现在右下角
 
 [1035](https://leetcode.cn/problems/uncrossed-lines/): 题目转化后，即是寻找 nums1 与 nums2 的最长公共子序列，故做法与 1143 相同
 
@@ -552,6 +555,89 @@ int countSubstrings(string s) {
 
 [84](https://leetcode.cn/problems/largest-rectangle-in-histogram/description/): 寻找波峰， 单调栈中单调递增排序, heights[mid] 为当前最高点， 则最大面积为 heights[mid] * (i-1 - st.top()), 其中 i-1 为当前所见到的最高柱子的下标， heights[mid] 为大于等于 heights[i] 的高度， i-1 - st.top() 即 heights[mid] 与 heights[cmax] 的距离， while进行直到栈顶元素 >= height[i];初始化时，向头和尾各插入一个 0， 其中在头部插入的0， 使得当只有一个元素时，循环也能进行下去， 而在尾部插入的0则意味着柱子非常平坦时，通过 > 0 找到最大的柱子
 
+## 图
+
+DFS
+```c++
+// 传递引用而非值，否则c++会完整复制一个 vector
+void dfs(const vector<vector<int>>& rooms, vector<bool>& visited, int c){
+    if(visited[c]) return;
+
+    visited[c] = true;
+    for(int i : rooms[c]) {
+        dfs(rooms, visited, i);
+    }
+}
+```
+
+BFS
+```c++
+vector<bool> visited(rooms.size(), false);
+queue<int> q;
+q.push(0);
+visited[0] = true;
+
+while(!q.empty()) {
+    int idx = q.front();
+    q.pop();
+
+    for(int j : rooms[idx]) {
+        if (!visited[j]) {
+            q.push(j);
+            visited[j] = true;
+        }
+    }
+    
+}
+```
+层序遍历: 层序遍历是记录了层的BFS
+
+```c++
+vector<bool> visited(rooms.size(), false);
+queue<int> q;
+q.push(0);
+visited[0] = true;
+
+while(!q.empty()) {
+    int l = q.size();
+    for (int i = 0; i < l; i++) {
+        int idx = q.front();
+        q.pop();
+        for(int j : rooms[idx]) {
+            if (!visited[j]) {
+                q.push(j);
+                visited[j] = true;
+            }
+        }
+    }
+    
+}
+```
+
+[841](https://leetcode.cn/problems/keys-and-rooms/): 实质是一个图，使用任意一种图遍历的方式，如果有节点不可达，则说明无法进入所有的房间
+
+[127](https://leetcode.cn/problems/word-ladder/description/): 相邻单词即有路，基于此可构造一个无向图，则题目转化为无向图中两个节点的最短路径长度，可以使用BFS(使用层次记录跳数), 只要找到目标节点， 即完存在一条最短路径，否则则不可达
+
+[684](https://leetcode.cn/problems/redundant-connection/): 使用并查集， 并查集使用一个 father 数组/指针 来维护序号为 i 所处集合的代表 j， 即 father[i] = j, 同处于一个集合的所有元素，其father都相同；并查集初始化时 father[i] = i, 对于两个元素 i，j， 通过关系 bool relation(i, j)， 来决定是否将两者归并到同一集合中， 典型的关系如 i， j 在同一条边上;定义 find 递归地查找给定元素 i 的father， 即所有的father所有子节点的father为根，考虑效率，可在查询时使用路径压缩，即当找到给定节点的 father f 时，就将 father[i]= f, 压缩搜索层数;通过关系构建并查集时，首先找到存在关系的两个元素 i， j各自的father, 如果两者father相同，即两者已经在同一个集合中，不必再添加，否则则将 i 的father fi的father 设置为 fj (或者相反), 这样做的结果是将两边的集合合并;判断两个元素是否在同一个集合中只需判断各自的father是否相同即可;对于此题目，判断是否成环的目的即是判断给定的边(关系)是否连接了两个已经在集合中的元素(相连两个联通元素就会导致成环)
+
+[657](https://leetcode.cn/problems/robot-return-to-origin/description/): 模拟运行，记录水平位移h，垂直位移v，定义U，R为正方向，模拟运行，结束时 h, v均为0即回到原点
+
+[31](https://leetcode.cn/problems/next-permutation/description/): 从后往前遍历元素，再从后往前遍历此元素之后的元素，如果找到一个后面的元素比当前元素的大，则将两者进行交换，然后再对此元素之后的元素反转即可，如果遍历完都没有元素需要反转，则反转整个列表即可
+
+[463](https://leetcode.cn/problems/island-perimeter/description/): 对于任意一个岛屿，其上下左右只要时水，总周长就++
+
+[1356](https://leetcode.cn/problems/sort-integers-by-the-number-of-1-bits/description/): 使用如下公式计算数字二进制中 1 的数量
+
+```c++
+static int bitCount(int n){
+    int count = 0;
+    while (n) {
+        n &= n -1;
+        count++;
+    }
+    return count;
+}
+```
 
 ## 杂
 
@@ -585,7 +671,14 @@ int countSubstrings(string s) {
 
 [5](https://leetcode.cn/problems/longest-palindromic-substring/description/): dp[i][j] 为 [i, j] 是否为回文子串; 判断 s[j] 与 s[i] 相等， 如果 j - i  <= 1, 则dp[i][j] = 1, 否则判断 dp[i+1][j-1], dp[i][j] = dp[i+1][j-1] + 2;根据递推公式, i必须从大到小，j必须从小到大
 
-[132](https://leetcode.cn/problems/palindrome-partitioning-ii/description/): dp[i]定义为[0, i]内回文子串的最小分割次数
+[132](https://leetcode.cn/problems/palindrome-partitioning-ii/description/): dp[i]定义为[0, i]内回文子串的最小分割次数;对于0, i内的下标j，如果[j,i]为回文串，则需进行分割，总分割次数为 dp[0,i] + 1, 遍历j找到最小的dp[i]; dp[0] = 0, 非0初始化为一个大数，同时注意在循环中，首先判断 [0, i] 是否为回文，如果为回文，则dp[i]=0, 即对于一个回文串而言，最小切割次数为0
+
+[673](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/description/): dp[i]定义为以i结尾的子序列中，最长严格递增子序列的长度， count[i] 则定义为以i为结尾的子序列中，最长序列的数量(对于i而言);从0遍历，如果n[i] > n[j], 如果 dp[i] < dp[j] + 1, 则更新dp[i], 同时 count[i] = count[j], 如果dp[i] == dp[j] + 1， 则count[i] += count[j], 最后再遍历 dp, 找到所有 dp[i] = max 的和即可;dp, count都初始化为全1
+
+## HW
+
+1. n个员工分到m组中，每组构成 k[i] * (k[i] - 1) / 2 对，求最大与最小的结对数和。等式中反映结对数和置于每组队数的平方有关，当组间差异最大时对数最多，当组差距平均时最小, 前者假设 m-1 组中只有1人，其余都集中在剩下的一组中， 后者则每组均分，注意在c++中使用long防止溢出
+2. n个员工初始级别为0, m次升职，每次都将 [l, r] 内的员工职位++。初始化后遍历m次升职即可
 
 ## 剑指offer
 
@@ -601,3 +694,41 @@ int countSubstrings(string s) {
 15. 对大数进行判断，更换思路，考虑当  m = n / e 时能够取得极大值，因而如果能够将 n 拆成3和2的组合，并在能取到3的前提下，尽可能地使得3多出现，就能够达到最大值，因而只需要不断让 n 减去3, 同时在过程中，使用 long 存储结果，并在每次计算时取模，解决大数问题
 16. n &= (n-1) 消去最右边的1
 17. 快速幂的原理在于，如果指数是偶数，则可以将指数减半，底数取平方的形式减少连续乘法的次数，如果是奇数，则可以提取出一个，对余下部分继续使用快速幂，使用快速幂，同时使用 long 替换int 类型的指数，以保证求绝对值时不会发生溢出错误(负数总比正数多一个)
+
+45. 排序条件为， 如果 x + y < y + x, 则 x < y, 即 x 应当放在更前面, 对于数字组成的字符串，只需进行值比较即可，不必stol或stoi转化为数字
+
+## Leecode 75
+
+[334](https://leetcode.cn/problems/increasing-triplet-subsequence/description/?envType=study-plan-v2&envId=leetcode-75): 求是否有长度为3的递增三元子序列， 此题若使用动态规划(最长递增子序列)，则易超时，考虑只需要判断是否有三个元素满足严格递增，因此设置 first， second 两个元素用来保存遍历过程中的子序列的前两个，其中 first 初始化为 nums[0], second 初始化为 INT_MAX, 从下标1开始遍历，如果发现当前元素大于 Second，则找到了一个递增三元子序列，否则如大于 first， 则将 second 赋值为当前元素，如小于first，则将first赋值为当前元素，这样只需要O(n)的时间复杂度和O(1)的空间复杂度
+
+[443](https://leetcode.cn/problems/string-compression/?envType=study-plan-v2&envId=leetcode-75): 使用一个 slow 指针指向已经压缩的字符串的最后一个元素，初始化指向第一个元素，随后其出现的次数，完毕时i为第一个不同的元素，此时首先将次数转化为字符串并填写到slow之后，随后移动slow并将其指向的元素设置为i
+
+
+### 双指针
+
+[11](https://leetcode.cn/problems/container-with-most-water/description/?envType=study-plan-v2&envId=leetcode-75):left, right两个指针, 每次都向中心移动端板，使用一个 max_s 记录最大的面积
+
+[1679](https://leetcode.cn/problems/max-number-of-k-sum-pairs/description/?envType=study-plan-v2&envId=leetcode-75): 贪心，要想操作次数最大，应当每次都移走恰好能组合成 k 的元素(意味着匹配度小), 故首先将数组进行排序，然后设置 left， right 两个指针，向中心移动，判断和是否为 sum
+
+
+### 滑动窗口
+
+
+[643](https://leetcode.cn/problems/maximum-average-subarray-i/description/?envType=study-plan-v2&envId=leetcode-75): 固定长度平均数最大，即滑动窗口，求最大的和，计算初始窗口中的和，然后开始移动，加上 i，减去 i - k， 过程中取最大的和即可
+
+[75](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/?envType=study-plan-v2&envId=leetcode-75): 将字符串转化为是否为元音的数组，滑动即可
+
+[1004](https://leetcode.cn/problems/max-consecutive-ones-iii/?envType=study-plan-v2&envId=leetcode-75): 考虑一个只变大而不缩小的滑动窗口；首先固定l，移动r, 如果当前元素为1，则窗口变大，如果当前元素为0，但k不为0，则窗口继续变大，反之则平移窗口;只有 k > 0 时，窗口才有可能扩展，而为使得最后结果为最大的窗口，允许k继续减小，使得只有当当前遇到的1大于先前遇到的1时，才允许窗口扩张，而这一条件既为 nums[r++] == 1，且 k<0 && nums[l++] == 0
+
+[1493](https://leetcode.cn/problems/longest-subarray-of-1s-after-deleting-one-element/description/?envType=study-plan-v2&envId=leetcode-75): 同 1004， 限制操作为1次
+
+
+## 米哈游
+
+## 字节
+
+[146](https://leetcode.cn/problems/lru-cache/description/?envType=study-plan-v2&envId=bytedance-2023-fall-sprint): 构造LRU缓存需要一个双向链表与一个hashmap， 其中 hashmap 用来实现 O(1) 的查询，删除，链表主要用于LRU。避免使用过程中逻辑过于杂糅，将 LRU 链表的维护与 hash map 的维护分离开， 其中 LRU 链表提供 `list_head *pick_node(list_head *n)`, `list_head* insert_head(list_head *n)` 两个方法，来将一个元素从链表中取出 或进行 头插(返回因LRU需要换出的节点), 并记录 size 与 cap。而后在实现中，get方法首先将 pick_node 出节点，再insert_head回去，put中，若节点存在，则先pick_node，随后再insert_head，考虑可能出现换出，因而增加对于insert_head的判断即可，使用 `erase` 将元素从map中清除
+
+[3](https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/?envType=study-plan-v2&envId=bytedance-2023-fall-sprint): 滑动窗口，使用一个 map 记录元素 e 上一次出现的位置，slow 记录窗口的左边沿，循环中判断当前元素是否出现过，如出现且落在窗口中，slow移动至次元素上一次出现位置的下一个。每次迭代都更新map，并更新最大窗口值
+
+[103](https://leetcode.cn/problems/binary-tree-zigzag-level-order-traversal/description/?envType=study-plan-v2&envId=bytedance-2023-fall-sprint): 层序遍历模板，考虑需要之字形，那么使用一个flag来决定当前遍历所得的序列是否需要反转即可

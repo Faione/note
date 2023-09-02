@@ -286,3 +286,4 @@ unsafe extern "C" fn switch() {
 ### adjustment for windows
 
 [](https://cfsamson.gitbook.io/green-threads-explained-in-200-lines-of-rust/supporting-windows)
+[thread_gorutine_comp](https://shane.ai/posts/threads-and-goroutines/)

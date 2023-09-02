@@ -15,9 +15,24 @@ using namespace std;
 
 push_back(), emplace_back() 区别在于前者只进行值的拷贝，而后者则会根据参数调用目标类型的构造函数再进行拷贝
 
+#### unordered_set
+
+用来维护一个元素互补相同的容器, 其效果与一个 value 为空的 unordered_map 类似
+
+```c++
+// 声明一个 unordered_map
+unordered_set<int> set;
+
+// 判断 e 是否在set中
+set.find(e) != set.end()
+
+// 向集合中增加一个元素
+set.insert(e)
+```
+
 #### unordered_map
 
-unordered_map 中的元素为 `pari<K, V>`, 可以通过for循环进行遍历
+unordered_map 中的元素为 `pair<K, V>`, 可以通过for循环进行遍历
 
 ```c++
 // key 为 const
@@ -77,8 +92,36 @@ vector<string> split(const string &s, char c) {
 - `cin`需要于`stdin`同步，因此当数据量较大时，存在很大的同步开销，可设置 `ios::sync_with_stdio(false);` 来对 cin 进行加速
 - 默认情况下 `cin` 与 `cout` 绑定，即 `cin` 之前会先flush `cout` 的缓冲区，以便快速的将信息进行输出，关闭此绑定能够进一步加快速度
 
-
+```c++
+ios::sync_with_stdio(false);
+cin.tie(nullptr);
+```
 [acm_in_out](https://zhuanlan.zhihu.com/p/494535515)
 
 
 
+## 链表
+
+### 链表插入
+
+```c++
+ListNode* insertionSortList(ListNode* head) {
+    ListNode* dummy_head = new ListNode(), *cur = head, *next = nullptr, *sorted = nullptr;
+
+    while(cur != nullptr) {
+        sorted = dummy_head;
+        while(sorted->next != nullptr && sorted->next->val < cur->val) {
+            sorted = sorted->next;
+        }
+
+        next = cur->next;
+
+        cur->next = sorted->next;
+        sorted->next = cur;
+
+        cur =  next;
+    }
+
+    return dummy_head->next;
+}
+```
