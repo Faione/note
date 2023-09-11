@@ -5,6 +5,7 @@
 ### Prometheus Server 配置文件
 
 - [基于文件的服务发现](https://www.prometheus.wang/sd/service-discovery-with-file.html)
+- [prometheus_file_sd_config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#file_sd_config)
 
 **targets.json**
 
