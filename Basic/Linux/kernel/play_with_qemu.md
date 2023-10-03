@@ -56,8 +56,8 @@ qemu-system-x86_64 \
     -drive file=image.qcow2 \
     -device e1000,netdev=net \
     -netdev user,id=net,hostfwd=tcp::2222-:22 \
-    -kernel $KERNEL \
-    -initrd initrd \
+    -kernel $KERNEL \ 
+     -initrd initrd \
     -nographic \
     -append "root=LABEL=rootfs console=ttyS0"
 ```

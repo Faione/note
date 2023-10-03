@@ -58,3 +58,6 @@ podman 启动 pod 时依赖 `pause` infra 容器，4x版本中已将此容器内
 
 [change_default_infra_container](https://serverfault.com/questions/1080486/how-to-change-the-default-infra-container-in-podman)
 
+
+
+todo: [user-mode](https://docs.podman.io/en/latest/markdown/podman-run.1.html#userns-mode)
