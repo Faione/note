@@ -15,11 +15,6 @@
     - [(2) Compose文件配置](#2-compose文件配置)
   - [四、Habor](#四habor)
 
-
-- [Dokcer 私有库搭建](https://www.cnblogs.com/huanchupkblog/p/10843800.html)
-- [Habor 搭建](https://cloud.tencent.com/developer/article/1404719)
-- [Docker 私有仓库配置](https://blog.csdn.net/buildcourage/article/details/80296453)
-
 ## 一、基础
 
 ### (1) 概念
@@ -192,45 +187,7 @@ services:
     restart: always
 ```
 
-
-```cert
------BEGIN CERTIFICATE-----
-MIIFgzCCA2ugAwIBAgIJALNumURFbsMUMA0GCSqGSIb3DQEBCwUAMFgxCzAJBgNV
-BAYTAmNuMQswCQYDVQQIDAJqczELMAkGA1UEBwwCbmoxDDAKBgNVBAoMA2ljdDEL
-MAkGA1UECwwCYWMxFDASBgNVBAMMC2dsdWVuZXRzLmlvMB4XDTIyMDYxMzA2NTU1
-NVoXDTIzMDYxMzA2NTU1NVowWDELMAkGA1UEBhMCY24xCzAJBgNVBAgMAmpzMQsw
-CQYDVQQHDAJuajEMMAoGA1UECgwDaWN0MQswCQYDVQQLDAJhYzEUMBIGA1UEAwwL
-Z2x1ZW5ldHMuaW8wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCd+Q87
-M7Fp7mEaLWHiyg/DvD19uOz3NN8Lppe8vqMUgO39n6c9sGlJrby68umhThU8+AIy
-6s38lZy3L3fcf4VEYXgY1S8s8WvPnLrGFYxviKj8oXBdZSPixeDOY6tPQ1/yfvoU
-X18Hf6+bZDNiMHf3DCDe8x6LdBObnH2krwfAFvdxASc36c++4IGSKoT7CjIwiyTP
-kyT/YDyfllRVECPQ2JO9T5XenvMgzhT5sjgOkqH2lVUKKwTjLkLaaUPzYyZdcrq0
-HrKl/1dfKshDgvJdC32j4CPhBDlOJpJqcu1UNl6Ms52YBdx4eR1SPX6cTse2wMNn
-N2hp/oEJBxoIzYudQ5SCYDQ/IC3WkuqKPKPxfK8JjmngRVBpkrcV3F5cQZG1Pwfk
-wdxLwCPatb+YoFJgEDYINrx+zi4HeMsZv5zQ6d/lFfkQ4b9jWOOCQt0W0h/6617t
-ThWZjumDD37anS5pUYkiIYIitcJSzAlHYplXmT+nh0j7QfYPlJYPsQkqg/c3qZxY
-3OKdqG0oMcH846pnXVtDtNN1ro8RBbNREfYHapT5MlbaGGktHvUdt8lp6+uRLH0E
-RzikPHB8UieYR9cW5gfSya0a0NfvTGCR6Uhb3r6dJw7RmYl93Gy8Mjgqcpg83TcT
-2ov6TS4NMDaCJsiTQed9tIA1K+yCzjxyZI+viwIDAQABo1AwTjAdBgNVHQ4EFgQU
-ACUEsac7vkJHRzBP3i7FrRfbnAgwHwYDVR0jBBgwFoAUACUEsac7vkJHRzBP3i7F
-rRfbnAgwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAgEAS9uME86WIy4i
-itA8LNAqmkGMfDQPEMKb7W0Rmy7wQDQNWaaE3e+/mXrH0eTVQ/bQ5EOy9hUEnm17
-L9Rkmj6+NH55alB/wu9BWikRlvLmuAeDpu7EIkVkJJFBS/YFqnlHvrPcPY8WanPz
-BjUOEjNkCXB4k6xlvyhdgaROANRfGJ6ulwqJrGjGP8YCOKk7dwkF019XH++FFuPl
-+iBuXiueybYQWeLgv7rLN73wyS+0wqfSK9kqTQIxis6EQpNQ86LdR/dweb/Beg2r
-jiLTn1/aiFbtu7RjL5WGO4PphnczYuImaQWbyeoWB6uTLXoKogQxqYIvha43jr3D
-QGDhaG7pjaGf6XOfT7MimTWRIFI5sBCyGb0zXvnwq7Krl2hWVDX7rj5rcNlSndTK
-CYKH27PgMkGzm1p8BKyHwJ6KBTchnHvsu2RHa0y5OSp1jpytyDXkZkFal8oC0S7q
-7CJS6DZA5ShJjHd6+9JtZnDCtJHKn1n97X9rTGvp/2z8HK7RL7kGyKT4CdhcPDWM
-Z7ZQdDWvS9iIbIi5PBPeulRe+AxpVl44GZqymykcd9bLqg/6tOjEhzycAgWM3GJe
-Qdyl0rKJ3uprdBxPABjo7rg57m7+r6QEy02TIyku+265e146a68lU5a/4PDj8qeb
-6UHCfdJhwKD5V1j01WlsPHdbiCVtvlg=
------END CERTIFICATE-----
-```
-
-
 - 查看镜像tag
-
 
 ## 四、Habor
 

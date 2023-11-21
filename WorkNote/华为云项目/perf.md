@@ -53,7 +53,7 @@ sudo perf stat \
   -e LLC-loads \
   -I 1000 -G fhl.slice
 ```
-
+```
 sudo docker run \
   --volume=/:/rootfs:ro \
   --volume=/var/run:/var/run:ro \
@@ -67,6 +67,7 @@ sudo docker run \
   --device=/dev/kmsg \
   cadvisor:latest
 
+```
 
 ## Perf Exporter
 

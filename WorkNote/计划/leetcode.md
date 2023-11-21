@@ -98,8 +98,6 @@ cin.tie(nullptr);
 ```
 [acm_in_out](https://zhuanlan.zhihu.com/p/494535515)
 
-
-
 ## 链表
 
 ### 链表插入
