@@ -4,4 +4,13 @@ github pages可以用来发布静态网页，相比于gitbook, 支持更多样�
 
 github pages通常与github actions配合使用，也可以手动push编译好的网站
 
-[^1] [github_pages](https://docs.github.com/en/pages)
+
+## 创建空白分支
+
+```shell
+# 创建孤立分支(无头)
+$ git checkout --orphan gh-pages
+
+# 删除缓冲区的所有文件
+git rm -rf .
+```

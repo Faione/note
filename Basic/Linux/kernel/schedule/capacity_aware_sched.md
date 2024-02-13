@@ -49,5 +49,3 @@ task_util_inv(p) = duty_cycle(p) * ------------------- * -------------
 - `SD_ASYM_CPUCAPACITY ` 在任意跨非对称调度域的调度域上设置, 标识当前调度域是否包含了非对称的部分
 
 ## Capacity aware scheduling implementation
-
-

@@ -33,6 +33,20 @@ end
 
 配置 `config.vm.box_check_update = false` 来关闭联网版本检测
 
+## SSH
+
+[vagrant_config_ssh](https://developer.hashicorp.com/vagrant/docs/vagrantfile/ssh_settings)
+
+vagrant 默认使用 `vagrant` 用户，以及 box 配置中所指定的登录方式，来进入虚拟机，并通过 bash，利用 sudo 来执行其他命令，如需对上述默认的模式进行修改，需要设计到如下几个配置
+
+```yaml
+config.ssh.username = "root"
+
+config.ssh.shell = "/bin/sh"
+
+config.ssh.sudo_command = "sudo"
+```
+
 ## Shell
 
 可以在 vagrant 中编写 shell 命令来定义虚拟机的启动行为，这些命令通常只会在虚拟机第一次启动时执行, 通过修改 `run` 字段可以定义执行的时机，通常有 `always`, `once`, `never`
@@ -43,15 +57,25 @@ config.vm.provision "shell",
     inline: "route add default gw 192.168.0.1"
 ```
 
+也可以配置多行的 "shell" 命令，run 的缺省是 always
+
 ## Network
 
 通常情况下，虚拟机连接到默认的虚拟网桥 `virbr`，从而与宿主机通信，同时宿主机经由此虚拟网桥来为虚拟机提供 dhcp 以及 dns 服务
 
 这种情况下虚拟机仅能被宿主机访问，因此这种网络模式被称为 `private_network`, 此时如需要将虚拟机暴漏给外界，需要配置 `config.vm.network "forwarded_port", guest: 80, host: 8080` 以进行端口转发
 
+>> 对于 libvirt provider 而言，public_network 的配置建立在 private_network 网络之上，宿主机通过 private_network 连接到虚拟机，从而按 Vagrant 中的配置来对网卡进行修改 
+
 如需将虚拟机完全暴漏到网络中，则需要通过建立连接到实际网络的虚拟网桥，通过这种方式使得虚拟机能够像物理机器一样连接到外部网络中，这种网络模式称为 `public_network`, 通过 `config.vm.network "public_network", ip: "10.208.129.191", :dev => "br0", :type => "bridge"` 配置以指定 public ip 以及实际要绑定到的网桥
 
 使用这种方式创建的虚拟机中会有两张网卡，一张连接到 `private_network`， 另一张连接到 `public_network`, 而由于默认情况下的路由表由第一张网卡生成，此时启动的虚拟机并不能正确的在外部网络中进行网络访问, 需要在启动命令中，修改默认网关[^1]
+
+```yaml
+  config.vm.provision "shell",
+    run: "always",
+    inline: "ip route add x.x.x.x/24 via x.x.x.x || true"
+```
 
 [^1]: [vagrant_public_router](https://developer.hashicorp.com/vagrant/docs/networking/public_network)
 
