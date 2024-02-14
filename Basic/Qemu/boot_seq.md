@@ -39,9 +39,9 @@ Ghost系统挂载目标存储介质，创建初始的 rootfs，随后通过 `chr
 # 启动前流程
 
 1. BIOS 进行硬件自查(POST), 挂载磁盘并跳转到 bootloader
-2. bootloader识别文件系统(UEFI), 寻找 vmlinux 和 initramfs，并将其加载到内存中
+2. bootloader 识别文件系统(UEFI), 寻找 vmlinux 和 initramfs，并将其加载到内存中
+- 对于压缩的 vmlinux, 则会进行解压，而对于 initramfs, 会向内核提供 initramfs 所存放内存的物理地址, 如启动日志中的 `RAMDISK: [mem 0xbf6ed000-0xbffcffff]`
 3. 内核启动
-  - 如有必要，解压 vmlinux
   - 创建 rootfs，并挂载到 /，解压 initramfs 到 /
   - 执行 init 进程(systemd/initd/openrc)
 
@@ -50,3 +50,11 @@ Ghost系统挂载目标存储介质，创建初始的 rootfs，随后通过 `chr
 
 使用 UEFI 的虚拟机，`vmlinux` 与 `initramfs` 通常保存在 boot 分区中，一般由 bootloader 进行加载，也可以从虚拟机磁盘中拷贝出来，从而通过 qemu cmd 直接指定
 - alpine linux 中，同样在 boot 分区中，还有一个 `startup.nsh` 文件保存了 kernel cmd, linux 启动之后也会将启动命令保存到 `/proc/cmdline` 中
+
+
+## Qemu X86 Boot
+
+常规引导过程中，对于使用 UEFI 启动的系统，需要为其准备 UEFI 固件，以进行操作系统的引导
+
+
+使用 `-kernel` 作为 qemu 启动参数时，可以认为是 qemu 完成了 bootloader 的工作，即将 kernel 与 initramfs 加载到内存中，但是实际上，这个过程还是由 SeaBIOS 与 qemu 写作完成的, [qemu_emulator_without_a_bootloader](https://stackoverflow.com/questions/68949890/how-does-qemu-emulate-a-kernel-without-a-bootloader)
