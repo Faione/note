@@ -61,3 +61,32 @@ podman 启动 pod 时依赖 `pause` infra 容器，4x版本中已将此容器内
 
 
 todo: [user-mode](https://docs.podman.io/en/latest/markdown/podman-run.1.html#userns-mode)
+
+
+## Podamn Pause
+
+Podman中的使用的pause容器为[catatonit](https://github.com/openSUSE/catatonit), 在创建容器时，由podman进行构建(较高版本)[build pause](https://github.com/containers/podman/blob/413819de0747b74219ec68f5a61e241886d10387/pkg/specgen/generate/pause_image.go#L48),其在进行一系列初始化操作后，进入为一个循环的核心逻辑，循环中会调用 `read` 并陷入等待信号的状态，此时不会在调度队列上，也几乎不会占用资源，仅作为一个cgroup与namespace的维护者， 标志Pod的生命周期
+
+## Podman Storage
+
+podman storage config
+- runroot: 零时的容器存储目录
+- graphroot: 可读可写的容器镜像存储目录
+- imagestore: 从graphroot中分离出来的，专门用于存储容器镜像的目录
+
+podman提供`imagestore`的目的在于允许用户将运行容器与存储镜像进行分离，前者对读写速度有要求，可以放置在SSD等高速存储介质上，后者对容量有要求，可以存放在HDD等大容量存储介质上
+- 注意: podman并未因此提供`热插拔的`镜像存储机制，后续会分析得出此结论的理由
+
+### imageroot 行为
+
+通过在storage配置文件中声明，或者在命令行中声明， 可以使能`imagestore`功能，此后所有的容器镜像导入会执行如下过程
+- 解压容器到`imagestore`中
+- 在`graphroot`中通过overlayfs的形式，将`imagestore`对应的镜像层作为底层文件系统
+- 在`imagestore`中的`overlay/l`中创建软链接，指向`graphroot`使用overlayfs挂载的可读可写镜像
+
+查看镜像时读取`imagestore`中的数据，而运行容器时则依赖`graphroot`中的可读可写层，于是热插拔时会出现如下问题
+- 卸载`imagestore`时，会导致`graphroot`中镜像不完整，容器无法启动
+- 迁移`imagestore`时，无效软连接会产生文件无法找到的错误
+- 使用 9p 作为文件系统时，由于overlayfs兼容性上的问题，导致podman启动失败，即不能成为 alternativeimagestore 的目录
+
+综上可以认为podman虽然单独区分了镜像存储，但这种区分仅限于可靠的存储设备，即尚不支持可插拔容器镜像存储

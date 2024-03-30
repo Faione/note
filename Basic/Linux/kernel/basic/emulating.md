@@ -122,6 +122,7 @@ make O=output -j `expr $(nproc) - 1`
 使用 qemu 模拟虚拟机，append 传入额外的内核启动命令参数
 - `nokaslr` 用来关闭内核地址空间随机化, 尤其是开启了内核地址空间随机时，方便进行debug
 - `root=LABEL=rootfs` 指定启动dqib时使用 label 为 `rootfs` 的文件系统，而对于 alpine maker 来说, 默认的label是 `root`
+  - 文件系统标签通常需要挂载文件系统之后才能获取，因此也可以指定 `root=dev/vda2` 这样的设备，使得直接从kernel boot rootfs
 - `console=ttyS0` 指定了启动过程中要将信息输出到那个设备
 
 **加载 initrd**

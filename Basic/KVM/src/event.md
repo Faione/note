@@ -78,4 +78,4 @@ Qemu用户程序预先申请 eventfd，并将其连同其他所需要的内容�
 `irqfd_wakeup` 核心在于唤起一次 `irqfd->inject` 的执行，`inject` 为一个 `work_struct`, 即一个延迟工作，其逻辑为函数 `irqfd_inject`，能够向 VM 中注入中断
 - `irqfd_inject` 的核心通过调用 `kvm_set_irq` 来完成， 涉及到中断路由 `kvm_kernel_irq_routing_entry` 中相关回调的使用  
 
-`eventfd_write` -> `waitqueue_active` -> `irqfd_wakeup` -> `irqfd_inject`
+`eventfd_write` -> `wake_up_locked_poll` -> `__wake_up_common` -> (wait_queue_func_t )`irqfd_wakeup` -> `irqfd_inject`

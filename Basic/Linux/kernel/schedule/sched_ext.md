@@ -34,3 +34,17 @@ BPF’s struct_ops feature
 **Dispatch queues**
 
 **Scheduling cycle**
+
+# Doc
+
+[extensible_scheduler_class](https://github.com/sched-ext/sched_ext/blob/sched_ext-v5/Documentation/scheduler/sched-ext.rst)
+
+
+如果没有加载BPF Scheduler，则调度类将会被设置为Fair，尽管此时的调度策略仍然是EXT
+
+```c
+#ifdef CONFIG_SCHED_CLASS_EXT
+	else if (task_should_scx(p))
+		p->sched_class = &ext_sched_class;
+#endif
+```
