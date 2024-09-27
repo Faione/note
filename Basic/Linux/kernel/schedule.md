@@ -13,6 +13,7 @@
     - [(7) 任务出队-dequeue\_task](#7-任务出队-dequeue_task)
     - [(8) 任务移动-sched\_move\_task](#8-任务移动-sched_move_task)
     - [(9) 优先级调整-set\_user\_nice](#9-优先级调整-set_user_nice)
+    - [(10) 负载均衡-put\_prev\_task\_balance](#10-负载均衡-put_prev_task_balance)
   - [二、Sched Class调度](#二sched-class调度)
     - [非抢占调度-STOP/FIFO](#非抢占调度-stopfifo)
     - [抢占式调度-RR/FAIR/BATCH/IDLE](#抢占式调度-rrfairbatchidle)
@@ -132,7 +133,7 @@ set_next_task 用于将选择好的任务从队列中取出，并设置为下一
 
 core中定义了一个内部函数[`enqueue_task`](https://elixir.bootlin.com/linux/v6.6.21/source/kernel/sched/core.c#L2091)封装了不同调度类enqueue_task的实现
 
-fork一个新进程执行时，首先会经由 kernel_clone->copy_process->sched_fork 完成调度信息的初始化，随后会依次调用 kernel_clone->wake_up_new_task->activate_task, 从而将任务加入到调度类的运行队列上
+fork一个新进程执行时，首先会经由 kernel_clone->copy_process->sched_fork 完成调度信息的初始化，随后会依次调用 kernel_clone->wake_up_new_task->activate_task->enqueue_task, 从而将任务加入到调度类的运行队列上
 
 ### (7) 任务出队-dequeue_task
 
@@ -154,6 +155,11 @@ core中定义了一个将task从一个group移动到另一个group中的方式[`
 
 对于相同队列中的任务，调度策略依赖预先的优先级定义，linux提供了nice机制来进行优先级的什么，通过core中的[`set_user_nice`](https://elixir.bootlin.com/linux/v6.6.21/source/kernel/sched/core.c#L7188)实现。优先级调整实际上也是字段的修改，因此逻辑与上述任务移动类似
 
+### (10) 负载均衡-put_prev_task_balance
+
+put_prev_task_balance 是 schedule_loop 中的核心逻辑之一，其有两个目标
+- balance pass：从当前调度类开始向低优先级调度类遍历，直到有一个调度类 balance 函数执行成功(仍然有任务去继续执行)
+- put_pre_task: 将上一个任务放回到 rq 中
 
 ## 二、Sched Class调度
 

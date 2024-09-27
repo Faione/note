@@ -46,10 +46,10 @@
 [31]Newell A, Skarlatos D, Fan J, et al. RAS: continuously optimized region-wide datacenter resource allocation[C]//Proceedings of the ACM SIGOPS 28th Symposium on Operating Systems Principles. 2021: 505-520.
 [32]Gan Y, Liang M, Dev S, et al. Sage: practical and scalable ML-driven performance debugging in microservices[C]//Proceedings of the 26th ACM International Conference on Architectural Support for Programming Languages and Operating Systems. 2021: 135-151.
 ![![](2023-12-21-12-59-42.png)](image-1.png)
-![Alt text](image.png)
+![](image.png)
 
 ![](2023-12-21-13-00-55.png)
 
-![Alt text](image-2.png)
+![](image-2.png)
 
-![Alt text](image-3.png)
+![](image-3.png)

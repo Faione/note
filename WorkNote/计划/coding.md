@@ -4,7 +4,7 @@
 
 [35](https://leetcode.cn/problems/search-insert-position/description/): 二分查找，使用 左闭右开， 最终的right是target应该在，但数组中没有的位置，即要插入的位置
 
-[34](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/): 使用二分法分别查找target在数组中最左边-1 和最右边 + 1 的位置，-2 标记搜索不到，搜索左边界时， 即在 target <= nums[mid] 分支中寻找, right - left > 1 是， 返回  {left + 1, right - 1}， 否则返回 {-1, -1}
+[34](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/): 使用二分法分别查找target在数组中最左边-1 和最右边 + 1 的位置，-2 标记搜索不到，搜索左边界时， 即在 target <= nums[mid] 分支中寻找, right - left > 1 时， 返回  {left + 1, right - 1}， 否则返回 {-1, -1}
 
 [27](https://leetcode.cn/problems/remove-element/): 双指针， slow指向不是val的数组的后一个(空位)， fast 遍历数组，将不是val的元素放入到slow中
 

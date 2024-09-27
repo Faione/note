@@ -63,7 +63,7 @@ sysret指令则相反
 #### 初始化
 
 内核主函数 [`start_kernel`](https://elixir.bootlin.com/linux/v6.1.56/source/init/main.c#L993) 中会调用 `trap_init`, 其在不同体系结构中的实现各不相同，x86 中 [`trap_init`](https://elixir.bootlin.com/linux/v6.1.56/source/arch/x86/kernel/traps.c#L1458) 在最后会进行 [`cpu_init`](https://elixir.bootlin.com/linux/v6.1.56/source/arch/x86/kernel/cpu/common.c#L2292)并调用 [`syscall_init`](https://elixir.bootlin.com/linux/v6.1.56/source/arch/x86/kernel/cpu/common.c#L2061)对syscall相关的基础设施进行初始化
-1. 设置 MSR_STAR 寄存器，将用户代码的CS 和 啮合代码的 CS 写入其中
+1. 设置 MSR_STAR 寄存器，将用户代码的CS 和 内核代码的 CS 写入其中
 2. 将 `entry_SYSCALL_64` 地址写入到 MSR_LSTAR 寄存器中
 3. 对于需要模拟的 `IA32` 进行相关初始化
 4. 设置 MSR_SYSCALL_MASK 寄存器，定义执行系统调用时应当被清除的EFLAGS寄存器中的标志

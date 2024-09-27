@@ -50,4 +50,12 @@ wsl --unregister Ubuntu-22.04
 wsl --import Ubuntu-22.04 F:\VirtualMachines\WSL\Ubuntu2204 E:\ubuntu2204.tar --version 2
 ```
 
+如修改了WSL的名称，则WSL会因丢失基础信息，而默认使用root登录，需要参考如下方法修改默认用户
+- Inside the instance, as root, create or edit /etc/wsl.conf and add these lines:
+
+```
+[user]
+default=username
+```
+
 [wsl导入导出](https://zhuanlan.zhihu.com/p/406917270)
